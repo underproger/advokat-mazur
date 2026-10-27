@@ -25,13 +25,104 @@
   $$('[data-drawer-close]').forEach(function (b) { b.addEventListener('click', function () { setDrawer(false); }); });
   drawer.addEventListener('click', function (e) { if (e.target === drawer) setDrawer(false); });
 
+  /* ---------- custom select ----------
+     Нативний <select> лишається в DOM (працює з формою / CF7),
+     поверх нього — кнопка + список. Синхронізація через подію change. */
+  var openSelect = null;
+  var closeSelect = function () {
+    if (!openSelect) return;
+    openSelect.field.classList.remove('is-open', 'is-up');
+    openSelect.btn.setAttribute('aria-expanded', 'false');
+    openSelect = null;
+  };
+  $$('select[data-select]').forEach(function (sel, n) {
+    var field = sel.closest('.field') || sel.parentNode;
+    var wrap = document.createElement('div'); wrap.className = 'cselect';
+    sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
+    sel.tabIndex = -1;
+
+    var listId = 'cselect-list-' + n;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'cselect__btn';
+    btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', listId);
+    if (sel.getAttribute('aria-label')) btn.setAttribute('aria-label', sel.getAttribute('aria-label'));
+    btn.innerHTML = '<span class="cselect__value"></span><i class="ic ic-chevron-down"></i>';
+    wrap.appendChild(btn);
+
+    var list = document.createElement('div');
+    list.className = 'cselect__list'; list.id = listId; list.setAttribute('role', 'listbox');
+    var opts = $$('option', sel).map(function (o, i) {
+      var el = document.createElement('div');
+      el.className = 'cselect__opt'; el.setAttribute('role', 'option'); el.dataset.i = i;
+      el.innerHTML = '<span></span><i class="ic ic-gold ic-check"></i>';
+      el.firstChild.textContent = o.textContent;
+      list.appendChild(el);
+      return el;
+    });
+    field.appendChild(list);
+
+    var active = 0;
+    var setActive = function (i) {
+      active = (i + opts.length) % opts.length;
+      opts.forEach(function (o, j) { o.classList.toggle('is-active', j === active); });
+      var o = opts[active], top = o.offsetTop, bottom = top + o.offsetHeight;
+      if (top < list.scrollTop) list.scrollTop = top - 8;
+      else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight + 8;
+    };
+    var sync = function () {
+      $('.cselect__value', btn).textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].textContent : '';
+      opts.forEach(function (o, j) { o.setAttribute('aria-selected', j === sel.selectedIndex); });
+    };
+    var choose = function (i) {
+      if (sel.selectedIndex !== i) { sel.selectedIndex = i; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+      sync(); closeSelect(); btn.focus();
+    };
+    var open = function () {
+      if (openSelect && openSelect.field !== field) closeSelect();
+      // відкриваємо вгору, якщо знизу не вистачає місця
+      var r = field.getBoundingClientRect();
+      field.classList.toggle('is-up', window.innerHeight - r.bottom < 320 && r.top > window.innerHeight - r.bottom);
+      field.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
+      openSelect = { field: field, btn: btn };
+      setActive(Math.max(sel.selectedIndex, 0));
+    };
+
+    field.addEventListener('click', function (e) {
+      if (e.target.closest('.cselect__list')) return;
+      field.classList.contains('is-open') ? closeSelect() : open();
+    });
+    list.addEventListener('click', function (e) {
+      var o = e.target.closest('.cselect__opt'); if (o) choose(+o.dataset.i);
+    });
+    list.addEventListener('mousemove', function (e) {
+      var o = e.target.closest('.cselect__opt'); if (o && +o.dataset.i !== active) setActive(+o.dataset.i);
+    });
+    btn.addEventListener('keydown', function (e) {
+      var isOpen = field.classList.contains('is-open');
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!isOpen) open(); else setActive(active + (e.key === 'ArrowDown' ? 1 : -1));
+      } else if (e.key === 'Home' && isOpen) { e.preventDefault(); setActive(0); }
+      else if (e.key === 'End' && isOpen) { e.preventDefault(); setActive(opts.length - 1); }
+      else if ((e.key === 'Enter' || e.key === ' ') && isOpen) { e.preventDefault(); choose(active); }
+      else if (e.key === 'Escape' && isOpen) { e.preventDefault(); e.stopPropagation(); closeSelect(); }
+      else if (e.key === 'Tab') closeSelect();
+    });
+    sel.addEventListener('change', sync);
+    sync();
+  });
+  document.addEventListener('click', function (e) {
+    if (openSelect && !openSelect.field.contains(e.target)) closeSelect();
+  });
+
   /* ---------- modal ---------- */
   var modal = $('[data-modal]'), topicSelect = $('[data-topic-select]');
   var openModal = function (topic) {
     modal.classList.remove('is-sent');
+    closeSelect();
     if (topic && topicSelect) {
       var opt = $$('option', topicSelect).filter(function (o) { return o.textContent === topic; })[0];
-      if (opt) topicSelect.value = opt.value;
+      if (opt) { topicSelect.value = opt.value; topicSelect.dispatchEvent(new Event('change', { bubbles: true })); }
     }
     modal.classList.add('is-open');
     document.body.classList.add('is-locked');
@@ -199,6 +290,11 @@
 
   /* ---------- scroll-driven: steps line, parallax, mobile bar ---------- */
   var stepsEl = $('[data-steps]'), parallax = $$('[data-parallax] img'), mbar = $('.mbar'), hero = $('.hero'), contact = $('#contact');
+  var totop = $('[data-totop]');
+  if (totop) totop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    totop.blur();
+  });
   var ticking = false;
   var onScroll = function () {
     ticking = false;
@@ -218,6 +314,12 @@
       var heroEnd = hero.getBoundingClientRect().bottom < 0;
       var c = contact.getBoundingClientRect(), inContact = c.top < vh && c.bottom > 0;
       mbar.classList.toggle('is-visible', heroEnd && !inContact);
+      document.body.classList.toggle('has-mbar', heroEnd && !inContact);
+    }
+    if (totop) {
+      var max = document.documentElement.scrollHeight - vh;
+      totop.classList.toggle('is-visible', window.scrollY > vh * 0.8);
+      totop.style.setProperty('--p', max > 0 ? Math.min(window.scrollY / max, 1).toFixed(4) : 0);
     }
     updToc(); updSeo();
   };

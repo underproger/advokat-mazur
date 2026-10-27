@@ -782,6 +782,12 @@
   </div>
 </footer>
 
+<!-- scroll to top -->
+<button class="totop" type="button" aria-label="Прокрутити нагору" data-totop>
+  <svg class="totop__ring" viewBox="0 0 56 56" aria-hidden="true"><circle class="totop__track" cx="28" cy="28" r="26"/><circle class="totop__bar" cx="28" cy="28" r="26"/></svg>
+  <i class="ic ic-gold ic-arrow-up"></i>
+</button>
+
 <!-- floating call -->
 <button class="fab" type="button" aria-label="Передзвонити" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-phone-fill"></i></button>
 
@@ -822,8 +828,8 @@
       <h3 class="modal__title" id="modalTitle">Безкоштовна консультація</h3>
       <p class="modal__text">Залиште ім'я та номер — я передзвоню і безкоштовно оціню вашу ситуацію.</p>
       <form class="form" data-form>
-        <label class="field"><i class="ic ic-briefcase"></i>
-          <select name="topic" data-topic-select>
+        <div class="field field--select"><i class="ic ic-briefcase"></i>
+          <select name="topic" data-topic-select data-select aria-label="Тема звернення">
             <option>Штраф від ТЦК</option>
             <option>Рішення ВЛК</option>
             <option>Відстрочка</option>
@@ -833,7 +839,7 @@
             <option>Безкоштовна консультація</option>
             <option>Інше питання</option>
           </select>
-        </label>
+        </div>
         <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
         <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
         <button class="btn btn--gold btn--block btn--lg" type="submit">Передзвоніть мені</button>
