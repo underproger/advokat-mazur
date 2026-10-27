@@ -1,0 +1,158 @@
+{#- Базовий шаблон: head, шапка, футер, оверлеї. Змінні: page, services, site -#}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="{{ page.body_class }}">
+
+<!-- ============ HEADER ============ -->
+<header class="hdr" id="top">
+  <div class="container container--wide hdr__in">
+    <a class="logo" href="index.html">
+      <span class="logo__name">Адвокат Мазур</span>
+      <span class="logo__sub">Кримінальні, адміністративні та транспортні справи</span>
+    </a>
+
+    <nav class="hdr__nav" aria-label="Головне меню">
+      <div class="hdr__menu">
+        <button class="hdr__link hdr__link--drop{% if not page.is_home %} is-current{% endif %}" type="button" data-mega-toggle aria-expanded="false">Послуги <i class="ic ic-chevron-down"></i></button>
+        <a class="hdr__link{% if page.is_home %} is-current{% endif %}" href="{{ page.home }}#about">Про мене</a>
+        <a class="hdr__link" href="{{ page.home }}#steps">Етапи</a>
+        <a class="hdr__link" href="{{ page.home }}#reviews">Відгуки</a>
+        <a class="hdr__link" href="#contacts">Контакти</a>
+      </div>
+      <div class="hdr__actions">
+        <span class="lang"><a class="lang__item is-active" href="#">UA</a><span class="lang__sep">/</span><a class="lang__item" href="#">EN</a></span>
+        <a class="hdr__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
+        <a class="btn btn--gold btn--xs" href="#contact">Консультація</a>
+      </div>
+    </nav>
+
+    <button class="burger" type="button" aria-label="Меню" data-burger><span></span><span></span><span></span></button>
+  </div>
+
+  <div class="mega" data-mega>
+    <div class="container container--wide">
+      <div class="mega__grid">
+        {%- for s in services %}
+        <a class="mega__item{% if s.slug == page.slug %} is-active{% endif %}" href="{{ s.slug }}.html"><i class="ic ic-gold {{ s.icon }}"></i>{{ s.nav }}</a>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+{% block main %}{% endblock %}
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ftr" id="contacts">
+  <div class="container ftr__grid">
+    <div class="ftr__brand">
+      <span class="ftr__logo">Адвокат Мазур</span>
+      <p>Індивідуальна адвокатська практика. Свідоцтво про право на заняття адвокатською діяльністю № 0000.</p>
+      <div class="socials">
+        <a href="#" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
+        <a href="#" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
+        <a href="#" aria-label="WhatsApp"><i class="ic ic-gold ic-whatsapp"></i></a>
+        <a href="#" aria-label="Instagram"><i class="ic ic-gold ic-instagram"></i></a>
+      </div>
+    </div>
+    <div class="ftr__col">
+      <span class="ftr__title">Послуги</span>
+      {%- for s in services %}
+      <a href="{{ s.slug }}.html"{% if s.slug == page.slug %} class="is-active"{% endif %}>{{ s.nav }}</a>
+      {%- endfor %}
+    </div>
+    <div class="ftr__col">
+      <span class="ftr__title">Контакти</span>
+      <a class="ftr__phone" href="tel:{{ site.phone_href }}">{{ site.phone }}</a>
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+      <span>{{ site.address }}</span>
+      <span>{{ site.hours }}</span>
+      <button class="btn btn--gold btn--sm" type="button" data-modal-open data-topic="Зворотний дзвінок">Замовити дзвінок</button>
+    </div>
+  </div>
+  <div class="container ftr__bottom">
+    <span>© 2026 Адвокат Мазур</span>
+    <div><a href="#">Політика конфіденційності</a><span>UA / EN</span></div>
+  </div>
+</footer>
+
+<!-- scroll to top -->
+<button class="totop" type="button" aria-label="Прокрутити нагору" data-totop>
+  <svg class="totop__ring" viewBox="0 0 56 56" aria-hidden="true"><circle class="totop__track" cx="28" cy="28" r="26"/><circle class="totop__bar" cx="28" cy="28" r="26"/></svg>
+  <i class="ic ic-gold ic-arrow-up"></i>
+</button>
+
+<!-- floating call -->
+<button class="fab" type="button" aria-label="Передзвонити" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-phone-fill"></i></button>
+
+<!-- mobile bottom bar -->
+<div class="mbar">
+  <a class="mbar__call" href="tel:{{ site.phone_href }}" aria-label="Подзвонити"><i class="ic ic-phone-fill"></i></a>
+  <button class="btn btn--gold mbar__btn" type="button" data-modal-open data-topic="Безкоштовна консультація">Безкоштовна консультація</button>
+</div>
+
+<!-- mobile menu -->
+<div class="drawer" data-drawer>
+  <div class="drawer__panel">
+    <button class="drawer__close" type="button" aria-label="Закрити" data-drawer-close><i class="ic ic-close"></i></button>
+    <a class="logo__name" href="index.html">Адвокат Мазур</a>
+    <nav class="drawer__nav">
+      <span class="drawer__label">Послуги</span>
+      {%- for s in services %}
+      <a href="{{ s.slug }}.html"{% if s.slug == page.slug %} class="is-active"{% endif %}>{{ s.nav }}</a>
+      {%- endfor %}
+      <span class="drawer__label">Сайт</span>
+      <a href="{{ page.home }}#about" data-drawer-close>Про мене</a>
+      <a href="{{ page.home }}#steps" data-drawer-close>Етапи роботи</a>
+      <a href="{{ page.home }}#reviews" data-drawer-close>Відгуки</a>
+      <a href="#contacts" data-drawer-close>Контакти</a>
+    </nav>
+    <a class="hdr__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
+    <a class="btn btn--gold btn--md btn--block" href="#contact" data-drawer-close>Безкоштовна консультація</a>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="modal" data-modal role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal__box">
+    <button class="modal__close" type="button" aria-label="Закрити" data-modal-close><i class="ic ic-close"></i></button>
+    <div class="modal__form">
+      <span class="eyebrow">Безкоштовно · конфіденційно</span>
+      <h3 class="modal__title" id="modalTitle">Безкоштовна консультація</h3>
+      <p class="modal__text">Залиште ім'я та номер — я передзвоню і безкоштовно оціню вашу ситуацію.</p>
+      <form class="form" data-form>
+        <div class="field field--select"><i class="ic ic-briefcase"></i>
+          <select name="topic" data-topic-select data-select aria-label="Тема звернення">
+            {%- for t in page.topics %}
+            <option>{{ t }}</option>
+            {%- endfor %}
+          </select>
+        </div>
+        <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
+        <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
+        <button class="btn btn--gold btn--block btn--lg" type="submit">Передзвоніть мені</button>
+      </form>
+    </div>
+    <div class="modal__done">
+      <i class="ic ic-gold ic-check-circle"></i>
+      <h3 class="modal__title">Дякую.</h3>
+      <p class="modal__text">Скоро передзвоню з номера {{ site.phone }}.</p>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{%- macro stars() -%}<span class="stars"><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i></span>{%- endmacro -%}
+
+{%- macro review(v) -%}
+    <article class="review">
+      <div class="review__top">{{ stars() }}<span class="review__src">Google</span></div>
+      <p class="review__text">{{ v.text }}</p>
+      <div class="review__author"><span class="avatar">{{ v.initials }}</span><div><b>{{ v.name }}</b><span>{{ v.tag }} · {{ v.date }}</span></div></div>
+    </article>
+{%- endmacro -%}
+
+{%- macro faq_item(f, open=false) -%}
+      <div class="faq__item{% if open %} is-open{% endif %}">
+        <button class="faq__q" type="button" aria-expanded="{{ 'true' if open else 'false' }}"><h3>{{ f.q }}</h3><span class="faq__icon"><i class="ic ic-gold ic-plus"></i></span></button>
+        <div class="faq__a"><div><p>{{ f.a|safe }}</p></div></div>
+      </div>
+{%- endmacro -%}

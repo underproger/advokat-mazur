@@ -121,7 +121,10 @@
     modal.classList.remove('is-sent');
     closeSelect();
     if (topic && topicSelect) {
-      var opt = $$('option', topicSelect).filter(function (o) { return o.textContent === topic; })[0];
+      var opts = $$('option', topicSelect);
+      var find = function (t) { return opts.filter(function (o) { return o.textContent === t; })[0]; };
+      // тема з кнопки → якщо такої немає у списку, «Безкоштовна консультація»
+      var opt = find(topic) || find('Безкоштовна консультація');
       if (opt) { topicSelect.value = opt.value; topicSelect.dispatchEvent(new Event('change', { bubbles: true })); }
     }
     modal.classList.add('is-open');
@@ -159,6 +162,17 @@
       $('.tabs__acc', p).addEventListener('click', function () { p.classList.toggle('is-open'); });
     });
   }
+
+  /* ---------- «Читати повністю» (SEO-блоки головної) ---------- */
+  $$('[data-more]').forEach(function (m) {
+    var b = $('[data-more-toggle]', m);
+    if (!b) return;
+    b.addEventListener('click', function () {
+      var open = m.classList.toggle('is-open');
+      b.setAttribute('aria-expanded', open);
+      $('span', b).textContent = open ? 'Згорнути' : 'Читати повністю';
+    });
+  });
 
   /* ---------- faq ---------- */
   $$('.faq__item').forEach(function (it) {
@@ -204,7 +218,7 @@
   }
 
   /* ---------- situation cards: spotlight ---------- */
-  $$('.sit').forEach(function (c) {
+  $$('.sit, .spot').forEach(function (c) {
     c.addEventListener('mousemove', function (e) {
       var r = c.getBoundingClientRect();
       c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
@@ -289,7 +303,7 @@
   var updToc = watch(tocLinks, 140), updSeo = watch(seoLinks, 200);
 
   /* ---------- scroll-driven: steps line, parallax, mobile bar ---------- */
-  var stepsEl = $('[data-steps]'), parallax = $$('[data-parallax] img'), mbar = $('.mbar'), hero = $('.hero'), contact = $('#contact');
+  var stepsEl = $('[data-steps]'), parallax = $$('[data-parallax] img'), mbar = $('.mbar'), hero = $('.hero, .h-hero'), contact = $('#contact');
   var totop = $('[data-totop]');
   if (totop) totop.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
@@ -311,8 +325,8 @@
       img.style.transform = 'translate3d(0,' + (k * -60 - 30).toFixed(1) + 'px,0)';
     });
     if (mbar) {
-      var heroEnd = hero.getBoundingClientRect().bottom < 0;
-      var c = contact.getBoundingClientRect(), inContact = c.top < vh && c.bottom > 0;
+      var heroEnd = hero ? hero.getBoundingClientRect().bottom < 0 : window.scrollY > vh;
+      var c = contact ? contact.getBoundingClientRect() : null, inContact = !!c && c.top < vh && c.bottom > 0;
       mbar.classList.toggle('is-visible', heroEnd && !inContact);
       document.body.classList.toggle('has-mbar', heroEnd && !inContact);
     }

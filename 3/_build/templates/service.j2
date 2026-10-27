@@ -1,0 +1,455 @@
+{% extends "base.j2" %}
+{% from "macros.j2" import stars, review, faq_item %}
+{% block main %}
+{%- set s = page.svc %}
+
+<!-- ============ 01 HERO ============ -->
+<section class="hero">
+  <div class="container container--wide hero__grid">
+    <div class="hero__content">
+      <nav class="crumbs" aria-label="Хлібні крихти" data-reveal>
+        <a href="index.html">Головна</a><i class="ic ic-li-diamond ic-gold"></i>
+        <a href="index.html#services">Послуги</a><i class="ic ic-li-diamond ic-gold"></i>
+        <span>{{ s.nav }}</span>
+      </nav>
+
+      <span class="eyebrow" data-reveal>{{ s.category }}</span>
+      <h1 class="hero__title" data-split>{{ s.h1 }} <span class="gold-text">{{ s.h1_gold }}</span></h1>
+      <p class="hero__lead" data-reveal>{{ s.lead }}</p>
+
+      <ul class="hero__list" data-reveal-group>
+        {%- for b in s.bullets %}
+        <li><i class="ic ic-li-diamond ic-gold"></i>{{ b }}</li>
+        {%- endfor %}
+      </ul>
+
+      <div class="hero__btns" data-reveal>
+        <a class="btn btn--gold btn--lg btn--shine" href="#contact">Безкоштовна консультація</a>
+        <button class="btn btn--ghost btn--lg" type="button" data-modal-open data-topic="Інше питання"><i class="ic ic-gold ic-chat"></i>Описати свою ситуацію</button>
+      </div>
+
+      <div class="hero__trust" data-reveal>
+        <span><i class="ic ic-gold ic-lock"></i>Конфіденційно</span>
+        <span><i class="ic ic-gold ic-globe"></i>Онлайн або в офісі</span>
+        <span><i class="ic ic-gold ic-user-focus"></i>Справу веду особисто</span>
+      </div>
+    </div>
+
+    <div class="hero__media">
+      <div class="hero__photo" data-parallax>
+        <img src="assets/img/{{ s.hero_img }}.webp" alt="{{ s.hero_alt }}" width="{{ 944 if s.hero_img == 'lawyer-office' else 979 }}" height="{{ 1025 if s.hero_img == 'lawyer-office' else 1322 }}" fetchpriority="high">
+      </div>
+
+      <div class="free-seal" aria-hidden="true">
+        <svg class="free-seal__ring" viewBox="0 0 200 200">
+          <defs><path id="sealPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+          <text><textPath href="#sealPath">Безкоштовна консультація ◆ Безкоштовна консультація ◆ </textPath></text>
+        </svg>
+        <span class="free-seal__core"><b>0 ₴</b><small>перша<br>консультація</small></span>
+      </div>
+
+      <div class="hero__card">
+        <span class="hero__card-num"><span data-count="12">0</span><i>+</i></span>
+        <span class="hero__card-text">років практики<br>{{ s.years_text }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOC (sticky) ============ -->
+<nav class="toc" aria-label="Зміст сторінки" data-toc>
+  <div class="container toc__in">
+    <div class="toc__list">
+      <a class="toc__link" href="#situations"><span>01</span>Ситуації</a>
+      <a class="toc__link" href="#help"><span>02</span>Чим допоможу</a>
+      <a class="toc__link" href="#steps"><span>03</span>Етапи</a>
+      <a class="toc__link" href="#price"><span>04</span>Вартість</a>
+      <a class="toc__link" href="#about"><span>05</span>Про адвоката</a>
+      <a class="toc__link" href="#reviews"><span>06</span>Відгуки</a>
+      <a class="toc__link" href="#faq"><span>07</span>Питання</a>
+    </div>
+    <a class="btn btn--gold btn--xs toc__btn" href="#contact">Безкоштовна консультація</a>
+  </div>
+</nav>
+
+<!-- ============ 02 SITUATIONS ============ -->
+<section class="section" id="situations">
+  <div class="container">
+    <div class="sec-head sec-head--split">
+      <div>
+        <span class="eyebrow" data-reveal><b>01</b>Ситуації</span>
+        <h2 class="h2" data-split>З яким питанням вам <span class="gold-text">потрібна допомога?</span></h2>
+      </div>
+      <p class="sec-head__text" data-reveal>{{ s.get('situations_text') or "Не обов'язково самостійно визначати, які норми закону порушено. Оберіть ситуацію — і почнемо з її безкоштовної правової оцінки." }}</p>
+    </div>
+
+    <div class="sit-grid" data-reveal-group>
+      {%- for it in s.situations %}
+      {%- set last = loop.last %}
+      <article class="sit{% if last %} sit--accent{% endif %}">
+        <span class="tile"><i class="ic ic-gold {{ it.icon }}"></i></span>
+        <h3 class="sit__title">{{ it.title }}</h3>
+        <p class="sit__text">{{ it.text }}</p>
+        <button class="sit__more" type="button" data-modal-open data-topic="{{ it.topic }}">{{ 'Описати ситуацію' if last else 'Оцінити безкоштовно' }} <i class="ic ic-arrow-right"></i></button>
+      </article>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 HELP (tabs) ============ -->
+<section class="section section--alt" id="help">
+  <div class="container">
+    <div class="sec-head sec-head--center">
+      <span class="ghost-word" aria-hidden="true">Допомога</span>
+      <span class="eyebrow" data-reveal><b>02</b>Чим допоможу</span>
+      <h2 class="h2" data-split>Яку допомогу надаю <span class="gold-text">{{ s.help_gold }}</span></h2>
+      <p class="sec-head__text" data-reveal>{{ s.help_text }}</p>
+    </div>
+
+    <div class="tabs" data-tabs>
+      <div class="tabs__nav" role="tablist" data-reveal-group>
+        {%- for t in s.tabs %}
+        <button class="tabs__btn{% if loop.first %} is-active{% endif %}" type="button" role="tab" data-tab="{{ loop.index0 }}"><span class="tabs__num">{{ '%02d' % loop.index }}</span><span class="tabs__label">{{ t.label }}</span><i class="ic ic-arrow-right"></i></button>
+        {%- endfor %}
+      </div>
+
+      <div class="tabs__panels" data-reveal>
+        {%- for t in s.tabs %}
+        <!-- {{ '%02d' % loop.index }} -->
+        <div class="tabs__panel{% if loop.first %} is-active{% endif %}" role="tabpanel">
+          <button class="tabs__acc" type="button"><span class="tabs__num">{{ '%02d' % loop.index }}</span>{{ t.label }}<i class="ic ic-plus"></i></button>
+          <div class="tabs__body"><div class="tabs__inner">
+            <span class="tile tile--lg"><i class="ic ic-gold {{ t.icon }}"></i></span>
+            <h3 class="h3">{{ t.h3 }}</h3>
+            {%- for p in t.p %}
+            <p>{{ p|safe }}</p>
+            {%- endfor %}
+            <div class="tabs__cols">
+              <div>
+                <span class="mini-label">У межах допомоги</span>
+                <ul class="check">
+                  {%- for li in t.list %}
+                  <li>{{ li }}</li>
+                  {%- endfor %}
+                </ul>
+              </div>
+              <aside class="tabs__note">
+                <i class="ic ic-gold {{ t.note_icon }}"></i>
+                <p>{{ t.note }}</p>
+                <button class="link-gold" type="button" data-modal-open data-topic="{{ t.topic }}">{{ t.cta }} <i class="ic ic-arrow-right"></i></button>
+              </aside>
+            </div>
+          </div></div>
+        </div>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 FREE CONSULTATION BAND ============ -->
+<section class="band">
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {%- for _ in range(2) %}
+      <span>Безкоштовна консультація</span><i class="ic ic-li-diamond"></i><span>Конфіденційно</span><i class="ic ic-li-diamond"></i><span>Онлайн або в офісі</span><i class="ic ic-li-diamond"></i><span>Без зобов'язань</span><i class="ic ic-li-diamond"></i>
+      {%- endfor %}
+    </div>
+  </div>
+  <div class="container">
+    <div class="band__box" data-reveal>
+      <div class="band__text">
+        <span class="band__price">0 ₴</span>
+        <div>
+          <h2 class="band__title">Перша консультація — безкоштовно</h2>
+          <p>Опишіть ситуацію та надішліть документи. Я оціню перспективи й скажу, які кроки варто зробити. Договір — лише якщо ви вирішите продовжити.</p>
+        </div>
+      </div>
+      <div class="band__actions">
+        <button class="btn btn--dark btn--lg" type="button" data-modal-open data-topic="Безкоштовна консультація">Записатися безкоштовно</button>
+        <div class="band__msg">
+          <a href="#" aria-label="Telegram"><i class="ic ic-telegram"></i></a>
+          <a href="#" aria-label="Viber"><i class="ic ic-viber"></i></a>
+          <a href="#" aria-label="WhatsApp"><i class="ic ic-whatsapp"></i></a>
+          <a class="band__phone" href="tel:{{ site.phone_href }}">{{ site.phone }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 STEPS ============ -->
+<section class="section" id="steps">
+  <div class="container">
+    <div class="sec-head sec-head--center">
+      <span class="ghost-word" aria-hidden="true">Етапи</span>
+      <span class="eyebrow" data-reveal><b>03</b>Етапи</span>
+      <h2 class="h2 h2--white" data-split>Як відбувається правовий супровід</h2>
+      <p class="sec-head__text" data-reveal>Від першого звернення до реалізації погодженої стратегії захисту.</p>
+    </div>
+
+    <ol class="steps" data-steps>
+      <li class="steps__line" aria-hidden="true"><span class="steps__fill"></span></li>
+      {%- for st in s.steps %}
+      <li class="step" data-reveal>
+        <span class="step__badge">{{ '%02d' % loop.index }}</span>
+        <span class="tile tile--xl"><i class="ic ic-gold {{ st.icon }}"></i></span>
+        <h3 class="step__title">{{ st.title }}</h3>
+        <p class="step__text">{{ st.text }}</p>
+        {%- if loop.first %}
+        <span class="step__tag">0 ₴</span>
+        {%- endif %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 06 PRICE ============ -->
+<section class="section section--tight" id="price">
+  <div class="container">
+    <div class="sec-head sec-head--split">
+      <div>
+        <span class="eyebrow" data-reveal><b>04</b>Вартість</span>
+        <h2 class="h2" data-split>Скільки коштують <span class="gold-text">послуги адвоката</span></h2>
+      </div>
+      <p class="sec-head__text" data-reveal>Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.</p>
+    </div>
+
+    <div class="price-grid" data-reveal-group>
+      <article class="price price--free">
+        <span class="price__ribbon">Безкоштовно</span>
+        <span class="price__label">Крок 1</span>
+        <h3 class="price__title">Первинна консультація</h3>
+        <span class="price__value"><b>0</b> ₴</span>
+        <ul class="check">
+          <li>Аналіз вашого питання</li>
+          <li>Оцінка перспектив і ризиків</li>
+          <li>Рекомендації щодо подальших дій</li>
+        </ul>
+        <button class="btn btn--gold btn--md btn--block btn--shine" type="button" data-modal-open data-topic="Безкоштовна консультація">Записатися безкоштовно</button>
+      </article>
+      <article class="price">
+        <span class="price__label">Крок 2</span>
+        <h3 class="price__title">{{ s.price.docs_title }}</h3>
+        <span class="price__value price__value--sm">Фіксована ціна</span>
+        <ul class="check">
+          {%- for li in s.price.docs %}
+          <li>{{ li }}</li>
+          {%- endfor %}
+        </ul>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Дізнатися вартість</button>
+      </article>
+      <article class="price">
+        <span class="price__label">Крок 3</span>
+        <h3 class="price__title">Комплексний супровід</h3>
+        <span class="price__value price__value--sm">За договором</span>
+        <ul class="check">
+          {%- for li in s.price.full %}
+          <li>{{ li }}</li>
+          {%- endfor %}
+        </ul>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Обговорити справу</button>
+      </article>
+    </div>
+    <p class="price-note" data-reveal><i class="ic ic-gold ic-li-diamond"></i>Обсяг робіт і вартість погоджуються до початку надання правової допомоги.</p>
+  </div>
+</section>
+
+<!-- ============ 07 ABOUT + ADVANTAGES ============ -->
+<section class="section" id="about">
+  <div class="container about">
+    <div class="about__media" data-reveal>
+      <div class="about__photo" data-parallax>
+        <img src="assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="Адвокат Мазур" loading="lazy">
+      </div>
+      <div class="about__stats">
+        <div><b><span data-count="500">0</span>+</b><span>справ і проваджень</span></div>
+        <div><b>5.0</b><span>рейтинг у Google</span></div>
+      </div>
+    </div>
+
+    <div class="about__content">
+      <span class="eyebrow" data-reveal><b>05</b>Про адвоката</span>
+      <h2 class="h2" data-split>Ваші інтереси захищає <span class="gold-text">адвокат Мазур</span></h2>
+      <p class="about__lead" data-reveal>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
+      <p class="about__text" data-reveal>{{ s.about_text }}</p>
+
+      <ul class="creds" data-reveal-group>
+        <li><i class="ic ic-gold ic-id-card"></i><span>Свідоцтво № 0000<small>від 00.00.0000</small></span></li>
+        <li><i class="ic ic-gold ic-scales"></i><span>Член НААУ<small>Київ · вся Україна</small></span></li>
+        <li><i class="ic ic-gold ic-briefcase"></i><span>12+ років<small>адвокатської практики</small></span></li>
+      </ul>
+
+      <div class="adv" data-reveal-group>
+        <div class="adv__item"><i class="ic ic-gold ic-user-focus"></i><div><h3>Особисто</h3><p>Не передаю справи помічникам — ви говорите з адвокатом, який веде захист.</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-eye"></i><div><h3>Чесна оцінка</h3><p>Реальні перспективи та ризики — ще до підписання договору.</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-receipt"></i><div><h3>Прозора ціна</h3><p>Вартість і етапи фіксуються в договорі. Без доплат.</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-lock"></i><div><h3>Адвокатська таємниця</h3><p>Усе, що ви розповідаєте, захищено законом.</p></div></div>
+      </div>
+
+      <div class="about__btns" data-reveal>
+        <a class="btn btn--gold btn--md btn--shine" href="#contact">Безкоштовна консультація</a>
+        <a class="btn btn--ghost btn--md" href="index.html#about">Детальніше про адвоката <i class="ic ic-gold ic-arrow-up-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 REVIEWS ============ -->
+<section class="section section--alt reviews" id="reviews">
+  <div class="container reviews__head">
+    <div>
+      <span class="eyebrow" data-reveal><b>06</b>Відгуки Google</span>
+      <h2 class="h2" data-split>Відгуки клієнтів <span class="gold-text">{{ s.reviews_gold }}</span></h2>
+      <span class="rating" data-reveal><b>5.0</b>{{ stars() }}48 відгуків у Google</span>
+    </div>
+    <div class="arrows" data-reveal>
+      <button class="arrow" type="button" aria-label="Назад" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
+      <button class="arrow arrow--gold" type="button" aria-label="Далі" data-slider-next><i class="ic ic-arrow-right"></i></button>
+    </div>
+  </div>
+
+  <div class="reviews__track" data-slider>
+    {%- for v in s.reviews %}
+    {{ review(v) }}
+    {%- endfor %}
+  </div>
+
+  <div class="container reviews__foot" data-reveal>
+    <a class="link-gold link-gold--underline" href="#">Усі відгуки в Google <i class="ic ic-gold ic-arrow-up-right"></i></a>
+    <a class="reviews__leave" href="#">Залишити відгук</a>
+  </div>
+</section>
+
+<!-- ============ 09 SEO TEXT (visible) ============ -->
+<section class="section seo" id="seo">
+  <div class="container seo__grid">
+    <aside class="seo__aside">
+      <span class="eyebrow" data-reveal>Корисно знати</span>
+      <h2 class="h2 h2--sm" data-reveal>{{ s.seo.h2 }}</h2>
+      <nav class="seo__toc" aria-label="Зміст статті" data-reveal>
+        <a href="#seo-when">Коли потрібен адвокат</a>
+        {%- for sec in s.seo.sections %}
+        <a href="#{{ sec.id }}">{{ sec.toc }}</a>
+        {%- endfor %}
+        <a href="#seo-tips">Що варто знати</a>
+      </nav>
+      <div class="author" data-reveal>
+        <span class="avatar avatar--lg">АМ</span>
+        <div><b>Адвокат Мазур</b><span>Автор матеріалу · оновлено жовтень 2026</span></div>
+      </div>
+    </aside>
+
+    <article class="seo__article">
+      <p class="seo__intro">{{ s.seo.intro|safe }}</p>
+      <p>{{ s.seo.p|safe }}</p>
+
+      <h3 class="h3" id="seo-when">{{ s.seo.when_title }}</h3>
+      <ul class="dlist">
+        {%- for li in s.seo.when %}
+        <li>{{ li }}</li>
+        {%- endfor %}
+      </ul>
+      <blockquote class="quote">{{ s.seo.quote }}</blockquote>
+      {%- for sec in s.seo.sections %}
+
+      <h3 class="h3" id="{{ sec.id }}">{{ sec.h3 }}</h3>
+      {%- for p in sec.p %}
+      <p>{{ p|safe }}</p>
+      {%- endfor %}
+      {%- endfor %}
+
+      <h3 class="h3" id="seo-tips">{{ s.seo.tips_title }}</h3>
+      <div class="tips">
+        {%- for tp in s.seo.tips %}
+        <div class="tip"><span class="tip__n">{{ '%02d' % loop.index }}</span><h4>{{ tp.t }}</h4><p>{{ tp.x }}</p></div>
+        {%- endfor %}
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 10 FAQ ============ -->
+<section class="section section--alt" id="faq">
+  <div class="container faq">
+    <div class="faq__side">
+      <span class="eyebrow" data-reveal><b>07</b>Питання та відповіді</span>
+      <h2 class="h2" data-split>Поширені <span class="gold-text">запитання</span></h2>
+      <p class="sec-head__text" data-reveal>Не знайшли відповідь? Поставте питання напряму — відповім особисто і безкоштовно.</p>
+      <button class="btn btn--ghost btn--md" type="button" data-modal-open data-topic="Інше питання" data-reveal><i class="ic ic-gold ic-chat"></i>Поставити питання</button>
+    </div>
+
+    <div class="faq__list" data-reveal-group>
+      {%- for f in s.faq %}
+      {{ faq_item(f, loop.first) }}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 FINAL FORM ============ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="final">
+      <div class="final__content">
+        <span class="eyebrow" data-reveal>Заявка</span>
+        <h2 class="h2" data-split>{{ s.final_h2 }} <span class="gold-text">{{ s.final_gold }}</span></h2>
+        <p class="final__text" data-reveal>Опишіть ситуацію — я зв'яжуся з вами, проведу безкоштовну консультацію та запропоную план дій.</p>
+
+        <div class="final__docs" data-reveal>
+          <span class="mini-label">Що підготувати до консультації</span>
+          <ul class="check check--cols">
+            {%- for d in s.docs %}
+            <li>{{ d }}</li>
+            {%- endfor %}
+          </ul>
+          <p class="final__hint">Немає всіх документів? Це не перешкода для першого звернення.</p>
+        </div>
+
+        <div class="final__direct" data-reveal>
+          <span>Зручніше напряму?</span>
+          <a class="final__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
+          <div class="socials">
+            <a href="#" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
+            <a href="#" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="ic ic-gold ic-whatsapp"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="final__form" data-reveal>
+        <div class="form-card" data-form-wrap>
+          <div class="form-card__head">
+            <span class="form-card__badge">0 ₴</span>
+            <div><b>Безкоштовна консультація</b><span>Відповім протягом робочого дня</span></div>
+          </div>
+          <form class="form" data-form>
+            <input type="hidden" name="service" value="{{ s.nav }}">
+            <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
+            <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
+            <label class="field field--area"><i class="ic ic-chat"></i><textarea name="message" rows="4" placeholder="Коротко опишіть ситуацію"></textarea></label>
+            <button class="btn btn--gold btn--block btn--lg btn--shine" type="submit">Отримати безкоштовну консультацію</button>
+            <p class="form__policy">Натискаючи кнопку, ви погоджуєтеся на обробку <a href="#">персональних даних</a>. Конфіденційність гарантована адвокатською таємницею.</p>
+          </form>
+          <div class="form-success">
+            <i class="ic ic-gold ic-check-circle"></i>
+            <div><b>Дякую.</b> Заявку отримано. Я зв'яжуся з вами найближчим часом.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="related" data-reveal>
+      <span class="related__title">Інші напрями допомоги</span>
+      <div class="related__list">
+        {%- for r in page.related %}
+        <a href="{{ r.slug }}.html"><i class="ic ic-gold {{ r.icon }}"></i>{{ r.nav }}<i class="ic ic-arrow-up-right"></i></a>
+        {%- endfor %}
+        <a href="index.html#services"><i class="ic ic-gold ic-folder"></i>Усі послуги<i class="ic ic-arrow-up-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

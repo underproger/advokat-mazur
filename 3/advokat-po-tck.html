@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/service.css">
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
+<body class="page-service">
 
 <!-- ============ HEADER ============ -->
 <header class="hdr" id="top">
-  <div class="container hdr__in">
+  <div class="container container--wide hdr__in">
     <a class="logo" href="index.html">
       <span class="logo__name">Адвокат Мазур</span>
       <span class="logo__sub">Кримінальні, адміністративні та транспортні справи</span>
@@ -39,16 +39,16 @@
   </div>
 
   <div class="mega" data-mega>
-    <div class="container">
+    <div class="container container--wide">
       <div class="mega__grid">
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-scales"></i>Корупційні справи</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-coins"></i>Економічні та фінансові злочини</a>
-        <a class="mega__item is-active" href="service.html"><i class="ic ic-gold ic-shield-star"></i>Адвокат по ТЦК та СП</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-documents"></i>Адміністративні правопорушення</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-truck"></i>Ліцензії на перевезення</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-id-card"></i>Чіп-карта водія</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-steering"></i>Код 95</a>
-        <a class="mega__item" href="#"><i class="ic ic-gold ic-globe"></i>Код EORI</a>
+        <a class="mega__item" href="korupciyni-spravy.html"><i class="ic ic-gold ic-scales"></i>Корупційні справи</a>
+        <a class="mega__item" href="ekonomichni-zlochyny.html"><i class="ic ic-gold ic-coins"></i>Економічні та фінансові злочини</a>
+        <a class="mega__item is-active" href="advokat-po-tck.html"><i class="ic ic-gold ic-shield-star"></i>Адвокат по ТЦК та СП</a>
+        <a class="mega__item" href="administratyvni-pravoporushennya.html"><i class="ic ic-gold ic-documents"></i>Адміністративні правопорушення</a>
+        <a class="mega__item" href="licenziya-na-perevezennya.html"><i class="ic ic-gold ic-truck"></i>Ліцензії на перевезення</a>
+        <a class="mega__item" href="chip-karta-vodiya.html"><i class="ic ic-gold ic-id-card"></i>Чіп-карта водія</a>
+        <a class="mega__item" href="kod-95.html"><i class="ic ic-gold ic-steering"></i>Код 95</a>
+        <a class="mega__item" href="kod-eori.html"><i class="ic ic-gold ic-globe"></i>Код EORI</a>
       </div>
     </div>
   </div>
@@ -56,9 +56,10 @@
 
 <main>
 
+
 <!-- ============ 01 HERO ============ -->
 <section class="hero">
-  <div class="container hero__grid">
+  <div class="container container--wide hero__grid">
     <div class="hero__content">
       <nav class="crumbs" aria-label="Хлібні крихти" data-reveal>
         <a href="index.html">Головна</a><i class="ic ic-li-diamond ic-gold"></i>
@@ -463,7 +464,7 @@
           <li>Формування правової позиції</li>
           <li>Скарга, звернення або адвокатський запит</li>
         </ul>
-        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Підготовка документів">Дізнатися вартість</button>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Дізнатися вартість</button>
       </article>
       <article class="price">
         <span class="price__label">Крок 3</span>
@@ -474,7 +475,7 @@
           <li>Процесуальні документи</li>
           <li>Представництво в органах і суді</li>
         </ul>
-        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Комплексний супровід">Обговорити справу</button>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Обговорити справу</button>
       </article>
     </div>
     <p class="price-note" data-reveal><i class="ic ic-gold ic-li-diamond"></i>Обсяг робіт і вартість погоджуються до початку надання правової допомоги.</p>
@@ -486,7 +487,7 @@
   <div class="container about">
     <div class="about__media" data-reveal>
       <div class="about__photo" data-parallax>
-        <img src="assets/img/lawyer-hero.webp" alt="Адвокат Мазур" width="979" height="1322" loading="lazy">
+        <img src="assets/img/lawyer-hero.webp" alt="Адвокат Мазур" loading="lazy">
       </div>
       <div class="about__stats">
         <div><b><span data-count="500">0</span>+</b><span>справ і проваджень</span></div>
@@ -581,7 +582,7 @@
         <a href="#seo-vlk">Оскарження рішення ВЛК</a>
         <a href="#seo-delay">Оформлення відстрочки</a>
         <a href="#seo-represent">Представництво в ТЦК</a>
-        <a href="#seo-tips">Що знати перед оскарженням</a>
+        <a href="#seo-tips">Що варто знати</a>
       </nav>
       <div class="author" data-reveal>
         <span class="avatar avatar--lg">АМ</span>
@@ -606,7 +607,7 @@
 
       <h3 class="h3" id="seo-appeal">Які рішення ТЦК та СП можна оскаржити?</h3>
       <p>Залежно від характеру рішення та наявних підстав можуть оскаржуватися постанови про адміністративні правопорушення, окремі рішення щодо військового обліку, відмови у розгляді чи задоволенні звернень, а також дії чи бездіяльність посадових осіб.</p>
-      <p>Порядок оскарження залежить від предмета спору: в одних випадках передбачено звернення до уповноваженого органу, в інших — захист прав у суді.</p>
+      <p>Порядок оскарження залежить від предмета спору: в одних випадках передбачено звернення до уповноваженого органу, в інших — захист прав у суді. Загальні правила оскарження постанов описані на сторінці про <a href="administratyvni-pravoporushennya.html">адміністративні правопорушення</a>.</p>
 
       <h3 class="h3" id="seo-vlk">Як відбувається оскарження рішення ВЛК?</h3>
       <p>Якщо ви не погоджуєтеся з постановою військово-лікарської комісії, законодавство передбачає механізми її перегляду. Залежно від рівня комісії та характеру спору рішення може переглядатися ВЛК вищого рівня або оскаржуватися в суді.</p>
@@ -637,7 +638,7 @@
       <span class="eyebrow" data-reveal><b>07</b>Питання та відповіді</span>
       <h2 class="h2" data-split>Поширені <span class="gold-text">запитання</span></h2>
       <p class="sec-head__text" data-reveal>Не знайшли відповідь? Поставте питання напряму — відповім особисто і безкоштовно.</p>
-      <button class="btn btn--ghost btn--md" type="button" data-modal-open data-topic="Питання адвокату" data-reveal><i class="ic ic-gold ic-chat"></i>Поставити питання</button>
+      <button class="btn btn--ghost btn--md" type="button" data-modal-open data-topic="Інше питання" data-reveal><i class="ic ic-gold ic-chat"></i>Поставити питання</button>
     </div>
 
     <div class="faq__list" data-reveal-group>
@@ -715,6 +716,7 @@
             <div><b>Безкоштовна консультація</b><span>Відповім протягом робочого дня</span></div>
           </div>
           <form class="form" data-form>
+            <input type="hidden" name="service" value="Адвокат по ТЦК та СП">
             <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
             <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
             <label class="field field--area"><i class="ic ic-chat"></i><textarea name="message" rows="4" placeholder="Коротко опишіть ситуацію"></textarea></label>
@@ -732,9 +734,9 @@
     <div class="related" data-reveal>
       <span class="related__title">Інші напрями допомоги</span>
       <div class="related__list">
-        <a href="#"><i class="ic ic-gold ic-documents"></i>Адміністративні правопорушення<i class="ic ic-arrow-up-right"></i></a>
-        <a href="#"><i class="ic ic-gold ic-scales"></i>Корупційні справи<i class="ic ic-arrow-up-right"></i></a>
-        <a href="#"><i class="ic ic-gold ic-coins"></i>Економічні злочини<i class="ic ic-arrow-up-right"></i></a>
+        <a href="administratyvni-pravoporushennya.html"><i class="ic ic-gold ic-documents"></i>Адміністративні правопорушення<i class="ic ic-arrow-up-right"></i></a>
+        <a href="licenziya-na-perevezennya.html"><i class="ic ic-gold ic-truck"></i>Ліцензії на перевезення<i class="ic ic-arrow-up-right"></i></a>
+        <a href="chip-karta-vodiya.html"><i class="ic ic-gold ic-id-card"></i>Чіп-карта водія<i class="ic ic-arrow-up-right"></i></a>
         <a href="index.html#services"><i class="ic ic-gold ic-folder"></i>Усі послуги<i class="ic ic-arrow-up-right"></i></a>
       </div>
     </div>
@@ -758,14 +760,14 @@
     </div>
     <div class="ftr__col">
       <span class="ftr__title">Послуги</span>
-      <a href="#">Корупційні справи</a>
-      <a href="#">Економічні та фінансові злочини</a>
-      <a href="service.html" class="is-active">Адвокат по ТЦК та СП</a>
-      <a href="#">Адміністративні правопорушення</a>
-      <a href="#">Ліцензії на перевезення</a>
-      <a href="#">Чіп-карта водія</a>
-      <a href="#">Код 95</a>
-      <a href="#">Код EORI</a>
+      <a href="korupciyni-spravy.html">Корупційні справи</a>
+      <a href="ekonomichni-zlochyny.html">Економічні та фінансові злочини</a>
+      <a href="advokat-po-tck.html" class="is-active">Адвокат по ТЦК та СП</a>
+      <a href="administratyvni-pravoporushennya.html">Адміністративні правопорушення</a>
+      <a href="licenziya-na-perevezennya.html">Ліцензії на перевезення</a>
+      <a href="chip-karta-vodiya.html">Чіп-карта водія</a>
+      <a href="kod-95.html">Код 95</a>
+      <a href="kod-eori.html">Код EORI</a>
     </div>
     <div class="ftr__col">
       <span class="ftr__title">Контакти</span>
@@ -801,18 +803,22 @@
 <div class="drawer" data-drawer>
   <div class="drawer__panel">
     <button class="drawer__close" type="button" aria-label="Закрити" data-drawer-close><i class="ic ic-close"></i></button>
-    <span class="logo__name">Адвокат Мазур</span>
+    <a class="logo__name" href="index.html">Адвокат Мазур</a>
     <nav class="drawer__nav">
       <span class="drawer__label">Послуги</span>
-      <a href="#">Корупційні справи</a>
-      <a href="#">Економічні та фінансові злочини</a>
-      <a href="service.html" class="is-active">Адвокат по ТЦК та СП</a>
-      <a href="#">Адміністративні правопорушення</a>
-      <a href="#">Транспортне право</a>
+      <a href="korupciyni-spravy.html">Корупційні справи</a>
+      <a href="ekonomichni-zlochyny.html">Економічні та фінансові злочини</a>
+      <a href="advokat-po-tck.html" class="is-active">Адвокат по ТЦК та СП</a>
+      <a href="administratyvni-pravoporushennya.html">Адміністративні правопорушення</a>
+      <a href="licenziya-na-perevezennya.html">Ліцензії на перевезення</a>
+      <a href="chip-karta-vodiya.html">Чіп-карта водія</a>
+      <a href="kod-95.html">Код 95</a>
+      <a href="kod-eori.html">Код EORI</a>
       <span class="drawer__label">Сайт</span>
-      <a href="index.html#about">Про мене</a>
-      <a href="index.html#reviews">Відгуки</a>
-      <a href="#contacts">Контакти</a>
+      <a href="index.html#about" data-drawer-close>Про мене</a>
+      <a href="index.html#steps" data-drawer-close>Етапи роботи</a>
+      <a href="index.html#reviews" data-drawer-close>Відгуки</a>
+      <a href="#contacts" data-drawer-close>Контакти</a>
     </nav>
     <a class="hdr__phone" href="tel:+380000000000"><i class="ic ic-gold ic-phone"></i>+380 00 000 00 00</a>
     <a class="btn btn--gold btn--md btn--block" href="#contact" data-drawer-close>Безкоштовна консультація</a>
@@ -837,6 +843,8 @@
             <option>Дії посадових осіб ТЦК</option>
             <option>Представництво в суді</option>
             <option>Безкоштовна консультація</option>
+            <option>Зворотний дзвінок</option>
+            <option>Захист у суді</option>
             <option>Інше питання</option>
           </select>
         </div>
@@ -853,6 +861,6 @@
   </div>
 </div>
 
-<script src="assets/js/service.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
