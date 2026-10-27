@@ -226,6 +226,27 @@
     });
   });
 
+  /* ---------- заголовки з довгими словами ----------
+     Слово не переноситься → якщо не вміщається в ширину блоку,
+     поступово зменшуємо шрифт (не менше 55% від CSS-розміру). */
+  var fitEls = $$('h1, h2, h3');
+  var fitTitles = function () {
+    fitEls.forEach(function (el) {
+      el.style.fontSize = '';
+      if (!el.clientWidth || el.scrollWidth <= el.clientWidth + 1) return;
+      var base = parseFloat(getComputedStyle(el).fontSize), size = base;
+      while (el.scrollWidth > el.clientWidth + 1 && size > base * 0.55) {
+        size *= 0.95;
+        el.style.fontSize = size.toFixed(1) + 'px';
+      }
+    });
+  };
+  fitTitles();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+  var fitTimer;
+  window.addEventListener('resize', function () { clearTimeout(fitTimer); fitTimer = setTimeout(fitTitles, 150); });
+  $$('.tabs__btn, .tabs__acc').forEach(function (b) { b.addEventListener('click', function () { setTimeout(fitTitles, 0); }); });
+
   /* ---------- split headings into words ---------- */
   var splitNode = function (node, state) {
     Array.prototype.slice.call(node.childNodes).forEach(function (ch) {

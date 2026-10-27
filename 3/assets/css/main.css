@@ -37,6 +37,7 @@ a{color:inherit;text-decoration:none;transition:color .2s}
 a:hover{color:var(--gold-l)}
 button,input,select,textarea{font-family:inherit}
 h1,h2,h3,h4,p,ul,ol{margin:0}
+h1,h2,h3{max-width:100%}
 ul,ol{padding:0;list-style:none}
 input::placeholder,textarea::placeholder{color:var(--muted-2)}
 select option{background:var(--panel);color:var(--text)}
@@ -745,7 +746,7 @@ select option{background:var(--panel);color:var(--text)}
 @media (max-width:1100px){
   .hdr__nav{display:none}
   .burger{display:flex}
-  .hero__grid{grid-template-columns:1fr}
+  .hero__grid{grid-template-columns:minmax(0,1fr)}
   .hero__media{min-height:520px;margin-top:10px}
   .hero__photo{left:0}
   .free-seal{left:auto;right:20px;top:-40px}
@@ -753,14 +754,14 @@ select option{background:var(--panel);color:var(--text)}
   .sit-grid,.price-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
   .steps__line{display:none}
-  .about{grid-template-columns:1fr}
+  .about{grid-template-columns:minmax(0,1fr)}
   .about__stats{right:20px}
-  .seo__grid{grid-template-columns:1fr}
+  .seo__grid{grid-template-columns:minmax(0,1fr)}
   .seo__aside{position:static}
   .seo__toc{display:none}
-  .faq{grid-template-columns:1fr}
-  .final{grid-template-columns:1fr}
-  .tabs{grid-template-columns:1fr}
+  .faq{grid-template-columns:minmax(0,1fr)}
+  .final{grid-template-columns:minmax(0,1fr)}
+  .tabs{grid-template-columns:minmax(0,1fr)}
   .tabs__nav{display:none}
   .tabs__panels{background:none;border:0;display:flex;flex-direction:column;gap:10px}
   .tabs__panel,.tabs__panel.is-active{display:block;animation:none;border-radius:16px;border:1px solid var(--line);background:#151412}
@@ -794,9 +795,9 @@ select option{background:var(--panel);color:var(--text)}
   .toc{display:none}
   .sec-head--split{flex-direction:column;align-items:flex-start}
   .sec-head--split > div,.sec-head--split > .sec-head__text{flex:none}
-  .sit-grid,.price-grid,.steps,.adv,.creds,.tips,.dlist,.check--cols{grid-template-columns:1fr}
+  .sit-grid,.price-grid,.steps,.adv,.creds,.tips,.dlist,.check--cols{grid-template-columns:minmax(0,1fr)}
   .sit{padding:26px 22px 22px}
-  .tabs__cols{grid-template-columns:1fr}
+  .tabs__cols{grid-template-columns:minmax(0,1fr)}
   .tabs__inner{padding-left:20px;padding-right:20px}
   .band__text{flex-direction:column;align-items:flex-start;gap:6px}
   .band__actions,.band__actions .btn{width:100%}
