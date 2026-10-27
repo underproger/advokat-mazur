@@ -560,10 +560,11 @@ select option{background:var(--panel);color:var(--text)}
 .js [data-split].is-in .w > span{transform:none}
 .js [data-split] .gold-text .w > span,.js [data-split] .w > .gold-text{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
 
+/* data-motion="force" на <html> — ігнорувати системне «зменшення анімації» */
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  .js [data-reveal],.js [data-reveal-group] > *{opacity:1;transform:none}
-  .js [data-split] .w > span{transform:none}
+  html:not([data-motion="force"]) *,html:not([data-motion="force"]) *::before,html:not([data-motion="force"]) *::after{animation:none!important;transition:none!important}
+  html.js:not([data-motion="force"]) [data-reveal],html.js:not([data-motion="force"]) [data-reveal-group] > *{opacity:1;transform:none}
+  html.js:not([data-motion="force"]) [data-split] .w > span{transform:none}
 }
 
 /* =========================================================

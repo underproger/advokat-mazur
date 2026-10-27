@@ -6,7 +6,7 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var isDesktop = function () { return window.matchMedia('(min-width:1101px)').matches; };
-  var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches && doc.getAttribute('data-motion') !== 'force';
 
   /* ---------- mega menu ---------- */
   var megaBtn = $('[data-mega-toggle]'), mega = $('[data-mega]'), hdr = $('.hdr');
