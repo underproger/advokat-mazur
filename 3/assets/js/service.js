@@ -83,19 +83,33 @@
   /* ---------- reviews slider ---------- */
   var track = $('[data-slider]');
   if (track) {
-    var paused = false;
+    var AUTOPLAY = 5000;            // інтервал автопрокрутки, мс
+    var hovered = false, touchedAt = 0, inView = false, lastManual = 0;
+    var behavior = reduce ? 'auto' : 'smooth';
     var step = function (d) {
       var card = $('.review', track); var w = card ? card.getBoundingClientRect().width + 20 : 440;
-      if (d > 0 && track.scrollLeft + track.clientWidth >= track.scrollWidth - 8) track.scrollTo({ left: 0, behavior: 'smooth' });
-      else if (d < 0 && track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-      else track.scrollBy({ left: d * w, behavior: 'smooth' });
+      if (d > 0 && track.scrollLeft + track.clientWidth >= track.scrollWidth - 8) track.scrollTo({ left: 0, behavior: behavior });
+      else if (d < 0 && track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: behavior });
+      else track.scrollBy({ left: d * w, behavior: behavior });
     };
-    $('[data-slider-prev]').addEventListener('click', function () { step(-1); });
-    $('[data-slider-next]').addEventListener('click', function () { step(1); });
-    track.addEventListener('mouseenter', function () { paused = true; });
-    track.addEventListener('mouseleave', function () { paused = false; });
-    track.addEventListener('touchstart', function () { paused = true; }, { passive: true });
-    if (!reduce) setInterval(function () { if (!paused && !document.hidden) step(1); }, 5500);
+    var manual = function (d) { lastManual = Date.now(); step(d); };
+    $('[data-slider-prev]').addEventListener('click', function () { manual(-1); });
+    $('[data-slider-next]').addEventListener('click', function () { manual(1); });
+    // пауза лише поки курсор над слайдером
+    track.addEventListener('mouseenter', function () { hovered = true; });
+    track.addEventListener('mouseleave', function () { hovered = false; });
+    // на тачі — пауза після свайпу, далі автопрокрутка продовжується
+    track.addEventListener('touchstart', function () { touchedAt = Date.now(); }, { passive: true });
+    // крутимо лише коли блок у полі зору
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { inView = en[0].isIntersecting; }, { threshold: 0.3 }).observe(track);
+    } else { inView = true; }
+    setInterval(function () {
+      var now = Date.now();
+      if (hovered || document.hidden || !inView) return;
+      if (now - touchedAt < AUTOPLAY * 2 || now - lastManual < AUTOPLAY) return;
+      step(1);
+    }, AUTOPLAY);
   }
 
   /* ---------- situation cards: spotlight ---------- */
