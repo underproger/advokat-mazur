@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-motion="force">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,8 +9,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/wow.css">
+  <script>try{if(sessionStorage.getItem('mz-v'))document.documentElement.classList.add('pl-quick')}catch(e){}</script>
 </head>
-<body class="page-home">
+<body class="wow page-home">
+
+<!-- прелоадер (повний — лише при першому заході в сесії) і шторка переходу між сторінками -->
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__panel preloader__panel--top"></div>
+  <div class="preloader__panel preloader__panel--bottom"></div>
+  <div class="preloader__inner">
+    <svg class="preloader__mono" viewBox="0 0 200 220"><defs><linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2a6"/><stop offset=".55" stop-color="#e2b85e"/><stop offset="1" stop-color="#b9883a"/></linearGradient></defs><text x="100" y="170" text-anchor="middle">М</text></svg>
+    <span class="preloader__line"><i></i></span>
+    <span class="preloader__meta"><span>Адвокат Мазур</span><b data-preloader-count>0</b></span>
+  </div>
+</div>
+<div class="page-curtain" aria-hidden="true" data-curtain></div>
 
 <!-- ============ HEADER ============ -->
 <header class="hdr" id="top">
@@ -58,17 +72,18 @@
 
 
 <!-- ============ 01 HERO ============ -->
-<section class="h-hero" data-screen-label="01 Hero">
+<section class="h-hero" data-hero data-screen-label="01 Hero">
+  <div class="hero__glow" aria-hidden="true"></div>
   <div class="container container--wide h-hero__grid">
     <div class="h-hero__content">
-      <span class="eyebrow" data-reveal>Індивідуальна адвокатська практика</span>
-      <h1 class="h-hero__title" data-split>Адвокат Мазур — <span class="gold-text">захист прав</span> фізичних осіб і бізнесу</h1>
-      <p class="h-hero__lead" data-reveal>У кримінальних, адміністративних і транспортних справах — особисто, від першої консультації до рішення суду.</p>
-      <div class="h-hero__btns" data-reveal>
+      <span class="eyebrow" data-hero-in>Індивідуальна адвокатська практика</span>
+      <h1 class="h-hero__title" data-chars>Адвокат Мазур — <span class="gold-text">захист прав</span> фізичних осіб і бізнесу</h1>
+      <p class="h-hero__lead" data-hero-in>У кримінальних, адміністративних і транспортних справах — особисто, від першої консультації до рішення суду.</p>
+      <div class="h-hero__btns" data-hero-in>
         <a class="btn btn--gold btn--xl btn--shine" href="#contact">Отримати консультацію</a>
         <button class="btn btn--ghost btn--call" type="button" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-gold ic-phone"></i>Передзвоніть мені</button>
       </div>
-      <div class="h-hero__trust" data-reveal>
+      <div class="h-hero__trust" data-hero-in>
         <span>Свідоцтво № 0000</span><i class="ic ic-li-diamond ic-gold"></i><span>Член НААУ</span><i class="ic ic-li-diamond ic-gold"></i><span>Київ · вся Україна</span>
       </div>
     </div>
@@ -82,7 +97,7 @@
 
 <!-- ============ 02a STATS ============ -->
 <div class="h-stats" data-screen-label="02a Про адвоката — цифри">
-  <div class="h-stats__box" data-reveal>
+  <div class="h-stats__box">
     <div class="h-stats__grid">
       <div class="h-stats__item"><span class="h-stats__num"><span data-count="12">0</span><span class="h-stats__gold">+</span> <span class="h-stats__unit">років</span></span><span class="h-stats__label">адвокатської практики</span></div>
       <div class="h-stats__item"><span class="h-stats__num"><span data-count="500">0</span><span class="h-stats__gold">+</span></span><span class="h-stats__label">справ і проваджень</span></div>
@@ -97,7 +112,7 @@
   <div class="h-about__in">
     <span class="eyebrow" data-reveal>Про адвоката</span>
     <h2 class="h-about__title" data-split>Я захищаю людей і бізнес там, де помилка коштує <span class="gold-text">свободи, ліцензії або репутації</span></h2>
-    <p class="h-about__text" data-reveal>Індивідуальна практика без посередників: кожну справу веду особисто і відповідаю за результат — від аналізу документів до виступу в суді.</p>
+    <p class="h-about__text" data-wow-fill>Індивідуальна практика без посередників: кожну справу веду особисто і відповідаю за результат — від аналізу документів до виступу в суді.</p>
   </div>
 </section>
 
@@ -294,7 +309,7 @@
 <!-- ============ 06 WHY ============ -->
 <section class="h-why" id="why" data-screen-label="06 Чому я">
   <div class="container h-why__in">
-    <div class="h-why__photo" data-reveal>
+    <div class="h-why__photo" data-wow-reveal>
       <div data-parallax><img src="assets/img/lawyer-office.webp" alt="Адвокат Мазур у переговорній кімнаті" width="944" height="1025" loading="lazy"></div>
     </div>
     <div class="h-why__content">
@@ -339,7 +354,7 @@
 <section class="h-contact" id="contact" data-screen-label="07 Заявка">
   <div class="container">
     <div class="h-contact__box" data-reveal>
-      <div class="h-contact__media">
+      <div class="h-contact__media" data-wow-reveal>
         <div data-parallax><img src="assets/img/themis.webp" alt="Адвокат Мазур" width="941" height="941" loading="lazy"></div>
       </div>
       <div class="h-contact__body" data-form-wrap>
@@ -605,6 +620,10 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/wow.js"></script>
 </body>
 </html>

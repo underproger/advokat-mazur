@@ -1,6 +1,6 @@
 /* =========================================================
-   WOW-шар поверх service.css (сторінка service-wow.html)
-   GSAP + ScrollTrigger + Lenis
+   Анімаційний шар для всього сайту (поверх main.css)
+   GSAP + ScrollTrigger + Lenis — див. assets/js/wow.js
    ========================================================= */
 @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
 
@@ -11,7 +11,7 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-stopped{overflow:hidden}
 
 /* ---------- film grain ---------- */
-.wow::after{content:"";position:fixed;inset:-50%;z-index:70;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1.2s steps(6) infinite}
+.wow::after{content:"";position:fixed;inset:-50%;z-index:70;pointer-events:none;opacity:.05;will-change:transform;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1.2s steps(6) infinite}
 @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-2%,6%)}80%{transform:translate(5%,-2%)}100%{transform:translate(0,0)}}
 
 /* ---------- preloader ---------- */
@@ -20,6 +20,8 @@ html.lenis,html.lenis body{height:auto}
 /* якщо wow.js не завантажився — прелоадер зникає сам */
 .preloader{animation:plFallback .5s 3.5s forwards}
 .wow-on .preloader{animation:none}
+.pl-quick .preloader{animation-delay:1.2s}
+.pl-quick .preloader__inner{display:none}
 @keyframes plFallback{to{opacity:0;visibility:hidden}}
 .preloader__panel{position:absolute;left:0;right:0;height:50.5%;background:#0b0a09}
 .preloader__panel--top{top:0;border-bottom:1px solid rgba(226,184,94,.0)}
@@ -35,12 +37,8 @@ html.lenis,html.lenis body{height:auto}
 
 .page-curtain{position:fixed;inset:0;z-index:190;pointer-events:none;background:#0b0a09;transform:translateY(100%)}
 
-/* ---------- scroll progress ---------- */
-.scroll-progress{position:fixed;left:0;right:0;top:0;z-index:60;height:2px;pointer-events:none}
-.scroll-progress i{position:absolute;inset:0;background:var(--grad-btn);transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px rgba(226,184,94,.7)}
-
 /* ---------- custom cursor ---------- */
-.has-cursor,.has-cursor a,.has-cursor button,.has-cursor .sit,.has-cursor .field--select{cursor:none}
+.has-cursor,.has-cursor a,.has-cursor button,.has-cursor .sit,.has-cursor .svc,.has-cursor .field--select{cursor:none}
 .has-cursor input,.has-cursor textarea{cursor:text}
 .cursor{position:fixed;left:0;top:0;z-index:300;pointer-events:none}
 .cursor__dot,.cursor__ring{position:fixed;left:0;top:0;border-radius:50%;pointer-events:none;will-change:transform}
@@ -58,18 +56,16 @@ html.lenis,html.lenis body{height:auto}
 .cursor.is-hidden .cursor__dot,.cursor.is-hidden .cursor__ring{opacity:0}
 
 /* ---------- hero ---------- */
-.dust{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.hero__glow{position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 420px at var(--hx,70%) var(--hy,30%),rgba(226,184,94,.14),transparent 70%);transition:background .1s}
-.hero__grid{position:relative;z-index:1}
-.hero__photo img{animation:none}
-.hero__media{perspective:1200px}
-.hero__photo{will-change:transform,clip-path}
-.hero__title{perspective:800px}
-.hero__title .word{display:inline-block;white-space:nowrap}
-.hero__title .char{display:inline-block;transform-origin:50% 100%;will-change:transform}
-.hero__title .gold-text .char,.hero__title .char.gold{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero__glow{position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 420px at var(--hx,70%) var(--hy,30%),rgba(226,184,94,.14),transparent 70%)}
+.hero__grid,.h-hero__grid{position:relative;z-index:1}
+.wow-on .hero__photo img,.wow-on .h-hero__photo img{animation:none}
+.hero__media,.h-hero__media{perspective:1200px}
+.hero__title,.h-hero__title{perspective:800px}
+[data-chars] .word{display:inline-block;white-space:nowrap}
+[data-chars] .char{display:inline-block;transform-origin:50% 100%}
+[data-chars] .gold-text .char{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-chars] .gold-text{background:none}
 .wow-on [data-hero-in]{opacity:0}
-.hero__title .gold-text{background:none}
 
 /* ---------- headings: blur in ---------- */
 .js [data-split] .w > span{filter:blur(10px);transition:transform 1s var(--ease),filter 1s var(--ease);transition-delay:var(--d,0s)}
@@ -84,13 +80,15 @@ html.lenis,html.lenis body{height:auto}
 @keyframes shimmer{0%{background-position:120% 0}60%,100%{background-position:-20% 0}}
 
 /* ---------- marquee driven by JS ---------- */
-.marquee__track{animation:none;will-change:transform}
+.wow-on .marquee__track{animation:none;will-change:transform}
 
 /* ---------- tilt + glare ---------- */
-.sit,.price{transform-style:preserve-3d;will-change:transform}
-.sit:hover{transform:none}
+/* під час наведення transform керує GSAP — прибираємо CSS-transition з transform, щоб не було ривків */
+.has-cursor .sit,.has-cursor .price,.has-cursor .svc{transform-style:preserve-3d}
+.has-cursor .sit:hover,.has-cursor .svc:hover{transform:none}
+.has-cursor .is-tilt{transition:border-color .3s,background .3s!important}
 .glare{position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;opacity:0;background:radial-gradient(420px 300px at var(--gx,50%) var(--gy,50%),rgba(255,240,200,.16),transparent 60%);transition:opacity .35s}
-.sit:hover .glare,.price:hover .glare{opacity:1}
+.sit:hover .glare,.price:hover .glare,.svc:hover .glare{opacity:1}
 .price > *:not(.glare):not(.price__ribbon){position:relative;z-index:1}
 
 /* ---------- tabs indicator ---------- */
@@ -101,6 +99,7 @@ html.lenis,html.lenis body{height:auto}
 .band__box{will-change:transform}
 
 /* ---------- steps ---------- */
+html:not(.wow-on) .steps__fill{transform:scaleX(1)}
 .step .tile{transition:box-shadow .5s,transform .5s var(--ease)}
 .step.is-lit .tile{box-shadow:0 0 0 8px #161513,0 0 40px rgba(226,184,94,.45),0 10px 30px rgba(0,0,0,.6);transform:translateY(-4px)}
 
@@ -111,8 +110,8 @@ html.lenis,html.lenis body{height:auto}
 .review{will-change:transform}
 
 /* ---------- final: animated glow border ---------- */
-.final{position:relative;isolation:isolate}
-.final::before{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:29px;padding:1px;background:conic-gradient(from var(--ang),rgba(226,184,94,0) 0deg,rgba(226,184,94,0) 250deg,#f8e2a6 300deg,#e2b85e 320deg,rgba(226,184,94,0) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ang 6s linear infinite}
+.final,.h-contact__box{position:relative;isolation:isolate}
+.final::before,.h-contact__box::before{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:29px;padding:1px;background:conic-gradient(from var(--ang),rgba(226,184,94,0) 0deg,rgba(226,184,94,0) 250deg,#f8e2a6 300deg,#e2b85e 320deg,rgba(226,184,94,0) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ang 6s linear infinite}
 .form-card{position:relative}
 .form-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 0 1px rgba(226,184,94,.0),0 0 60px rgba(226,184,94,.0);transition:box-shadow .5s}
 .form-card:focus-within::after{box-shadow:0 0 0 1px rgba(226,184,94,.6),0 0 60px rgba(226,184,94,.18)}

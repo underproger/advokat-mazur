@@ -1,6 +1,6 @@
 {#- Базовий шаблон: head, шапка, футер, оверлеї. Змінні: page, services, site -#}
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-motion="force">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/wow.css">
+  <script>try{if(sessionStorage.getItem('mz-v'))document.documentElement.classList.add('pl-quick')}catch(e){}</script>
 </head>
-<body class="{{ page.body_class }}">
+<body class="wow {{ page.body_class }}">
+
+<!-- прелоадер (повний — лише при першому заході в сесії) і шторка переходу між сторінками -->
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__panel preloader__panel--top"></div>
+  <div class="preloader__panel preloader__panel--bottom"></div>
+  <div class="preloader__inner">
+    <svg class="preloader__mono" viewBox="0 0 200 220"><defs><linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2a6"/><stop offset=".55" stop-color="#e2b85e"/><stop offset="1" stop-color="#b9883a"/></linearGradient></defs><text x="100" y="170" text-anchor="middle">М</text></svg>
+    <span class="preloader__line"><i></i></span>
+    <span class="preloader__meta"><span>Адвокат Мазур</span><b data-preloader-count>0</b></span>
+  </div>
+</div>
+<div class="page-curtain" aria-hidden="true" data-curtain></div>
 
 <!-- ============ HEADER ============ -->
 <header class="hdr" id="top">
@@ -152,6 +166,10 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/wow.js"></script>
 </body>
 </html>

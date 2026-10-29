@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-motion="force">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,8 +9,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/wow.css">
+  <script>try{if(sessionStorage.getItem('mz-v'))document.documentElement.classList.add('pl-quick')}catch(e){}</script>
 </head>
-<body class="page-service">
+<body class="wow page-service">
+
+<!-- прелоадер (повний — лише при першому заході в сесії) і шторка переходу між сторінками -->
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__panel preloader__panel--top"></div>
+  <div class="preloader__panel preloader__panel--bottom"></div>
+  <div class="preloader__inner">
+    <svg class="preloader__mono" viewBox="0 0 200 220"><defs><linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2a6"/><stop offset=".55" stop-color="#e2b85e"/><stop offset="1" stop-color="#b9883a"/></linearGradient></defs><text x="100" y="170" text-anchor="middle">М</text></svg>
+    <span class="preloader__line"><i></i></span>
+    <span class="preloader__meta"><span>Адвокат Мазур</span><b data-preloader-count>0</b></span>
+  </div>
+</div>
+<div class="page-curtain" aria-hidden="true" data-curtain></div>
 
 <!-- ============ HEADER ============ -->
 <header class="hdr" id="top">
@@ -58,31 +72,32 @@
 
 
 <!-- ============ 01 HERO ============ -->
-<section class="hero">
+<section class="hero" data-hero>
+  <div class="hero__glow" aria-hidden="true"></div>
   <div class="container container--wide hero__grid">
     <div class="hero__content">
-      <nav class="crumbs" aria-label="Хлібні крихти" data-reveal>
+      <nav class="crumbs" aria-label="Хлібні крихти" data-hero-in>
         <a href="index.html">Головна</a><i class="ic ic-li-diamond ic-gold"></i>
         <a href="index.html#services">Послуги</a><i class="ic ic-li-diamond ic-gold"></i>
         <span>Корупційні справи</span>
       </nav>
 
-      <span class="eyebrow" data-reveal>Кримінальне право</span>
-      <h1 class="hero__title" data-split>Адвокат по <span class="gold-text">корупційним справам</span></h1>
-      <p class="hero__lead" data-reveal>Професійна допомога фізичним і юридичним особам в антикорупційних справах: від протоколу чи підозри до розгляду в суді. Корупційні справи — один з основних напрямів моєї практики.</p>
+      <span class="eyebrow" data-hero-in>Кримінальне право</span>
+      <h1 class="hero__title" data-chars>Адвокат по <span class="gold-text">корупційним справам</span></h1>
+      <p class="hero__lead" data-hero-in>Професійна допомога фізичним і юридичним особам в антикорупційних справах: від протоколу чи підозри до розгляду в суді. Корупційні справи — один з основних напрямів моєї практики.</p>
 
-      <ul class="hero__list" data-reveal-group>
+      <ul class="hero__list" data-hero-in>
         <li><i class="ic ic-li-diamond ic-gold"></i>Захист підозрюваних, обвинувачених і свідків</li>
         <li><i class="ic ic-li-diamond ic-gold"></i>Протоколи про правопорушення, пов'язані з корупцією</li>
         <li><i class="ic ic-li-diamond ic-gold"></i>НАЗК, е-декларування та антикорупційні програми</li>
       </ul>
 
-      <div class="hero__btns" data-reveal>
+      <div class="hero__btns" data-hero-in>
         <a class="btn btn--gold btn--lg btn--shine" href="#contact">Безкоштовна консультація</a>
         <button class="btn btn--ghost btn--lg" type="button" data-modal-open data-topic="Інше питання"><i class="ic ic-gold ic-chat"></i>Описати свою ситуацію</button>
       </div>
 
-      <div class="hero__trust" data-reveal>
+      <div class="hero__trust" data-hero-in>
         <span><i class="ic ic-gold ic-lock"></i>Конфіденційно</span>
         <span><i class="ic ic-gold ic-globe"></i>Онлайн або в офісі</span>
         <span><i class="ic ic-gold ic-user-focus"></i>Справу веду особисто</span>
@@ -181,6 +196,7 @@
 
     <div class="tabs" data-tabs>
       <div class="tabs__nav" role="tablist" data-reveal-group>
+        <span class="tabs__indicator" aria-hidden="true"></span>
         <button class="tabs__btn is-active" type="button" role="tab" data-tab="0"><span class="tabs__num">01</span><span class="tabs__label">Кримінальні провадження</span><i class="ic ic-arrow-right"></i></button>
         <button class="tabs__btn" type="button" role="tab" data-tab="1"><span class="tabs__num">02</span><span class="tabs__label">Протоколи та суд</span><i class="ic ic-arrow-right"></i></button>
         <button class="tabs__btn" type="button" role="tab" data-tab="2"><span class="tabs__num">03</span><span class="tabs__label">НАЗК і е-декларування</span><i class="ic ic-arrow-right"></i></button>
@@ -333,9 +349,9 @@
     </div>
   </div>
   <div class="container">
-    <div class="band__box" data-reveal>
+    <div class="band__box" data-wow-band>
       <div class="band__text">
-        <span class="band__price">0 ₴</span>
+        <span class="band__price shimmer-dark">0 ₴</span>
         <div>
           <h2 class="band__title">Перша консультація — безкоштовно</h2>
           <p>Опишіть ситуацію та надішліть документи. Я оціню перспективи й скажу, які кроки варто зробити. Договір — лише якщо ви вирішите продовжити.</p>
@@ -364,28 +380,28 @@
       <p class="sec-head__text" data-reveal>Від першого звернення до реалізації погодженої стратегії захисту.</p>
     </div>
 
-    <ol class="steps" data-steps>
+    <ol class="steps" data-wow-steps>
       <li class="steps__line" aria-hidden="true"><span class="steps__fill"></span></li>
-      <li class="step" data-reveal>
+      <li class="step">
         <span class="step__badge">01</span>
         <span class="tile tile--xl"><i class="ic ic-gold ic-consult"></i></span>
         <h3 class="step__title">Безкоштовна консультація</h3>
         <p class="step__text">Ви описуєте проблему та надаєте документи, які маєте.</p>
         <span class="step__tag">0 ₴</span>
       </li>
-      <li class="step" data-reveal>
+      <li class="step">
         <span class="step__badge">02</span>
         <span class="tile tile--xl"><i class="ic ic-gold ic-search"></i></span>
         <h3 class="step__title">Правовий аналіз</h3>
         <p class="step__text">Вивчаю матеріали, перевіряю підстави рішень і визначаю варіанти захисту.</p>
       </li>
-      <li class="step" data-reveal>
+      <li class="step">
         <span class="step__badge">03</span>
         <span class="tile tile--xl"><i class="ic ic-gold ic-receipt"></i></span>
         <h3 class="step__title">Договір і позиція</h3>
         <p class="step__text">Узгоджуємо дії, обсяг роботи та фіксовану вартість у договорі.</p>
       </li>
-      <li class="step" data-reveal>
+      <li class="step">
         <span class="step__badge">04</span>
         <span class="tile tile--xl"><i class="ic ic-gold ic-court"></i></span>
         <h3 class="step__title">Комплексний захист</h3>
@@ -406,7 +422,7 @@
       <p class="sec-head__text" data-reveal>Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.</p>
     </div>
 
-    <div class="price-grid" data-reveal-group>
+    <div class="price-grid" data-wow-fan>
       <article class="price price--free">
         <span class="price__ribbon">Безкоштовно</span>
         <span class="price__label">Крок 1</span>
@@ -450,7 +466,7 @@
 <section class="section" id="about">
   <div class="container about">
     <div class="about__media" data-reveal>
-      <div class="about__photo" data-parallax>
+      <div class="about__photo" data-parallax data-wow-reveal>
         <img src="assets/img/lawyer-hero.webp" alt="Адвокат Сергій Мазур" loading="lazy">
       </div>
       <div class="about__stats">
@@ -462,7 +478,7 @@
     <div class="about__content">
       <span class="eyebrow" data-reveal><b>05</b>Про адвоката</span>
       <h2 class="h2" data-split>Ваші інтереси захищає <span class="gold-text">адвокат Мазур</span></h2>
-      <p class="about__lead" data-reveal>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
+      <p class="about__lead" data-wow-fill>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
       <p class="about__text" data-reveal>Розгляд корупційних справ має негативні наслідки для репутації, а інколи — і кримінальні санкції. Захистити власні інтереси без знання законодавства складно, особливо коли правоохоронці діють з порушеннями. Моє завдання — вирішити більшість проблем ще на досудовій стадії та особисто супроводжувати справу.</p>
 
       <ul class="creds" data-reveal-group>
@@ -550,7 +566,7 @@
     </aside>
 
     <article class="seo__article">
-      <p class="seo__intro">Професійний адвокат по корупційним справам захищає інтереси клієнта у випадках підозри чи звинувачення в корупції — зокрема тоді, коли під час розслідування, вручення підозри чи інших дій правоохоронців було порушено права людини. Це можуть бути як адміністративні правопорушення, пов'язані з корупцією, так і кримінальні справи.</p>
+      <p class="seo__intro" data-wow-fill>Професійний адвокат по корупційним справам захищає інтереси клієнта у випадках підозри чи звинувачення в корупції — зокрема тоді, коли під час розслідування, вручення підозри чи інших дій правоохоронців було порушено права людини. Це можуть бути як адміністративні правопорушення, пов'язані з корупцією, так і кримінальні справи.</p>
       <p>Окремі норми законодавства передбачають обов'язкову участь адвоката, включно з деякими процесуальними діями в корупційних справах. Тому залучення спеціалізованого захисника — необхідна умова ефективного захисту.</p>
 
       <h3 class="h3" id="seo-when">Коли потрібен адвокат по корупційним справам</h3>
@@ -562,7 +578,7 @@
         <li>Потрібна довідка про відсутність корупційних правопорушень.</li>
         <li>Компанії потрібна антикорупційна програма чи захист від рейдерства.</li>
       </ul>
-      <blockquote class="quote">Спеціалізований адвокат здатен вирішити більшість проблем ще на досудовій стадії — до того, як справа вдарить по репутації.</blockquote>
+      <blockquote class="quote" data-wow-fill>Спеціалізований адвокат здатен вирішити більшість проблем ще на досудовій стадії — до того, як справа вдарить по репутації.</blockquote>
 
       <h3 class="h3" id="seo-why">Чому в корупційній справі потрібен адвокат?</h3>
       <p>Багато корупційних злочинів належать до тяжких і особливо тяжких. Захищатися самостійно без знання законодавства в таких справах складно — особливо, якщо правоохоронні органи діють з порушеннями.</p>
@@ -819,6 +835,10 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/wow.js"></script>
 </body>
 </html>

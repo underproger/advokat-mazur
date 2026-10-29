@@ -1,6 +1,7 @@
 /* =========================================================
-   WOW-шар для service-wow.html
-   Потрібні: gsap, ScrollTrigger, Lenis (CDN) + service.js
+   Адвокат Мазур — анімаційний шар для всього сайту
+   Потрібні: gsap, ScrollTrigger, Lenis (CDN) + main.js
+   Без бібліотек сайт працює на базових анімаціях main.js.
    ========================================================= */
 (function () {
   'use strict';
@@ -9,7 +10,6 @@
   var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches && !force;
   var pre = document.querySelector('[data-preloader]');
 
-  // без бібліотек або при reduced-motion — звичайна сторінка
   if (!window.gsap || !window.ScrollTrigger || reduce) {
     if (pre) pre.remove();
     return;
@@ -17,19 +17,33 @@
 
   html.classList.add('wow-on');
   gsap.registerPlugin(ScrollTrigger);
+  gsap.config({ nullTargetWarn: false });
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var mm = gsap.matchMedia();
-  var tocH = function () { var t = $('.toc'); return t ? t.offsetHeight : 64; };
+  var tocH = function () { var t = $('.toc'); return t && t.offsetHeight ? t.offsetHeight : 0; };
   var clamp = gsap.utils.clamp;
 
+  // одноразова поява елементів при скролі: fromTo + clearProps, щоб нічого не «застрягало»
+  var reveal = function (targets, from, opts) {
+    targets = gsap.utils.toArray(targets);
+    if (!targets.length) return;
+    opts = opts || {};
+    var to = { opacity: 1, x: 0, y: 0, rotation: 0, duration: opts.duration || 1, ease: opts.ease || 'expo.out', stagger: opts.stagger || 0, clearProps: 'transform,opacity' };
+    gsap.set(targets, from);
+    ScrollTrigger.create({
+      trigger: opts.trigger || targets[0], start: opts.start || 'top 88%', once: true,
+      onEnter: function () { gsap.to(targets, to); }
+    });
+  };
+
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.scrollTo(0, 0);
+  if (!location.hash) window.scrollTo(0, 0);
 
   /* =======================================================
-     1. Smooth scroll (Lenis)
+     1. Плавний скрол (Lenis)
      ======================================================= */
   var lenis = null;
   if (window.Lenis) {
@@ -38,14 +52,13 @@
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
     gsap.ticker.lagSmoothing(0);
     $$('.modal, .drawer__panel, .cselect__list').forEach(function (e) { e.setAttribute('data-lenis-prevent', ''); });
-    // модалка / меню блокують body → зупиняємо Lenis
     new MutationObserver(function () {
       document.body.classList.contains('is-locked') ? lenis.stop() : lenis.start();
     }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
   var scrollTo = function (target, opts) {
     if (lenis) setTimeout(function () { lenis.scrollTo(target, opts || {}); }, 30);
-    else window.scrollTo({ top: typeof target === 'number' ? target : target.getBoundingClientRect().top + scrollY, behavior: 'smooth' });
+    else window.scrollTo({ top: typeof target === 'number' ? target : target.getBoundingClientRect().top + scrollY - 16, behavior: 'smooth' });
   };
 
   // якорі, «нагору» та перехід між сторінками
@@ -55,7 +68,7 @@
     if (top) { e.preventDefault(); e.stopPropagation(); scrollTo(0, { duration: 1.6 }); return; }
 
     var a = e.target.closest('a[href]');
-    if (!a || e.defaultPrevented) return;
+    if (!a || e.defaultPrevented || e.button !== 0) return;
     var href = a.getAttribute('href');
     if (href.charAt(0) === '#') {
       if (href.length < 2) return;
@@ -63,17 +76,23 @@
       if (t) { e.preventDefault(); scrollTo(t, { offset: -(tocH() + 16), duration: 1.4 }); }
       return;
     }
-    // перехід на іншу сторінку — шторка
-    if (/^(tel:|mailto:|javascript:)/.test(href) || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (/^(tel:|mailto:|viber:|javascript:|https?:)/.test(href) || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    // якір на поточній сторінці у вигляді «index.html#about»
+    var url = new URL(a.href, location.href);
+    if (url.pathname === location.pathname && url.hash) {
+      var t2 = $(url.hash);
+      if (t2) { e.preventDefault(); scrollTo(t2, { offset: -(tocH() + 16), duration: 1.4 }); }
+      return;
+    }
     if (curtain) {
       e.preventDefault();
-      gsap.fromTo(curtain, { yPercent: 100 }, { yPercent: 0, duration: 0.7, ease: 'expo.inOut', onComplete: function () { location.href = a.href; } });
+      gsap.fromTo(curtain, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: 'expo.inOut', onComplete: function () { location.href = a.href; } });
     }
   }, true);
   window.addEventListener('pageshow', function (e) { if (e.persisted && curtain) gsap.set(curtain, { yPercent: 100 }); });
 
   /* =======================================================
-     2. Hero: розбивка H1 на літери
+     2. H1 по літерах + scramble для «назв блоків»
      ======================================================= */
   var h1 = $('[data-chars]');
   var chars = [];
@@ -97,15 +116,12 @@
   };
   if (h1) splitChars(h1);
 
-  /* =======================================================
-     3. Scramble для eyebrow
-     ======================================================= */
   var GLYPHS = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯ0123456789◆';
   var scramble = function (el) {
     var node = null;
     Array.prototype.slice.call(el.childNodes).forEach(function (n) { if (n.nodeType === 3 && n.textContent.trim()) node = n; });
     if (!node) return;
-    var final = node.textContent, len = final.length, frame = 0, total = 26;
+    var final = node.textContent, len = final.length, frame = 0, total = 24;
     var tick = function () {
       var p = frame / total, out = '';
       for (var i = 0; i < len; i++) {
@@ -119,117 +135,81 @@
   };
 
   /* =======================================================
-     4. Прелоадер → інтро hero
+     3. Прелоадер → інтро першого екрана
      ======================================================= */
+  var heroPhoto = $('.hero__photo, .h-hero__photo');
   var intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
-  intro
-    .from('.hdr__in > *', { y: -24, opacity: 0, duration: 1, stagger: 0.08 }, 0)
-    .fromTo('.hero__photo', { clipPath: 'inset(100% 0% 0% 0% round 28px)', scale: 1.18 },
-      { clipPath: 'inset(0% 0% 0% 0% round 28px)', scale: 1, duration: 1.7, ease: 'expo.inOut' }, 0)
-    .from(chars, { yPercent: 120, rotateX: -95, opacity: 0, duration: 1.2, stagger: 0.035 }, 0.25)
-    .fromTo('[data-hero-in]', { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.09, ease: 'power3.out' }, 0.45)
-    .add(function () { $$('[data-hero] .eyebrow').forEach(scramble); }, 0.5)
-    .from('.free-seal', { scale: 0, rotation: -200, duration: 1.4, ease: 'back.out(1.5)' }, 0.9)
-    .from('.hero__card', { x: -70, opacity: 0, duration: 1.1 }, 1.05)
-    .from('.toc', { y: 30, opacity: 0, duration: 0.9 }, 1.1);
-
-  var heroCount = $('.hero__card [data-count]');
-  if (heroCount) {
-    var hc = { v: 0 };
-    intro.to(hc, { v: +heroCount.getAttribute('data-count'), duration: 1.6, ease: 'power3.out', onUpdate: function () { heroCount.textContent = Math.round(hc.v); } }, 1.1);
-  }
+  intro.fromTo('.hdr__in > *', { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.08, clearProps: 'transform,opacity' }, 0);
+  if (heroPhoto) intro.fromTo(heroPhoto, { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.15 },
+    { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.6, ease: 'expo.inOut', clearProps: 'clipPath,transform' }, 0);
+  if (chars.length) intro.fromTo(chars, { yPercent: 120, rotateX: -95, opacity: 0 }, { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.2, stagger: 0.03, clearProps: 'transform,opacity' }, 0.25);
+  intro.fromTo('[data-hero-in]', { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.09, ease: 'power3.out', clearProps: 'transform' }, 0.45)
+    .add(function () { $$('[data-hero] .eyebrow').forEach(scramble); }, 0.5);
+  if ($('.free-seal')) intro.fromTo('.free-seal', { scale: 0, rotation: -200 }, { scale: 1, rotation: 0, duration: 1.4, ease: 'back.out(1.5)' }, 0.9);
+  if ($('.hero__card')) intro.fromTo('.hero__card', { x: -70, opacity: 0 }, { x: 0, opacity: 1, duration: 1.1 }, 1.05);
+  if ($('.h-stats__box')) intro.fromTo('.h-stats__box', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, clearProps: 'transform,opacity' }, 1.0);
+  if ($('.toc')) intro.fromTo('.toc', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, clearProps: 'transform,opacity' }, 1.1);
 
   var startPage = function () {
     if (lenis) lenis.start();
     intro.play();
     ScrollTrigger.refresh();
+    if (location.hash) { var t = $(location.hash); if (t) scrollTo(t, { offset: -(tocH() + 16), immediate: true }); }
   };
+
+  var quick = html.classList.contains('pl-quick');
+  try { sessionStorage.setItem('mz-v', '1'); } catch (e) { /* noop */ }
 
   if (pre) {
     if (lenis) lenis.stop();
-    var count = $('[data-preloader-count]'), cnt = { v: 0 };
-    gsap.timeline({ onComplete: function () { pre.remove(); } })
-      .to('.preloader__mono text', { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
-      .to('.preloader__line i', { scaleX: 1, duration: 1.35, ease: 'power3.inOut' }, 0)
-      .to(cnt, { v: 100, duration: 1.35, ease: 'power3.inOut', onUpdate: function () { count.textContent = Math.round(cnt.v); } }, 0)
-      .to('.preloader__mono text', { fillOpacity: 1, strokeOpacity: 0, duration: 0.5 }, 1.0)
-      .to('.preloader__inner', { y: -24, opacity: 0, duration: 0.45, ease: 'power2.in' }, 1.55)
-      .add(function () { pre.classList.add('is-done'); }, 1.8)
-      .to('.preloader__panel--top', { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, 1.8)
-      .to('.preloader__panel--bottom', { yPercent: 100, duration: 1.1, ease: 'expo.inOut' }, 1.8)
-      .add(startPage, 2.0);
+    var done = function () { pre.remove(); };
+    if (quick) {
+      // повторний перехід — лише розкриття шторок
+      gsap.timeline({ onComplete: done })
+        .add(function () { pre.classList.add('is-done'); }, 0)
+        .to('.preloader__panel--top', { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 0.05)
+        .to('.preloader__panel--bottom', { yPercent: 100, duration: 0.9, ease: 'expo.inOut' }, 0.05)
+        .add(startPage, 0.2);
+    } else {
+      var count = $('[data-preloader-count]'), cnt = { v: 0 };
+      gsap.timeline({ onComplete: done })
+        .to('.preloader__mono text', { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
+        .to('.preloader__line i', { scaleX: 1, duration: 1.35, ease: 'power3.inOut' }, 0)
+        .to(cnt, { v: 100, duration: 1.35, ease: 'power3.inOut', onUpdate: function () { count.textContent = Math.round(cnt.v); } }, 0)
+        .to('.preloader__mono text', { fillOpacity: 1, strokeOpacity: 0, duration: 0.5 }, 1.0)
+        .to('.preloader__inner', { y: -24, opacity: 0, duration: 0.45, ease: 'power2.in' }, 1.55)
+        .add(function () { pre.classList.add('is-done'); }, 1.8)
+        .to('.preloader__panel--top', { yPercent: -100, duration: 1.1, ease: 'expo.inOut' }, 1.8)
+        .to('.preloader__panel--bottom', { yPercent: 100, duration: 1.1, ease: 'expo.inOut' }, 1.8)
+        .add(startPage, 2.0);
+    }
   } else startPage();
 
   /* =======================================================
-     5. Hero: світло за мишкою, 3D-нахил, золотий пил
+     4. Перший екран: світло за мишкою + легкий 3D-нахил
      ======================================================= */
   var hero = $('[data-hero]');
   if (hero && fine) {
-    var media = $('.hero__media'), seal = $('.free-seal'), card = $('.hero__card');
-    var q = function (el, p, d) { return gsap.quickTo(el, p, { duration: d || 0.9, ease: 'power3' }); };
+    var media = $('.hero__media, .h-hero__media'), seal = $('.free-seal'), card = $('.hero__card');
+    var q = function (el, p, d) { return el ? gsap.quickTo(el, p, { duration: d || 0.9, ease: 'power3' }) : function () {}; };
     var mRY = q(media, 'rotationY'), mRX = q(media, 'rotationX');
     var sX = q(seal, 'x', 1.1), sY = q(seal, 'y', 1.1), cX = q(card, 'x'), cY = q(card, 'y');
-    hero.addEventListener('mousemove', function (e) {
+    var raf = 0, last = null;
+    var apply = function () {
+      raf = 0;
       var r = hero.getBoundingClientRect();
-      var nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
-      mRY(nx * 9); mRX(-ny * 7);
-      sX(nx * 46); sY(ny * 46); cX(nx * -28); cY(ny * -28);
-      hero.style.setProperty('--hx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-      hero.style.setProperty('--hy', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
-    });
+      var nx = (last.clientX - r.left) / r.width - 0.5, ny = (last.clientY - r.top) / r.height - 0.5;
+      mRY(nx * 6); mRX(-ny * 5);
+      sX(nx * 36); sY(ny * 36); cX(nx * -22); cY(ny * -22);
+      hero.style.setProperty('--hx', ((nx + 0.5) * 100).toFixed(1) + '%');
+      hero.style.setProperty('--hy', ((ny + 0.5) * 100).toFixed(1) + '%');
+    };
+    hero.addEventListener('mousemove', function (e) { last = e; if (!raf) raf = requestAnimationFrame(apply); });
     hero.addEventListener('mouseleave', function () { mRY(0); mRX(0); sX(0); sY(0); cX(0); cY(0); });
   }
 
-  var canvas = $('[data-dust]');
-  if (canvas) (function () {
-    var ctx = canvas.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var W = 0, H = 0, parts = [], mouse = { x: -999, y: -999 }, running = false;
-    var make = function () {
-      var n = Math.min(120, Math.round(W * H / 12000));
-      parts = [];
-      for (var i = 0; i < n; i++) parts.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: 0.4 + Math.random() * 1.6, vx: (Math.random() - 0.5) * 0.18, vy: -(0.08 + Math.random() * 0.35),
-        a: 0.25 + Math.random() * 0.6, t: Math.random() * 6.28
-      });
-    };
-    var resize = function () {
-      W = canvas.offsetWidth; H = canvas.offsetHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      make();
-    };
-    var draw = function () {
-      if (!running) return;
-      ctx.clearRect(0, 0, W, H);
-      for (var i = 0; i < parts.length; i++) {
-        var p = parts[i];
-        var dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
-        if (d2 < 16000) { var f = (16000 - d2) / 16000 * 1.6; var d = Math.sqrt(d2) || 1; p.x += dx / d * f; p.y += dy / d * f; }
-        p.x += p.vx; p.y += p.vy; p.t += 0.03;
-        if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
-        if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
-        var al = p.a * (0.55 + 0.45 * Math.sin(p.t));
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283);
-        ctx.fillStyle = 'rgba(240,207,127,' + al.toFixed(3) + ')'; ctx.fill();
-        if (p.r > 1.4) {
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, 6.283);
-          ctx.fillStyle = 'rgba(226,184,94,' + (al * 0.08).toFixed(3) + ')'; ctx.fill();
-        }
-      }
-      requestAnimationFrame(draw);
-    };
-    resize();
-    window.addEventListener('resize', resize);
-    hero.addEventListener('mousemove', function (e) { var r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
-    hero.addEventListener('mouseleave', function () { mouse.x = mouse.y = -999; });
-    new IntersectionObserver(function (en) {
-      var v = en[0].isIntersecting;
-      if (v && !running) { running = true; draw(); } else if (!v) running = false;
-    }).observe(canvas);
-  })();
-
   /* =======================================================
-     6. Кастомний курсор
+     5. Кастомний курсор
      ======================================================= */
   if (fine) (function () {
     var cur = document.createElement('div');
@@ -240,7 +220,7 @@
     var dot = $('.cursor__dot', cur), ring = $('.cursor__ring', cur), label = $('.cursor__label', cur);
     var dX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3' }), dY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3' });
     var rX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' }), rY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
-    var LABELS = [['.sit', 'Обрати'], ['.reviews__track', 'Тягни'], ['.tabs__btn', 'Дивитись']];
+    var LABELS = [['.sit', 'Обрати'], ['.svc', 'Відкрити'], ['.reviews__track', 'Тягни'], ['.tabs__btn', 'Дивитись']];
 
     window.addEventListener('mousemove', function (e) {
       cur.classList.remove('is-hidden');
@@ -248,6 +228,7 @@
     });
     document.addEventListener('mouseover', function (e) {
       var t = e.target, lab = '';
+      if (!t.closest) return;
       for (var i = 0; i < LABELS.length; i++) if (t.closest(LABELS[i][0])) { lab = LABELS[i][1]; break; }
       var isText = !!t.closest('input, textarea');
       var isLink = !lab && !isText && !!t.closest('a, button, .field--select, .cselect__opt, label');
@@ -262,52 +243,49 @@
   })();
 
   /* =======================================================
-     7. Магнітні кнопки
+     6. Магнітні кнопки
      ======================================================= */
-  if (fine) $$('.btn--gold:not(.mbar__btn), .btn--dark, .btn--ghost, .arrow, .fab, .socials a, .hdr__phone, .band__msg a').forEach(function (el) {
+  if (fine) $$('.btn--gold:not(.mbar__btn), .btn--dark, .btn--ghost, .arrow, .fab, .totop, .socials a, .hdr__phone, .band__msg a, .more-btn, .svc__more').forEach(function (el) {
     el.setAttribute('data-magnetic', '');
     var xTo = gsap.quickTo(el, 'x', { duration: 0.6, ease: 'power3' }), yTo = gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power3' });
     el.addEventListener('mousemove', function (e) {
       var r = el.getBoundingClientRect();
-      xTo(clamp(-16, 16, (e.clientX - r.left - r.width / 2) * 0.3));
-      yTo(clamp(-12, 12, (e.clientY - r.top - r.height / 2) * 0.4));
+      xTo(clamp(-14, 14, (e.clientX - r.left - r.width / 2) * 0.3));
+      yTo(clamp(-10, 10, (e.clientY - r.top - r.height / 2) * 0.4));
     });
     el.addEventListener('mouseleave', function () { xTo(0); yTo(0); });
   });
 
   /* =======================================================
-     8. 3D-нахил карток
+     7. 3D-нахил карток
      ======================================================= */
-  if (fine) $$('.sit, .price').forEach(function (card) {
-    if (card.classList.contains('price')) { var g = document.createElement('span'); g.className = 'glare'; card.prepend(g); }
+  if (fine) $$('.sit, .price, .svc').forEach(function (card) {
+    if (!card.querySelector('.glare')) { var g = document.createElement('span'); g.className = 'glare'; card.prepend(g); }
     gsap.set(card, { transformPerspective: 900 });
     var rx = gsap.quickTo(card, 'rotationX', { duration: 0.6, ease: 'power3' }), ry = gsap.quickTo(card, 'rotationY', { duration: 0.6, ease: 'power3' });
+    card.addEventListener('mouseenter', function () { card.classList.add('is-tilt'); });
     card.addEventListener('mousemove', function (e) {
       var r = card.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width, ny = (e.clientY - r.top) / r.height;
-      ry((nx - 0.5) * 12); rx((0.5 - ny) * 12);
+      ry((nx - 0.5) * 10); rx((0.5 - ny) * 10);
       card.style.setProperty('--gx', (nx * 100) + '%'); card.style.setProperty('--gy', (ny * 100) + '%');
     });
     card.addEventListener('mouseleave', function () { rx(0); ry(0); });
   });
 
   /* =======================================================
-     9. Скрол-ефекти
+     8. Скрол-ефекти
      ======================================================= */
-  // прогрес-бар
-  var bar = $('[data-progress]');
-  if (bar) ScrollTrigger.create({ start: 0, end: 'max', onUpdate: function (s) { gsap.set(bar, { scaleX: s.progress }); } });
-
-  // eyebrow — scramble при появі
+  // «назви блоків» — scramble при появі
   $$('.eyebrow').forEach(function (eb) {
     if (eb.closest('[data-hero]') || eb.closest('.modal')) return;
     ScrollTrigger.create({ trigger: eb, start: 'top 92%', once: true, onEnter: function () { scramble(eb); } });
   });
 
   // фонові слова їдуть горизонтально
-  $$('.ghost-word').forEach(function (g) {
+  $$('.ghost-word, .h-head__ghost').forEach(function (g) {
     gsap.set(g, { xPercent: -50, yPercent: -50, x: 0, y: 0 });
-    gsap.fromTo(g, { x: function () { return innerWidth * 0.14; } }, {
-      x: function () { return -innerWidth * 0.14; }, ease: 'none',
+    gsap.fromTo(g, { x: function () { return innerWidth * 0.12; } }, {
+      x: function () { return -innerWidth * 0.12; }, ease: 'none',
       scrollTrigger: { trigger: g.closest('section'), start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
     });
   });
@@ -330,17 +308,19 @@
       });
     };
     walk(el);
-    gsap.to(words, { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 88%', end: 'bottom 50%', scrub: true } });
+    gsap.fromTo(words, { opacity: 0.16 }, { opacity: 1, stagger: 0.1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 88%', end: 'bottom 55%', scrub: true } });
   });
 
   // marquee: швидкість і напрям від швидкості скролу
   var mq = $('.marquee__track');
   if (mq) (function () {
-    var half = 0, xPos = 0, dir = 1;
+    var half = 0, xPos = 0, dir = 1, visible = true;
     var measure = function () { half = mq.scrollWidth / 2; };
     measure(); window.addEventListener('resize', measure);
+    new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(mq);
     var skewTo = gsap.quickTo(mq, 'skewX', { duration: 0.5, ease: 'power3' });
     gsap.ticker.add(function (t, dt) {
+      if (!visible) return;
       var v = lenis ? lenis.velocity : 0;
       if (Math.abs(v) > 0.5) dir = v > 0 ? 1 : -1;
       xPos -= (1.1 + Math.min(Math.abs(v), 50) * 0.55) * dir * (dt / 16.7);
@@ -352,12 +332,12 @@
 
   // CTA-плашка розкривається
   var band = $('[data-wow-band]');
-  if (band) gsap.fromTo(band, { scale: 0.84, y: 60, borderRadius: 120 }, {
+  if (band) gsap.fromTo(band, { scale: 0.86, y: 60, borderRadius: 120 }, {
     scale: 1, y: 0, borderRadius: 28, ease: 'none',
-    scrollTrigger: { trigger: band, start: 'top 98%', end: 'top 45%', scrub: true }
+    scrollTrigger: { trigger: band, start: 'top 98%', end: 'top 50%', scrub: true }
   });
 
-  // етапи: пін + послідовне підсвічування (десктоп)
+  // етапи на сторінках послуг: пін + послідовне підсвічування (десктоп)
   var stepsWrap = $('[data-wow-steps]');
   if (stepsWrap) {
     var steps = $$('.step', stepsWrap);
@@ -376,7 +356,8 @@
     });
     mm.add('(max-width:1100px)', function () {
       stepsWrap.style.setProperty('--p', 1);
-      gsap.from(steps, { y: 70, opacity: 0, duration: 1, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: stepsWrap, start: 'top 80%' }, onComplete: function () { lit(1); } });
+      lit(1);
+      reveal(steps, { y: 60, opacity: 0 }, { trigger: stepsWrap, stagger: 0.12, start: 'top 82%' });
     });
   }
 
@@ -384,38 +365,33 @@
   var fan = $('[data-wow-fan]');
   if (fan) {
     var pc = $$('.price', fan);
-    gsap.from(pc, {
-      y: 200, opacity: 0, duration: 1.4, ease: 'expo.out', stagger: 0.12,
-      x: function (i) { return innerWidth > 767 ? [180, 0, -180][i] || 0 : 0; },
-      rotation: function (i) { return innerWidth > 767 ? [-14, 0, 14][i] || 0 : 0; },
-      scrollTrigger: { trigger: fan, start: 'top 88%' }
+    var wide = innerWidth > 767;
+    pc.forEach(function (c, i) {
+      reveal(c, { opacity: 0, y: 160, x: wide ? [160, 0, -160][i] || 0 : 0, rotation: wide ? [-12, 0, 12][i] || 0 : 0 },
+        { trigger: fan, duration: 1.3, start: 'top 85%' });
     });
   }
 
-  // фото адвоката: розкриття маски + статистика
-  if ($('.about__photo')) {
-    gsap.fromTo('.about__photo', { clipPath: 'inset(16% 14% 16% 14% round 24px)' }, {
-      clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none',
-      scrollTrigger: { trigger: '.about__media', start: 'top 92%', end: 'center 55%', scrub: true }
+  // фото: розкриття маски під час скролу
+  $$('[data-wow-reveal]').forEach(function (el) {
+    gsap.fromTo(el, { clipPath: 'inset(14% 12% 14% 12%)' }, {
+      clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 95%', end: 'center 60%', scrub: true }
     });
-    gsap.from('.about__stats > div', { x: 90, opacity: 0, duration: 1.1, stagger: 0.15, ease: 'expo.out', scrollTrigger: { trigger: '.about__media', start: 'top 60%' } });
-  }
+  });
+  if ($('.about__stats')) reveal('.about__stats > div', { x: 80, opacity: 0 }, { trigger: '.about__media', start: 'top 60%', stagger: 0.15 });
 
-  // поради та список ситуацій — каскад
-  gsap.utils.toArray('.tips').forEach(function (t) {
-    gsap.from($$('.tip', t), { y: 60, rotationX: -40, transformPerspective: 800, opacity: 0, duration: 1, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: t, start: 'top 85%' } });
-  });
-  gsap.utils.toArray('.dlist').forEach(function (l) {
-    gsap.from($$('li', l), { x: -40, opacity: 0, duration: 0.9, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: l, start: 'top 85%' } });
-  });
+  // поради та список ситуацій — простий каскад (без 3D, без «застрягань»)
+  $$('.tips').forEach(function (t) { reveal($$('.tip', t), { y: 40, opacity: 0 }, { trigger: t, stagger: 0.08, duration: 0.9 }); });
+  $$('.dlist').forEach(function (l) { reveal($$('li', l), { x: -30, opacity: 0 }, { trigger: l, stagger: 0.05, duration: 0.8, ease: 'power3.out' }); });
 
   /* =======================================================
-     10. Таби: золотий індикатор + каскад контенту
+     9. Таби: золотий індикатор + поява контенту
      ======================================================= */
   var ind = $('.tabs__indicator');
   if (ind) {
     var moveInd = function (btn, instant) {
-      gsap.to(ind, { top: btn.offsetTop, height: btn.offsetHeight, duration: instant ? 0 : 0.7, ease: 'expo.out' });
+      gsap.to(ind, { top: btn.offsetTop, height: btn.offsetHeight, duration: instant ? 0 : 0.6, ease: 'expo.out' });
     };
     var act = $('.tabs__btn.is-active');
     if (act) moveInd(act, true);
@@ -424,13 +400,14 @@
       b.addEventListener('click', function () {
         moveInd(b);
         var panel = $('.tabs__panel.is-active');
-        if (panel) gsap.from($$('.tabs__inner > *', panel), { y: 26, opacity: 0, duration: 0.7, stagger: 0.05, ease: 'power3.out', overwrite: true });
+        if (panel) gsap.fromTo($$('.tabs__inner > *', panel), { y: 22, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, stagger: 0.04, ease: 'power3.out', overwrite: true, clearProps: 'transform,opacity' });
       });
     });
   }
 
   /* =======================================================
-     11. Відгуки: drag мишкою + skew від швидкості
+     10. Відгуки: drag мишкою + нахил від швидкості
      ======================================================= */
   var track = $('.reviews__track');
   if (track && fine) (function () {
@@ -445,7 +422,7 @@
       if (!down) return;
       track.scrollLeft = sl - (e.clientX - sx);
       vel = e.clientX - lx; lx = e.clientX;
-      var k = clamp(-10, 10, vel * 0.5);
+      var k = clamp(-8, 8, vel * 0.5);
       skewTo.forEach(function (f) { f(k); });
     });
     var up = function () {
@@ -461,7 +438,7 @@
   })();
 
   /* =======================================================
-     12. Оновлення розмірів
+     11. Перерахунок розмірів
      ======================================================= */
   window.addEventListener('load', function () { ScrollTrigger.refresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });

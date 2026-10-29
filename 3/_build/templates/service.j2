@@ -4,31 +4,32 @@
 {%- set s = page.svc %}
 
 <!-- ============ 01 HERO ============ -->
-<section class="hero">
+<section class="hero" data-hero>
+  <div class="hero__glow" aria-hidden="true"></div>
   <div class="container container--wide hero__grid">
     <div class="hero__content">
-      <nav class="crumbs" aria-label="Хлібні крихти" data-reveal>
+      <nav class="crumbs" aria-label="Хлібні крихти" data-hero-in>
         <a href="index.html">Головна</a><i class="ic ic-li-diamond ic-gold"></i>
         <a href="index.html#services">Послуги</a><i class="ic ic-li-diamond ic-gold"></i>
         <span>{{ s.nav }}</span>
       </nav>
 
-      <span class="eyebrow" data-reveal>{{ s.category }}</span>
-      <h1 class="hero__title" data-split>{{ s.h1 }} <span class="gold-text">{{ s.h1_gold }}</span></h1>
-      <p class="hero__lead" data-reveal>{{ s.lead }}</p>
+      <span class="eyebrow" data-hero-in>{{ s.category }}</span>
+      <h1 class="hero__title" data-chars>{{ s.h1 }} <span class="gold-text">{{ s.h1_gold }}</span></h1>
+      <p class="hero__lead" data-hero-in>{{ s.lead }}</p>
 
-      <ul class="hero__list" data-reveal-group>
+      <ul class="hero__list" data-hero-in>
         {%- for b in s.bullets %}
         <li><i class="ic ic-li-diamond ic-gold"></i>{{ b }}</li>
         {%- endfor %}
       </ul>
 
-      <div class="hero__btns" data-reveal>
+      <div class="hero__btns" data-hero-in>
         <a class="btn btn--gold btn--lg btn--shine" href="#contact">Безкоштовна консультація</a>
         <button class="btn btn--ghost btn--lg" type="button" data-modal-open data-topic="Інше питання"><i class="ic ic-gold ic-chat"></i>Описати свою ситуацію</button>
       </div>
 
-      <div class="hero__trust" data-reveal>
+      <div class="hero__trust" data-hero-in>
         <span><i class="ic ic-gold ic-lock"></i>Конфіденційно</span>
         <span><i class="ic ic-gold ic-globe"></i>Онлайн або в офісі</span>
         <span><i class="ic ic-gold ic-user-focus"></i>Справу веду особисто</span>
@@ -100,6 +101,7 @@
 
     <div class="tabs" data-tabs>
       <div class="tabs__nav" role="tablist" data-reveal-group>
+        <span class="tabs__indicator" aria-hidden="true"></span>
         {%- for t in s.tabs %}
         <button class="tabs__btn{% if loop.first %} is-active{% endif %}" type="button" role="tab" data-tab="{{ loop.index0 }}"><span class="tabs__num">{{ '%02d' % loop.index }}</span><span class="tabs__label">{{ t.label }}</span><i class="ic ic-arrow-right"></i></button>
         {%- endfor %}
@@ -149,9 +151,9 @@
     </div>
   </div>
   <div class="container">
-    <div class="band__box" data-reveal>
+    <div class="band__box" data-wow-band>
       <div class="band__text">
-        <span class="band__price">0 ₴</span>
+        <span class="band__price shimmer-dark">0 ₴</span>
         <div>
           <h2 class="band__title">Перша консультація — безкоштовно</h2>
           <p>Опишіть ситуацію та надішліть документи. Я оціню перспективи й скажу, які кроки варто зробити. Договір — лише якщо ви вирішите продовжити.</p>
@@ -180,10 +182,10 @@
       <p class="sec-head__text" data-reveal>Від першого звернення до реалізації погодженої стратегії захисту.</p>
     </div>
 
-    <ol class="steps" data-steps>
+    <ol class="steps" data-wow-steps>
       <li class="steps__line" aria-hidden="true"><span class="steps__fill"></span></li>
       {%- for st in s.steps %}
-      <li class="step" data-reveal>
+      <li class="step">
         <span class="step__badge">{{ '%02d' % loop.index }}</span>
         <span class="tile tile--xl"><i class="ic ic-gold {{ st.icon }}"></i></span>
         <h3 class="step__title">{{ st.title }}</h3>
@@ -208,7 +210,7 @@
       <p class="sec-head__text" data-reveal>{{ s.price.get('text') or 'Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.' }}</p>
     </div>
 
-    <div class="price-grid" data-reveal-group>
+    <div class="price-grid" data-wow-fan>
       <article class="price price--free">
         <span class="price__ribbon">Безкоштовно</span>
         <span class="price__label">Крок 1</span>
@@ -262,7 +264,7 @@
 <section class="section" id="about">
   <div class="container about">
     <div class="about__media" data-reveal>
-      <div class="about__photo" data-parallax>
+      <div class="about__photo" data-parallax data-wow-reveal>
         <img src="assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="Адвокат Сергій Мазур" loading="lazy">
       </div>
       <div class="about__stats">
@@ -274,7 +276,7 @@
     <div class="about__content">
       <span class="eyebrow" data-reveal><b>05</b>Про адвоката</span>
       <h2 class="h2" data-split>Ваші інтереси захищає <span class="gold-text">адвокат Мазур</span></h2>
-      <p class="about__lead" data-reveal>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
+      <p class="about__lead" data-wow-fill>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
       <p class="about__text" data-reveal>{{ s.about_text }}</p>
 
       <ul class="creds" data-reveal-group>
@@ -348,7 +350,7 @@
     </aside>
 
     <article class="seo__article">
-      <p class="seo__intro">{{ s.seo.intro|safe }}</p>
+      <p class="seo__intro" data-wow-fill>{{ s.seo.intro|safe }}</p>
       <p>{{ s.seo.p|safe }}</p>
 
       <h3 class="h3" id="seo-when">{{ s.seo.when_title }}</h3>
@@ -357,7 +359,7 @@
         <li>{{ li }}</li>
         {%- endfor %}
       </ul>
-      <blockquote class="quote">{{ s.seo.quote }}</blockquote>
+      <blockquote class="quote" data-wow-fill>{{ s.seo.quote }}</blockquote>
       {%- for sec in s.seo.sections %}
 
       <h3 class="h3" id="{{ sec.id }}">{{ sec.h3 }}</h3>
