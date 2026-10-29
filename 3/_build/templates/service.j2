@@ -160,9 +160,9 @@
       <div class="band__actions">
         <button class="btn btn--dark btn--lg" type="button" data-modal-open data-topic="Безкоштовна консультація">Записатися безкоштовно</button>
         <div class="band__msg">
-          <a href="#" aria-label="Telegram"><i class="ic ic-telegram"></i></a>
-          <a href="#" aria-label="Viber"><i class="ic ic-viber"></i></a>
-          <a href="#" aria-label="WhatsApp"><i class="ic ic-whatsapp"></i></a>
+          <a href="{{ site.telegram }}" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-telegram"></i></a>
+          <a href="{{ site.viber }}" aria-label="Viber"><i class="ic ic-viber"></i></a>
+          <a href="{{ site.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="ic ic-whatsapp"></i></a>
           <a class="band__phone" href="tel:{{ site.phone_href }}">{{ site.phone }}</a>
         </div>
       </div>
@@ -205,7 +205,7 @@
         <span class="eyebrow" data-reveal><b>04</b>Вартість</span>
         <h2 class="h2" data-split>Скільки коштують <span class="gold-text">послуги адвоката</span></h2>
       </div>
-      <p class="sec-head__text" data-reveal>Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.</p>
+      <p class="sec-head__text" data-reveal>{{ s.price.get('text') or 'Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.' }}</p>
     </div>
 
     <div class="price-grid" data-reveal-group>
@@ -224,7 +224,12 @@
       <article class="price">
         <span class="price__label">Крок 2</span>
         <h3 class="price__title">{{ s.price.docs_title }}</h3>
+        {%- if s.price.get('docs_value') %}
+        <span class="price__value">{{ s.price.docs_value|safe }}</span>
+        {%- if s.price.get('docs_hint') %}<span class="price__hint">{{ s.price.docs_hint }}</span>{% endif %}
+        {%- else %}
         <span class="price__value price__value--sm">Фіксована ціна</span>
+        {%- endif %}
         <ul class="check">
           {%- for li in s.price.docs %}
           <li>{{ li }}</li>
@@ -234,8 +239,13 @@
       </article>
       <article class="price">
         <span class="price__label">Крок 3</span>
-        <h3 class="price__title">Комплексний супровід</h3>
+        <h3 class="price__title">{{ s.price.get('full_title', 'Комплексний супровід') }}</h3>
+        {%- if s.price.get('full_value') %}
+        <span class="price__value">{{ s.price.full_value|safe }}</span>
+        {%- if s.price.get('full_hint') %}<span class="price__hint">{{ s.price.full_hint }}</span>{% endif %}
+        {%- else %}
         <span class="price__value price__value--sm">За договором</span>
+        {%- endif %}
         <ul class="check">
           {%- for li in s.price.full %}
           <li>{{ li }}</li>
@@ -253,7 +263,7 @@
   <div class="container about">
     <div class="about__media" data-reveal>
       <div class="about__photo" data-parallax>
-        <img src="assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="Адвокат Мазур" loading="lazy">
+        <img src="assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="Адвокат Сергій Мазур" loading="lazy">
       </div>
       <div class="about__stats">
         <div><b><span data-count="500">0</span>+</b><span>справ і проваджень</span></div>
@@ -292,9 +302,11 @@
 <section class="section section--alt reviews" id="reviews">
   <div class="container reviews__head">
     <div>
-      <span class="eyebrow" data-reveal><b>06</b>Відгуки Google</span>
+      <span class="eyebrow" data-reveal><b>06</b>{{ s.get('reviews_rating') or 'Відгуки Google' }}</span>
       <h2 class="h2" data-split>Відгуки клієнтів <span class="gold-text">{{ s.reviews_gold }}</span></h2>
+      {%- if not s.get('reviews_rating') %}
       <span class="rating" data-reveal><b>5.0</b>{{ stars() }}48 відгуків у Google</span>
+      {%- endif %}
     </div>
     <div class="arrows" data-reveal>
       <button class="arrow" type="button" aria-label="Назад" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
@@ -309,7 +321,9 @@
   </div>
 
   <div class="container reviews__foot" data-reveal>
+    {%- if not s.get('reviews_rating') %}
     <a class="link-gold link-gold--underline" href="#">Усі відгуки в Google <i class="ic ic-gold ic-arrow-up-right"></i></a>
+    {%- endif %}
     <a class="reviews__leave" href="#">Залишити відгук</a>
   </div>
 </section>
@@ -329,7 +343,7 @@
       </nav>
       <div class="author" data-reveal>
         <span class="avatar avatar--lg">АМ</span>
-        <div><b>Адвокат Мазур</b><span>Автор матеріалу · оновлено жовтень 2026</span></div>
+        <div><b>Адвокат Сергій Мазур</b><span>Автор матеріалу · оновлено жовтень 2026</span></div>
       </div>
     </aside>
 
@@ -403,9 +417,9 @@
           <span>Зручніше напряму?</span>
           <a class="final__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
           <div class="socials">
-            <a href="#" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
-            <a href="#" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
-            <a href="#" aria-label="WhatsApp"><i class="ic ic-gold ic-whatsapp"></i></a>
+            <a href="{{ site.telegram }}" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
+            <a href="{{ site.viber }}" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
+            <a href="{{ site.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="ic ic-gold ic-whatsapp"></i></a>
           </div>
         </div>
       </div>

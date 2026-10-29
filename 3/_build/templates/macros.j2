@@ -2,9 +2,9 @@
 
 {%- macro review(v) -%}
     <article class="review">
-      <div class="review__top">{{ stars() }}<span class="review__src">Google</span></div>
+      <div class="review__top">{{ stars() }}<span class="review__src">{{ v.get('src', 'Google') }}</span></div>
       <p class="review__text">{{ v.text }}</p>
-      <div class="review__author"><span class="avatar">{{ v.initials }}</span><div><b>{{ v.name }}</b><span>{{ v.tag }} · {{ v.date }}</span></div></div>
+      <div class="review__author"><span class="avatar">{{ v.initials }}</span><div><b>{{ v.name }}</b><span>{{ v.tag }}{% if v.date %} · {{ v.date }}{% endif %}</span></div></div>
     </article>
 {%- endmacro -%}
 

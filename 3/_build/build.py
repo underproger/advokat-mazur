@@ -19,11 +19,16 @@ sys.path.insert(0, HERE)
 from data_services import SERVICES, DEFAULT_STEPS_HEAD, SHARED_FAQ_FIRST, rv, faq  # noqa: E402
 
 SITE = {
-    "phone": "+380 00 000 00 00",
-    "phone_href": "+380000000000",
-    "email": "info@advokatmazur.com.ua",
-    "address": "м. Київ, вул. Адреса офісу, 00",
+    # контакти — з чинного сайту advokatmazur.com.ua
+    "name": "Сергій Мазур",
+    "phone": "+38 096 912 48 00",
+    "phone_href": "+380969124800",
+    "email": "advocatemazur@gmail.com",
+    "address": "м. Київ, вул. Симона Петлюри, 8",
     "hours": "Пн–Пт 9:00–19:00",
+    "telegram": "https://t.me/+380969124800",
+    "viber": "viber://chat?number=%2B380969124800",
+    "whatsapp": "https://wa.me/380969124800",
 }
 
 # Відгуки та FAQ головної — з дизайну головної, з перелінковкою на послуги
@@ -99,7 +104,7 @@ def main():
     # --- послуги
     for svc in SERVICES:
         svc = dict(svc)
-        svc["steps"] = DEFAULT_STEPS_HEAD + [svc["step_last"]]
+        svc["steps"] = svc.get("steps") or (DEFAULT_STEPS_HEAD + [svc["step_last"]])
         svc["faq"] = [SHARED_FAQ_FIRST] + svc["faq"]
         topics = uniq([x["topic"] for x in svc["situations"] if x["topic"] != "Інше питання"]
                       + [t["topic"] for t in svc["tabs"] if t["topic"] != "Інше питання"]

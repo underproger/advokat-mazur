@@ -322,6 +322,8 @@ select option{background:var(--panel);color:var(--text)}
 .price__title{font:400 28px/1.05 var(--serif);text-transform:uppercase}
 .price__value{font:400 64px/1 var(--serif)}
 .price__value b{font-weight:400}
+.price__value small{font-size:.42em;color:var(--muted);margin-right:.2em}
+.price__hint{margin-top:-8px;font-size:13px;line-height:1.45;color:var(--muted-2)}
 .price__value--sm{font-size:30px;line-height:64px;color:var(--muted)}
 .price--free{border-color:rgba(226,184,94,.6);background:radial-gradient(420px 300px at 100% 0%,rgba(226,184,94,.18),transparent 70%),var(--grad-card);box-shadow:0 30px 70px rgba(226,184,94,.08)}
 .price--free .price__value{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
