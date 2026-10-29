@@ -16,8 +16,12 @@
   $$('[data-lang]').forEach(function (box) {
     var btn = $('.lang__btn', box);
     var set = function (open) { box.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', open); };
-    btn.addEventListener('click', function (e) { e.stopPropagation(); set(!box.classList.contains('is-open')); });
-    box.addEventListener('mouseleave', function () { set(false); });
+    var hover = window.matchMedia('(hover: hover) and (pointer: fine)').matches, t;
+    btn.addEventListener('click', function (e) { e.stopPropagation(); set(hover ? true : !box.classList.contains('is-open')); });
+    if (hover) {
+      box.addEventListener('mouseenter', function () { clearTimeout(t); set(true); });
+      box.addEventListener('mouseleave', function () { t = setTimeout(function () { set(false); }, 250); });
+    }
     document.addEventListener('click', function (e) { if (!box.contains(e.target)) set(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
   });
