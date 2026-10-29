@@ -5,7 +5,7 @@
     python3 3/_build/build.py
 
 Шаблони: _build/templates/*.j2, контент послуг: _build/data_services.py.
-Результат: 3/index.html + 3/<slug>.html для кожної послуги.
+Результат: 3/index.html, 3/<slug>.html, 3/keysy.html, 3/keys-<slug>.html + те саме в 3/ru/.
 Сторінки згенеровані — правки контенту вносимо в дані/шаблони і перезбираємо.
 """
 import os
@@ -17,10 +17,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from data_services import SERVICES, DEFAULT_STEPS_HEAD, SHARED_FAQ_FIRST, rv, faq  # noqa: E402
+from data_cases import CASES  # noqa: E402
+from i18n import Translator  # noqa: E402
 
 SITE = {
     # контакти — з чинного сайту advokatmazur.com.ua
     "name": "Сергій Мазур",
+    "cert": "4073",
+    "years": "20",
     "phone": "+38 096 912 48 00",
     "phone_href": "+380969124800",
     "email": "advocatemazur@gmail.com",
@@ -72,56 +76,118 @@ def uniq(seq):
     return out
 
 
-def related_for(svc):
+def related_for(svc, services):
     """Спочатку послуги тієї ж категорії, потім сусідні за списком; разом 3."""
-    slugs = [s["slug"] for s in SERVICES]
-    same = [s for s in SERVICES if s["category"] == svc["category"] and s["slug"] != svc["slug"]]
+    slugs = [s["slug"] for s in services]
+    same = [s for s in services if s["category"] == svc["category"] and s["slug"] != svc["slug"]]
     idx = slugs.index(svc["slug"])
-    rest = [SERVICES[(idx + k) % len(SERVICES)] for k in range(1, len(SERVICES))]
+    rest = [services[(idx + k) % len(services)] for k in range(1, len(services))]
     rest = [s for s in rest if s["slug"] not in [x["slug"] for x in same]]
     return (same + rest)[:3]
 
 
+LANGS = [
+    {"code": "uk", "label": "UA", "name": "Українська", "dir": ""},
+    {"code": "ru", "label": "RU", "name": "Русский", "dir": "ru/"},
+]
+
+# Тексти, що відрізняються для мов, але не перекладаються за словником
+SITE_I18N = {
+    "ru": {"name": "Сергей Мазур", "address": "г. Киев, ул. Симона Петлюры, 8", "hours": "Пн–Пт 9:00–19:00"},
+}
+
+
+def page_langs(lang, filename):
+    """Посилання на цю ж сторінку в усіх мовах (відносно поточної папки)."""
+    cur = next(l for l in LANGS if l["code"] == lang)
+    out = []
+    for l in LANGS:
+        if l["code"] == lang:
+            href = filename
+        elif cur["dir"]:            # з ru/ на корінь
+            href = "../" + l["dir"] + filename
+        else:                       # з кореня в ru/
+            href = l["dir"] + filename
+        out.append(dict(l, href=href, active=l["code"] == lang))
+    return out
+
+
 def main():
-    env = Environment(loader=FileSystemLoader(os.path.join(HERE, "templates")),
-                      undefined=StrictUndefined, trim_blocks=False, lstrip_blocks=False,
-                      keep_trailing_newline=True)
-
     written = []
+    total_missing = 0
+    for L in LANGS:
+        lang = L["code"]
+        tr = Translator(lang)
+        env = Environment(loader=FileSystemLoader(os.path.join(HERE, "templates")),
+                          undefined=StrictUndefined, trim_blocks=False, lstrip_blocks=False,
+                          keep_trailing_newline=True)
+        env.globals["_"] = tr.gettext
+        out_dir = os.path.join(OUT, L["dir"])
+        os.makedirs(out_dir, exist_ok=True)
 
-    # --- головна
-    home_page = {
-        "slug": "index", "is_home": True, "home": "", "body_class": "page-home",
-        "title": "Адвокат Мазур — захист прав фізичних осіб і бізнесу",
-        "description": "Адвокат Мазур: кримінальні, адміністративні та транспортні справи, спори з ТЦК, ліцензії перевізників. Особистий захист від першої консультації до рішення суду.",
-        "topics": uniq([s["nav"] for s in SERVICES] + GENERIC_TOPICS + ["Інше"]),
-        "reviews": HOME_REVIEWS, "faq": HOME_FAQ,
-    }
-    html = env.get_template("home.j2").render(page=home_page, services=SERVICES, site=SITE)
-    path = os.path.join(OUT, "index.html")
-    open(path, "w", encoding="utf-8").write(html)
-    written.append(path)
+        site = dict(SITE, **SITE_I18N.get(lang, {}))
+        services = tr.obj(SERVICES)
+        svc_by_slug = {s["slug"]: s for s in services}
+        cases = tr.obj(CASES)
+        generic = tr.obj(GENERIC_TOPICS)
+        base = {"root": "../" if L["dir"] else "", "html_lang": lang, "lang_label": L["label"],
+                "svc_by_slug": svc_by_slug, "is_case": False}
 
-    # --- послуги
-    for svc in SERVICES:
-        svc = dict(svc)
-        svc["steps"] = svc.get("steps") or (DEFAULT_STEPS_HEAD + [svc["step_last"]])
-        svc["faq"] = [SHARED_FAQ_FIRST] + svc["faq"]
-        topics = uniq([x["topic"] for x in svc["situations"] if x["topic"] != "Інше питання"]
-                      + [t["topic"] for t in svc["tabs"] if t["topic"] != "Інше питання"]
-                      + GENERIC_TOPICS)
-        page = {
-            "slug": svc["slug"], "is_home": False, "home": "index.html", "body_class": "page-service",
-            "title": svc["title"], "description": svc["description"],
-            "topics": topics, "svc": svc, "related": related_for(svc),
-        }
-        html = env.get_template("service.j2").render(page=page, services=SERVICES, site=SITE)
-        path = os.path.join(OUT, svc["slug"] + ".html")
-        open(path, "w", encoding="utf-8").write(html)
-        written.append(path)
+        def render(tpl, filename, **page):
+            page = dict(base, langs=page_langs(lang, filename), **page)
+            html = env.get_template(tpl).render(page=page, services=services, site=site)
+            path = os.path.join(out_dir, filename)
+            open(path, "w", encoding="utf-8").write(html)
+            written.append(path)
+
+        # --- головна
+        render("home.j2", "index.html",
+               slug="index", is_home=True, home="", body_class="page-home",
+               title=tr.text("Адвокат Мазур — захист прав фізичних осіб і бізнесу"),
+               description=tr.text("Адвокат Сергій Мазур: трудові спори, кримінальні, адміністративні та транспортні справи, спори з ТЦК, ліцензії перевізників. Особистий захист від першої консультації до рішення суду."),
+               topics=uniq([s["nav"] for s in services] + generic + [tr.text("Інше")]),
+               reviews=tr.obj(HOME_REVIEWS), faq=tr.obj(HOME_FAQ))
+
+        # --- послуги
+        shared_faq = tr.obj(SHARED_FAQ_FIRST)
+        steps_head = tr.obj(DEFAULT_STEPS_HEAD)
+        other_q = tr.text("Інше питання")
+        for svc in services:
+            svc = dict(svc)
+            svc["steps"] = svc.get("steps") or (steps_head + [svc["step_last"]])
+            svc["faq"] = [shared_faq] + svc["faq"]
+            topics = uniq([x["topic"] for x in svc["situations"] if x["topic"] != other_q]
+                          + [t["topic"] for t in svc["tabs"] if t["topic"] != other_q]
+                          + generic)
+            render("service.j2", svc["slug"] + ".html",
+                   slug=svc["slug"], is_home=False, home="index.html", body_class="page-service",
+                   title=svc["title"], description=svc["description"],
+                   topics=topics, svc=svc, related=related_for(svc, services),
+                   svc_cases=[c for c in cases if c["service"] == svc["slug"]][:3])
+
+        # --- кейси
+        render("cases.j2", "keysy.html",
+               slug="keysy", is_home=False, home="index.html", body_class="page-cases",
+               title=tr.text("Кейси адвоката Сергія Мазура — приклади справ з практики"),
+               description=tr.text("Приклади справ з практики адвоката Сергія Мазура: трудові спори, ТЦК, корупційні справи, штрафи Укртрансбезпеки, ліцензії перевізників."),
+               topics=uniq(generic + [s["nav"] for s in services]), cases=cases)
+        for c in cases:
+            more = [x for x in cases if x["slug"] != c["slug"]]
+            more = sorted(more, key=lambda x: x["service"] != c["service"])[:3]
+            render("case.j2", "keys-%s.html" % c["slug"],
+                   slug="keys-" + c["slug"], is_home=False, home="index.html", body_class="page-case", is_case=True,
+                   title="%s %s | %s" % (tr.text("Кейс:"), c["title"], tr.text("Адвокат Сергій Мазур")),
+                   description=c["lead"][:180],
+                   topics=uniq(generic + [svc_by_slug[c["service"]]["nav"]]), case=c, more_cases=more)
+
+        n = tr.report()
+        total_missing += n
+        if n:
+            print("! %s: неперекладених рядків — %d (див. _build/i18n/missing_%s.tsv)" % (lang, n, lang))
 
     for p in written:
         print("✓", os.path.relpath(p, OUT))
+    return total_missing
 
 
 if __name__ == "__main__":

@@ -6,7 +6,21 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var isDesktop = function () { return window.matchMedia('(min-width:1101px)').matches; };
+  var RU = (doc.getAttribute('lang') || '').indexOf('ru') === 0;
+  var L = RU
+    ? { free: 'Бесплатная консультация', collapse: 'Свернуть', more: 'Читать полностью' }
+    : { free: 'Безкоштовна консультація', collapse: 'Згорнути', more: 'Читати повністю' };
   var reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches && doc.getAttribute('data-motion') !== 'force';
+
+  /* ---------- перемикач мов ---------- */
+  $$('[data-lang]').forEach(function (box) {
+    var btn = $('.lang__btn', box);
+    var set = function (open) { box.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', open); };
+    btn.addEventListener('click', function (e) { e.stopPropagation(); set(!box.classList.contains('is-open')); });
+    box.addEventListener('mouseleave', function () { set(false); });
+    document.addEventListener('click', function (e) { if (!box.contains(e.target)) set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  });
 
   /* ---------- mega menu ---------- */
   var megaBtn = $('[data-mega-toggle]'), mega = $('[data-mega]'), hdr = $('.hdr');
@@ -124,7 +138,7 @@
       var opts = $$('option', topicSelect);
       var find = function (t) { return opts.filter(function (o) { return o.textContent === t; })[0]; };
       // тема з кнопки → якщо такої немає у списку, «Безкоштовна консультація»
-      var opt = find(topic) || find('Безкоштовна консультація');
+      var opt = find(topic) || find(L.free);
       if (opt) { topicSelect.value = opt.value; topicSelect.dispatchEvent(new Event('change', { bubbles: true })); }
     }
     modal.classList.add('is-open');
@@ -170,9 +184,22 @@
     b.addEventListener('click', function () {
       var open = m.classList.toggle('is-open');
       b.setAttribute('aria-expanded', open);
-      $('span', b).textContent = open ? 'Згорнути' : 'Читати повністю';
+      $('span', b).textContent = open ? L.collapse : L.more;
     });
   });
+
+  /* ---------- кейси: фільтр за напрямом ---------- */
+  var casesBox = $('[data-cases]');
+  if (casesBox) {
+    var chips = $$('.chip', casesBox), cards = $$('.case-card', casesBox);
+    chips.forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        var f = ch.getAttribute('data-filter');
+        chips.forEach(function (x) { x.classList.toggle('is-active', x === ch); });
+        cards.forEach(function (c) { c.classList.toggle('is-hidden', f !== 'all' && c.getAttribute('data-cat') !== f); });
+      });
+    });
+  }
 
   /* ---------- faq ---------- */
   $$('.faq__item').forEach(function (it) {

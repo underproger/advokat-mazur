@@ -1,6 +1,6 @@
 {#- Базовий шаблон: head, шапка, футер, оверлеї. Змінні: page, services, site -#}
 <!DOCTYPE html>
-<html lang="uk" data-motion="force">
+<html lang="{{ page.html_lang }}" data-motion="force">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,8 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="stylesheet" href="assets/css/wow.css">
+  {%- for l in page.langs %}
+  <link rel="alternate" hreflang="{{ l.code }}" href="{{ l.href }}">
+  {%- endfor %}
+  <link rel="stylesheet" href="{{ page.root }}assets/css/main.css">
+  <link rel="stylesheet" href="{{ page.root }}assets/css/wow.css">
   <script>try{if(sessionStorage.getItem('mz-v'))document.documentElement.classList.add('pl-quick')}catch(e){}</script>
 </head>
 <body class="wow {{ page.body_class }}">
@@ -20,9 +23,9 @@
   <div class="preloader__panel preloader__panel--top"></div>
   <div class="preloader__panel preloader__panel--bottom"></div>
   <div class="preloader__inner">
-    <svg class="preloader__mono" viewBox="0 0 200 220"><defs><linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2a6"/><stop offset=".55" stop-color="#e2b85e"/><stop offset="1" stop-color="#b9883a"/></linearGradient></defs><text x="100" y="170" text-anchor="middle">М</text></svg>
+    <svg class="preloader__mono" viewBox="0 0 200 220"><defs><linearGradient id="monoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8e2a6"/><stop offset=".55" stop-color="#e2b85e"/><stop offset="1" stop-color="#b9883a"/></linearGradient></defs><text x="100" y="170" text-anchor="middle">{{ _("М") }}</text></svg>
     <span class="preloader__line"><i></i></span>
-    <span class="preloader__meta"><span>Адвокат Мазур</span><b data-preloader-count>0</b></span>
+    <span class="preloader__meta"><span>{{ _("Адвокат Мазур") }}</span><b data-preloader-count>0</b></span>
   </div>
 </div>
 <div class="page-curtain" aria-hidden="true" data-curtain></div>
@@ -31,26 +34,33 @@
 <header class="hdr" id="top">
   <div class="container container--wide hdr__in">
     <a class="logo" href="index.html">
-      <span class="logo__name">Адвокат Мазур</span>
-      <span class="logo__sub">Кримінальні, адміністративні та транспортні справи</span>
+      <span class="logo__name">{{ _("Адвокат Мазур") }}</span>
+      <span class="logo__sub">{{ _("Кримінальні, адміністративні та транспортні справи") }}</span>
     </a>
 
-    <nav class="hdr__nav" aria-label="Головне меню">
+    <nav class="hdr__nav" aria-label="{{ _("Головне меню") }}">
       <div class="hdr__menu">
-        <button class="hdr__link hdr__link--drop{% if not page.is_home %} is-current{% endif %}" type="button" data-mega-toggle aria-expanded="false">Послуги <i class="ic ic-chevron-down"></i></button>
-        <a class="hdr__link{% if page.is_home %} is-current{% endif %}" href="{{ page.home }}#about">Про мене</a>
-        <a class="hdr__link" href="{{ page.home }}#steps">Етапи</a>
-        <a class="hdr__link" href="{{ page.home }}#reviews">Відгуки</a>
-        <a class="hdr__link" href="#contacts">Контакти</a>
+        <button class="hdr__link hdr__link--drop{% if not page.is_home %} is-current{% endif %}" type="button" data-mega-toggle aria-expanded="false">{{ _("Послуги") }} <i class="ic ic-chevron-down"></i></button>
+        <a class="hdr__link{% if page.is_home %} is-current{% endif %}" href="{{ page.home }}#about">{{ _("Про мене") }}</a>
+        <a class="hdr__link{% if page.slug == 'keysy' or page.is_case %} is-current{% endif %}" href="keysy.html">{{ _("Кейси") }}</a>
+        <a class="hdr__link" href="{{ page.home }}#reviews">{{ _("Відгуки") }}</a>
+        <a class="hdr__link" href="#contacts">{{ _("Контакти") }}</a>
       </div>
       <div class="hdr__actions">
-        <span class="lang"><a class="lang__item is-active" href="#">UA</a><span class="lang__sep">/</span><a class="lang__item" href="#">EN</a></span>
+        <div class="lang" data-lang>
+          <button class="lang__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="{{ _("Мова сайту") }}">{{ page.lang_label }} <i class="ic ic-chevron-down"></i></button>
+          <div class="lang__menu" role="menu">
+            {%- for l in page.langs %}
+            <a class="lang__item{% if l.active %} is-active{% endif %}" role="menuitem" href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}"><b>{{ l.label }}</b>{{ l.name }}</a>
+            {%- endfor %}
+          </div>
+        </div>
         <a class="hdr__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
-        <a class="btn btn--gold btn--xs" href="#contact">Консультація</a>
+        <a class="btn btn--gold btn--xs" href="#contact">{{ _("Консультація") }}</a>
       </div>
     </nav>
 
-    <button class="burger" type="button" aria-label="Меню" data-burger><span></span><span></span><span></span></button>
+    <button class="burger" type="button" aria-label="{{ _("Меню") }}" data-burger><span></span><span></span><span></span></button>
   </div>
 
   <div class="mega" data-mega>
@@ -72,8 +82,8 @@
 <footer class="ftr" id="contacts">
   <div class="container ftr__grid">
     <div class="ftr__brand">
-      <span class="ftr__logo">Адвокат Мазур</span>
-      <p>Індивідуальна адвокатська практика. Свідоцтво про право на заняття адвокатською діяльністю № 0000.</p>
+      <span class="ftr__logo">{{ _("Адвокат Мазур") }}</span>
+      <p>{{ _("Індивідуальна адвокатська практика. Свідоцтво про право на заняття адвокатською діяльністю №") }} {{ site.cert }}.</p>
       <div class="socials">
         <a href="{{ site.telegram }}" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
         <a href="{{ site.viber }}" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
@@ -81,87 +91,93 @@
       </div>
     </div>
     <div class="ftr__col">
-      <span class="ftr__title">Послуги</span>
+      <span class="ftr__title">{{ _("Послуги") }}</span>
       {%- for s in services %}
       <a href="{{ s.slug }}.html"{% if s.slug == page.slug %} class="is-active"{% endif %}>{{ s.nav }}</a>
       {%- endfor %}
     </div>
     <div class="ftr__col">
-      <span class="ftr__title">Контакти</span>
+      <span class="ftr__title">{{ _("Контакти") }}</span>
       <a class="ftr__phone" href="tel:{{ site.phone_href }}">{{ site.phone }}</a>
       <a href="mailto:{{ site.email }}">{{ site.email }}</a>
       <span>{{ site.address }}</span>
       <span>{{ site.hours }}</span>
-      <button class="btn btn--gold btn--sm" type="button" data-modal-open data-topic="Зворотний дзвінок">Замовити дзвінок</button>
+      <button class="btn btn--gold btn--sm" type="button" data-modal-open data-topic="{{ _("Зворотний дзвінок") }}">{{ _("Замовити дзвінок") }}</button>
     </div>
   </div>
   <div class="container ftr__bottom">
-    <span>© 2026 Адвокат Сергій Мазур</span>
-    <div><a href="#">Політика конфіденційності</a><span>UA / EN</span></div>
+    <span>{{ _("© 2026 Адвокат Сергій Мазур. Всі права захищені.") }}</span>
+    <div><a href="#">{{ _("Політика конфіденційності") }}</a><span class="ftr__dev">{{ _("Створення та просування сайтів") }} <a href="https://impulse-design.com.ua/" rel="nofollow" target="_blank">Impulse Design</a></span></div>
   </div>
 </footer>
 
 <!-- scroll to top -->
-<button class="totop" type="button" aria-label="Прокрутити нагору" data-totop>
+<button class="totop" type="button" aria-label="{{ _("Прокрутити нагору") }}" data-totop>
   <svg class="totop__ring" viewBox="0 0 56 56" aria-hidden="true"><circle class="totop__track" cx="28" cy="28" r="26"/><circle class="totop__bar" cx="28" cy="28" r="26"/></svg>
   <i class="ic ic-gold ic-arrow-up"></i>
 </button>
 
 <!-- floating call -->
-<button class="fab" type="button" aria-label="Передзвонити" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-phone-fill"></i></button>
+<button class="fab" type="button" aria-label="{{ _("Передзвонити") }}" data-modal-open data-topic="{{ _("Зворотний дзвінок") }}"><i class="ic ic-phone-fill"></i></button>
 
 <!-- mobile bottom bar -->
 <div class="mbar">
-  <a class="mbar__call" href="tel:{{ site.phone_href }}" aria-label="Подзвонити"><i class="ic ic-phone-fill"></i></a>
-  <button class="btn btn--gold mbar__btn" type="button" data-modal-open data-topic="Безкоштовна консультація">Безкоштовна консультація</button>
+  <a class="mbar__call" href="tel:{{ site.phone_href }}" aria-label="{{ _("Подзвонити") }}"><i class="ic ic-phone-fill"></i></a>
+  <button class="btn btn--gold mbar__btn" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Безкоштовна консультація") }}</button>
 </div>
 
 <!-- mobile menu -->
 <div class="drawer" data-drawer>
   <div class="drawer__panel">
-    <button class="drawer__close" type="button" aria-label="Закрити" data-drawer-close><i class="ic ic-close"></i></button>
-    <a class="logo__name" href="index.html">Адвокат Мазур</a>
+    <button class="drawer__close" type="button" aria-label="{{ _("Закрити") }}" data-drawer-close><i class="ic ic-close"></i></button>
+    <a class="logo__name" href="index.html">{{ _("Адвокат Мазур") }}</a>
+    <div class="drawer__langs">
+      {%- for l in page.langs %}
+      <a class="{% if l.active %}is-active{% endif %}" href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}">{{ l.label }}</a>
+      {%- endfor %}
+    </div>
     <nav class="drawer__nav">
-      <span class="drawer__label">Послуги</span>
+      <span class="drawer__label">{{ _("Послуги") }}</span>
       {%- for s in services %}
       <a href="{{ s.slug }}.html"{% if s.slug == page.slug %} class="is-active"{% endif %}>{{ s.nav }}</a>
       {%- endfor %}
-      <span class="drawer__label">Сайт</span>
-      <a href="{{ page.home }}#about" data-drawer-close>Про мене</a>
-      <a href="{{ page.home }}#steps" data-drawer-close>Етапи роботи</a>
-      <a href="{{ page.home }}#reviews" data-drawer-close>Відгуки</a>
-      <a href="#contacts" data-drawer-close>Контакти</a>
+      <span class="drawer__label">{{ _("Сайт") }}</span>
+      <a href="{{ page.home }}#about" data-drawer-close>{{ _("Про мене") }}</a>
+      <a href="keysy.html"{% if page.slug == 'keysy' %} class="is-active"{% endif %}>{{ _("Кейси") }}</a>
+      <a href="{{ page.home }}#steps" data-drawer-close>{{ _("Етапи роботи") }}</a>
+      <a href="{{ page.home }}#reviews" data-drawer-close>{{ _("Відгуки") }}</a>
+      <a href="#contacts" data-drawer-close>{{ _("Контакти") }}</a>
     </nav>
     <a class="hdr__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
-    <a class="btn btn--gold btn--md btn--block" href="#contact" data-drawer-close>Безкоштовна консультація</a>
+    <a class="btn btn--gold btn--md btn--block" href="#contact" data-drawer-close>{{ _("Безкоштовна консультація") }}</a>
   </div>
 </div>
 
 <!-- modal -->
 <div class="modal" data-modal role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal__box">
-    <button class="modal__close" type="button" aria-label="Закрити" data-modal-close><i class="ic ic-close"></i></button>
+    <button class="modal__close" type="button" aria-label="{{ _("Закрити") }}" data-modal-close><i class="ic ic-close"></i></button>
     <div class="modal__form">
-      <span class="eyebrow">Безкоштовно · конфіденційно</span>
-      <h3 class="modal__title" id="modalTitle">Безкоштовна консультація</h3>
-      <p class="modal__text">Залиште ім'я та номер — я передзвоню і безкоштовно оціню вашу ситуацію.</p>
+      <span class="eyebrow">{{ _("Безкоштовно · конфіденційно") }}</span>
+      <h3 class="modal__title" id="modalTitle">{{ _("Безкоштовна консультація") }}</h3>
+      <p class="modal__text">{{ _("Залиште ім'я та номер — я передзвоню і безкоштовно оціню вашу ситуацію.") }}</p>
       <form class="form" data-form>
         <div class="field field--select"><i class="ic ic-briefcase"></i>
-          <select name="topic" data-topic-select data-select aria-label="Тема звернення">
+          <select name="topic" data-topic-select data-select aria-label="{{ _("Тема звернення") }}">
             {%- for t in page.topics %}
             <option>{{ t }}</option>
             {%- endfor %}
           </select>
         </div>
-        <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
-        <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
-        <button class="btn btn--gold btn--block btn--lg" type="submit">Передзвоніть мені</button>
+        <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="{{ _("Ваше ім'я") }}" required></label>
+        <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="{{ _("Номер телефону") }}" required></label>
+        <button class="btn btn--gold btn--block btn--lg" type="submit">{{ _("Передзвоніть мені") }}</button>
       </form>
     </div>
     <div class="modal__done">
       <i class="ic ic-gold ic-check-circle"></i>
-      <h3 class="modal__title">Дякую.</h3>
-      <p class="modal__text">Скоро передзвоню з номера {{ site.phone }}.</p>
+      <h3 class="modal__title">{{ _("Дякую.") }}</h3>
+      <p class="modal__text">{{ _("Скоро передзвоню з номера") }} {{ site.phone }}.</p>
     </div>
   </div>
 </div>
@@ -169,7 +185,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="assets/js/main.js"></script>
-<script src="assets/js/wow.js"></script>
+<script src="{{ page.root }}assets/js/main.js"></script>
+<script src="{{ page.root }}assets/js/wow.js"></script>
 </body>
 </html>

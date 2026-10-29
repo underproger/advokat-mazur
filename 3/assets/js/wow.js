@@ -116,7 +116,7 @@
   };
   if (h1) splitChars(h1);
 
-  var GLYPHS = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯ0123456789◆';
+  var GLYPHS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЮЯ0123456789◆';
   var scramble = function (el) {
     var node = null;
     Array.prototype.slice.call(el.childNodes).forEach(function (n) { if (n.nodeType === 3 && n.textContent.trim()) node = n; });
@@ -142,7 +142,7 @@
   intro.fromTo('.hdr__in > *', { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.08, clearProps: 'transform,opacity' }, 0);
   if (heroPhoto) intro.fromTo(heroPhoto, { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.15 },
     { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.6, ease: 'expo.inOut', clearProps: 'clipPath,transform' }, 0);
-  if (chars.length) intro.fromTo(chars, { yPercent: 120, rotateX: -95, opacity: 0 }, { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.2, stagger: 0.03, clearProps: 'transform,opacity' }, 0.25);
+  if (chars.length) intro.fromTo(chars, { yPercent: 120, rotateX: -95, opacity: 0 }, { yPercent: 0, rotateX: 0, opacity: 1, duration: 1.2, stagger: Math.min(0.03, 0.9 / chars.length), clearProps: 'transform,opacity' }, 0.25);
   intro.fromTo('[data-hero-in]', { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: 0.09, ease: 'power3.out', clearProps: 'transform' }, 0.45)
     .add(function () { $$('[data-hero] .eyebrow').forEach(scramble); }, 0.5);
   if ($('.free-seal')) intro.fromTo('.free-seal', { scale: 0, rotation: -200 }, { scale: 1, rotation: 0, duration: 1.4, ease: 'back.out(1.5)' }, 0.9);
@@ -220,7 +220,10 @@
     var dot = $('.cursor__dot', cur), ring = $('.cursor__ring', cur), label = $('.cursor__label', cur);
     var dX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3' }), dY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3' });
     var rX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' }), rY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
-    var LABELS = [['.sit', 'Обрати'], ['.svc', 'Відкрити'], ['.reviews__track', 'Тягни'], ['.tabs__btn', 'Дивитись']];
+    var ru = (html.getAttribute('lang') || '').indexOf('ru') === 0;
+    var LABELS = ru
+      ? [['.sit', 'Выбрать'], ['.svc', 'Открыть'], ['.case-card', 'Читать'], ['.reviews__track', 'Тяни'], ['.tabs__btn', 'Смотреть']]
+      : [['.sit', 'Обрати'], ['.svc', 'Відкрити'], ['.case-card', 'Читати'], ['.reviews__track', 'Тягни'], ['.tabs__btn', 'Дивитись']];
 
     window.addEventListener('mousemove', function (e) {
       cur.classList.remove('is-hidden');

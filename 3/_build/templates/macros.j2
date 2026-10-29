@@ -14,3 +14,15 @@
         <div class="faq__a"><div><p>{{ f.a|safe }}</p></div></div>
       </div>
 {%- endmacro -%}
+
+{%- macro case_card(c, sv) -%}
+      <a class="case-card" href="keys-{{ c.slug }}.html" data-cat="{{ c.service }}">
+        <span class="case-card__top">
+          <span class="case-card__icon"><i class="ic ic-gold {{ sv.icon }}"></i></span>
+          <span class="case-card__cat">{{ sv.nav }}</span>
+        </span>
+        <span class="case-card__title">{{ c.title }}</span>
+        <span class="case-card__result"><i class="ic ic-gold ic-check-circle"></i>{{ c.result_short }}</span>
+        <span class="case-card__foot"><span>{{ c.date }}</span><span class="case-card__more">{{ _("Читати кейс") }} <i class="ic ic-arrow-right"></i></span></span>
+      </a>
+{%- endmacro -%}

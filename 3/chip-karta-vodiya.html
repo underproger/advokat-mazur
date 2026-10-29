@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&family=Oranienbaum&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="alternate" hreflang="uk" href="chip-karta-vodiya.html">
+  <link rel="alternate" hreflang="ru" href="ru/chip-karta-vodiya.html">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/wow.css">
   <script>try{if(sessionStorage.getItem('mz-v'))document.documentElement.classList.add('pl-quick')}catch(e){}</script>
@@ -38,12 +40,18 @@
       <div class="hdr__menu">
         <button class="hdr__link hdr__link--drop is-current" type="button" data-mega-toggle aria-expanded="false">Послуги <i class="ic ic-chevron-down"></i></button>
         <a class="hdr__link" href="index.html#about">Про мене</a>
-        <a class="hdr__link" href="index.html#steps">Етапи</a>
+        <a class="hdr__link" href="keysy.html">Кейси</a>
         <a class="hdr__link" href="index.html#reviews">Відгуки</a>
         <a class="hdr__link" href="#contacts">Контакти</a>
       </div>
       <div class="hdr__actions">
-        <span class="lang"><a class="lang__item is-active" href="#">UA</a><span class="lang__sep">/</span><a class="lang__item" href="#">EN</a></span>
+        <div class="lang" data-lang>
+          <button class="lang__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Мова сайту">UA <i class="ic ic-chevron-down"></i></button>
+          <div class="lang__menu" role="menu">
+            <a class="lang__item is-active" role="menuitem" href="chip-karta-vodiya.html" hreflang="uk" lang="uk"><b>UA</b>Українська</a>
+            <a class="lang__item" role="menuitem" href="ru/chip-karta-vodiya.html" hreflang="ru" lang="ru"><b>RU</b>Русский</a>
+          </div>
+        </div>
         <a class="hdr__phone" href="tel:+380969124800"><i class="ic ic-gold ic-phone"></i>+38 096 912 48 00</a>
         <a class="btn btn--gold btn--xs" href="#contact">Консультація</a>
       </div>
@@ -121,7 +129,7 @@
       </div>
 
       <div class="hero__card">
-        <span class="hero__card-num"><span data-count="12">0</span><i>+</i></span>
+        <span class="hero__card-num"><span data-count="20">0</span></span>
         <span class="hero__card-text">років практики<br>у транспортному праві</span>
       </div>
     </div>
@@ -512,9 +520,9 @@
       <p class="about__text" data-reveal>Ви економите час і нерви, а весь бюрократичний процес бере на себе досвідчений юрист: детальна консультація, перевірка документів, взаємодія з державним підприємством, оплата зборів і супровід до отримання картки.</p>
 
       <ul class="creds" data-reveal-group>
-        <li><i class="ic ic-gold ic-id-card"></i><span>Свідоцтво № 0000<small>від 00.00.0000</small></span></li>
+        <li><i class="ic ic-gold ic-id-card"></i><span>Свідоцтво № 4073<small>право на заняття адвокатською діяльністю</small></span></li>
         <li><i class="ic ic-gold ic-scales"></i><span>Член НААУ<small>Київ · вся Україна</small></span></li>
-        <li><i class="ic ic-gold ic-briefcase"></i><span>12+ років<small>адвокатської практики</small></span></li>
+        <li><i class="ic ic-gold ic-briefcase"></i><span>20 років<small>практики</small></span></li>
       </ul>
 
       <div class="adv" data-reveal-group>
@@ -768,7 +776,7 @@
   <div class="container ftr__grid">
     <div class="ftr__brand">
       <span class="ftr__logo">Адвокат Мазур</span>
-      <p>Індивідуальна адвокатська практика. Свідоцтво про право на заняття адвокатською діяльністю № 0000.</p>
+      <p>Індивідуальна адвокатська практика. Свідоцтво про право на заняття адвокатською діяльністю № 4073.</p>
       <div class="socials">
         <a href="https://t.me/+380969124800" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
         <a href="viber://chat?number=%2B380969124800" aria-label="Viber"><i class="ic ic-gold ic-viber"></i></a>
@@ -799,8 +807,8 @@
     </div>
   </div>
   <div class="container ftr__bottom">
-    <span>© 2026 Адвокат Сергій Мазур</span>
-    <div><a href="#">Політика конфіденційності</a><span>UA / EN</span></div>
+    <span>© 2026 Адвокат Сергій Мазур. Всі права захищені.</span>
+    <div><a href="#">Політика конфіденційності</a><span class="ftr__dev">Створення та просування сайтів <a href="https://impulse-design.com.ua/" rel="nofollow" target="_blank">Impulse Design</a></span></div>
   </div>
 </footer>
 
@@ -824,6 +832,10 @@
   <div class="drawer__panel">
     <button class="drawer__close" type="button" aria-label="Закрити" data-drawer-close><i class="ic ic-close"></i></button>
     <a class="logo__name" href="index.html">Адвокат Мазур</a>
+    <div class="drawer__langs">
+      <a class="is-active" href="chip-karta-vodiya.html" hreflang="uk" lang="uk">UA</a>
+      <a class="" href="ru/chip-karta-vodiya.html" hreflang="ru" lang="ru">RU</a>
+    </div>
     <nav class="drawer__nav">
       <span class="drawer__label">Послуги</span>
       <a href="trudovi-spory.html">Трудові спори</a>
@@ -839,6 +851,7 @@
       <a href="kod-eori.html">Код EORI</a>
       <span class="drawer__label">Сайт</span>
       <a href="index.html#about" data-drawer-close>Про мене</a>
+      <a href="keysy.html">Кейси</a>
       <a href="index.html#steps" data-drawer-close>Етапи роботи</a>
       <a href="index.html#reviews" data-drawer-close>Відгуки</a>
       <a href="#contacts" data-drawer-close>Контакти</a>

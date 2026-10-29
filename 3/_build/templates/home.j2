@@ -7,52 +7,52 @@
   <div class="hero__glow" aria-hidden="true"></div>
   <div class="container container--wide h-hero__grid">
     <div class="h-hero__content">
-      <span class="eyebrow" data-hero-in>Індивідуальна адвокатська практика</span>
-      <h1 class="h-hero__title" data-chars>Адвокат Мазур — <span class="gold-text">захист прав</span> фізичних осіб і бізнесу</h1>
-      <p class="h-hero__lead" data-hero-in>У кримінальних, адміністративних і транспортних справах — особисто, від першої консультації до рішення суду.</p>
+      <span class="eyebrow" data-hero-in>{{ _("Індивідуальна адвокатська практика") }}</span>
+      <h1 class="h-hero__title" data-chars>{{ _("Адвокат Мазур —") }} <span class="gold-text">{{ _("захист прав") }}</span> {{ _("фізичних осіб і бізнесу") }}</h1>
+      <p class="h-hero__lead" data-hero-in>{{ _("У кримінальних, адміністративних і транспортних справах — особисто, від першої консультації до рішення суду.") }}</p>
       <div class="h-hero__btns" data-hero-in>
-        <a class="btn btn--gold btn--xl btn--shine" href="#contact">Отримати консультацію</a>
-        <button class="btn btn--ghost btn--call" type="button" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-gold ic-phone"></i>Передзвоніть мені</button>
+        <a class="btn btn--gold btn--xl btn--shine" href="#contact">{{ _("Отримати консультацію") }}</a>
+        <button class="btn btn--ghost btn--call" type="button" data-modal-open data-topic="{{ _("Зворотний дзвінок") }}"><i class="ic ic-gold ic-phone"></i>{{ _("Передзвоніть мені") }}</button>
       </div>
       <div class="h-hero__trust" data-hero-in>
-        <span>Свідоцтво № 0000</span><i class="ic ic-li-diamond ic-gold"></i><span>Член НААУ</span><i class="ic ic-li-diamond ic-gold"></i><span>Київ · вся Україна</span>
+        <span>{{ _("Свідоцтво №") }} {{ site.cert }}</span><i class="ic ic-li-diamond ic-gold"></i><span>{{ _("Член НААУ") }}</span><i class="ic ic-li-diamond ic-gold"></i><span>{{ _("Київ · вся Україна") }}</span>
       </div>
     </div>
     <div class="h-hero__media">
       <div class="h-hero__photo" data-parallax>
-        <img src="assets/img/lawyer-hero.webp" alt="Адвокат Мазур" width="979" height="1322" fetchpriority="high">
+        <img src="{{ page.root }}assets/img/lawyer-hero.webp" alt="{{ _("Адвокат Мазур") }}" width="979" height="1322" fetchpriority="high">
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ 02a STATS ============ -->
-<div class="h-stats" data-screen-label="02a Про адвоката — цифри">
+<div class="h-stats" data-screen-label="{{ _("02a Про адвоката — цифри") }}">
   <div class="h-stats__box">
     <div class="h-stats__grid">
-      <div class="h-stats__item"><span class="h-stats__num"><span data-count="12">0</span><span class="h-stats__gold">+</span> <span class="h-stats__unit">років</span></span><span class="h-stats__label">адвокатської практики</span></div>
-      <div class="h-stats__item"><span class="h-stats__num"><span data-count="500">0</span><span class="h-stats__gold">+</span></span><span class="h-stats__label">справ і проваджень</span></div>
-      <div class="h-stats__item"><span class="h-stats__num"><span data-count="{{ services|length }}">0</span></span><span class="h-stats__label">напрямів практики</span></div>
-      <div class="h-stats__item"><span class="h-stats__num">5.0</span><span class="h-stats__label">рейтинг у Google</span></div>
+      <div class="h-stats__item"><span class="h-stats__num"><span data-count="{{ site.years }}">0</span> <span class="h-stats__unit">{{ _("років") }}</span></span><span class="h-stats__label">{{ _("практики") }}</span></div>
+      <div class="h-stats__item"><span class="h-stats__num"><span data-count="500">0</span><span class="h-stats__gold">+</span></span><span class="h-stats__label">{{ _("справ і проваджень") }}</span></div>
+      <div class="h-stats__item"><span class="h-stats__num"><span data-count="{{ services|length }}">0</span></span><span class="h-stats__label">{{ _("напрямів практики") }}</span></div>
+      <div class="h-stats__item"><span class="h-stats__num">5.0</span><span class="h-stats__label">{{ _("рейтинг у Google") }}</span></div>
     </div>
   </div>
 </div>
 
 <!-- ============ 02b ABOUT ============ -->
-<section class="h-about" id="about" data-screen-label="02b Про адвоката">
+<section class="h-about" id="about" data-screen-label="{{ _("02b Про адвоката") }}">
   <div class="h-about__in">
-    <span class="eyebrow" data-reveal>Про адвоката</span>
-    <h2 class="h-about__title" data-split>Я захищаю людей і бізнес там, де помилка коштує <span class="gold-text">свободи, ліцензії або репутації</span></h2>
-    <p class="h-about__text" data-wow-fill>Індивідуальна практика без посередників: кожну справу веду особисто і відповідаю за результат — від аналізу документів до виступу в суді.</p>
+    <span class="eyebrow" data-reveal>{{ _("Про адвоката") }}</span>
+    <h2 class="h-about__title" data-split>{{ _("Я захищаю людей і бізнес там, де помилка коштує") }} <span class="gold-text">{{ _("свободи, ліцензії або репутації") }}</span></h2>
+    <p class="h-about__text" data-wow-fill>{{ _("Індивідуальна практика без посередників: кожну справу веду особисто і відповідаю за результат — від аналізу документів до виступу в суді.") }}</p>
   </div>
 </section>
 
 <!-- ============ 03 SERVICES ============ -->
-<section class="h-services" id="services" data-screen-label="03 Послуги">
+<section class="h-services" id="services" data-screen-label="{{ _("03 Послуги") }}">
   <div class="h-head">
-    <span class="h-head__ghost" aria-hidden="true">Послуги</span>
-    <h2 class="h-head__title h-head__title--gold" data-split>Надаю послуги</h2>
-    <p class="h-head__text" data-reveal>{{ services|length }} напрямів практики — від трудових спорів і кримінального захисту до документів для перевізників.</p>
+    <span class="h-head__ghost" aria-hidden="true">{{ _("Послуги") }}</span>
+    <h2 class="h-head__title h-head__title--gold" data-split>{{ _("Надаю послуги") }}</h2>
+    <p class="h-head__text" data-reveal>{{ services|length }} {{ _("напрямів практики — від трудових спорів і кримінального захисту до документів для перевізників.") }}</p>
   </div>
   <div class="container h-services__grid" data-reveal-group>
     {%- for s in services %}
@@ -66,40 +66,40 @@
         <li><i class="ic ic-li-diamond ic-gold"></i>{{ it }}</li>
         {%- endfor %}
       </ul>
-      <a class="svc__more" href="{{ s.slug }}.html">Детальніше</a>
+      <a class="svc__more" href="{{ s.slug }}.html">{{ _("Детальніше") }}</a>
     </article>
     {%- endfor %}
   </div>
 </section>
 
 <!-- ============ 04 SEO TEXT 1 ============ -->
-<section class="h-seo" data-screen-label="04 SEO текст 1">
+<section class="h-seo" data-screen-label="{{ _("04 SEO текст 1") }}">
   <div class="container">
     <div class="h-seo__in">
-      <h2 class="h-seo__title" data-reveal>Адвокат Мазур: юридичний захист у кримінальних, адміністративних і транспортних справах</h2>
+      <h2 class="h-seo__title" data-reveal>{{ _("Адвокат Мазур: юридичний захист у кримінальних, адміністративних і транспортних справах") }}</h2>
       <article class="h-seo__article" data-more>
-        <p data-reveal>Адвокат Мазур надає правову допомогу фізичним особам, підприємцям і перевізникам у справах, де від швидкості та точності дій залежить результат. Кожна справа починається з аналізу документів і обставин: ви отримуєте зрозумілу оцінку ризиків, план дій і фіксовану вартість роботи ще до підписання договору.</p>
+        <p data-reveal>{{ _("Адвокат Мазур надає правову допомогу фізичним особам, підприємцям і перевізникам у справах, де від швидкості та точності дій залежить результат. Кожна справа починається з аналізу документів і обставин: ви отримуєте зрозумілу оцінку ризиків, план дій і фіксовану вартість роботи ще до підписання договору.") }}</p>
         <div class="h-seo__more" data-more-body><div>
-          <h3>Трудові спори</h3>
-          <p>Основна практика — <a href="trudovi-spory.html">спори про незаконне звільнення</a> з державної служби та з будь-яких підприємств, поновлення на роботі, дисциплінарні стягнення, службові розслідування, захист від мобінгу.</p>
-          <h3>Кримінальний захист</h3>
-          <p>Захист у справах про <a href="korupciyni-spravy.html">корупційні</a>, <a href="ekonomichni-zlochyny.html">економічні та фінансові злочини</a>; супровід на допитах; оскарження запобіжних заходів і арешту майна; представництво у ВАКС та судах усіх інстанцій.</p>
-          <h3>Військові та адміністративні справи</h3>
-          <p>Допомога у справах <a href="advokat-po-tck.html">з ТЦК та СП</a>: відстрочка, неправомірні дії, адвокатські запити. Для бізнесу — <a href="krytychnist-pidpryiemstv.html">критичність підприємства</a> та бронювання працівників. <a href="administratyvni-pravoporushennya.html">Адміністративна практика</a>: оскарження постанов, рішень органів влади, представництво в ДВС і НАЗК.</p>
-          <h3>Транспортне право</h3>
-          <p>Видача, розширення та звуження <a href="licenziya-na-perevezennya.html">ліцензій на перевезення пасажирів та вантажів</a>, відкриття міжнародних автобусних маршрутів і готові фірми з ліцензіями. Дистанційне оформлення <a href="chip-karta-vodiya.html">чіп-карти водія</a>, <a href="kod-95.html">кваліфікаційної картки (Код 95)</a> та <a href="kod-eori.html">коду EORI</a> для роботи з митницями ЄС. Оскарження <a href="shtrafy-za-perevantazhennya.html">штрафів Укртрансбезпеки за перевантаження</a> (WIM).</p>
+          <h3>{{ _("Трудові спори") }}</h3>
+          <p>{{ _("Основна практика —") }} <a href="trudovi-spory.html">{{ _("спори про незаконне звільнення") }}</a> {{ _("з державної служби та з будь-яких підприємств, поновлення на роботі, дисциплінарні стягнення, службові розслідування, захист від мобінгу.") }}</p>
+          <h3>{{ _("Кримінальний захист") }}</h3>
+          <p>{{ _("Захист у справах про") }} <a href="korupciyni-spravy.html">{{ _("корупційні") }}</a>, <a href="ekonomichni-zlochyny.html">{{ _("економічні та фінансові злочини") }}</a>{{ _("; супровід на допитах; оскарження запобіжних заходів і арешту майна; представництво у ВАКС та судах усіх інстанцій.") }}</p>
+          <h3>{{ _("Військові та адміністративні справи") }}</h3>
+          <p>{{ _("Допомога у справах") }} <a href="advokat-po-tck.html">{{ _("з ТЦК та СП") }}</a>{{ _(": відстрочка, неправомірні дії, адвокатські запити. Для бізнесу —") }} <a href="krytychnist-pidpryiemstv.html">{{ _("критичність підприємства") }}</a> {{ _("та бронювання працівників.") }} <a href="administratyvni-pravoporushennya.html">{{ _("Адміністративна практика") }}</a>{{ _(": оскарження постанов, рішень органів влади, представництво в ДВС і НАЗК.") }}</p>
+          <h3>{{ _("Транспортне право") }}</h3>
+          <p>{{ _("Видача, розширення та звуження") }} <a href="licenziya-na-perevezennya.html">{{ _("ліцензій на перевезення пасажирів та вантажів") }}</a>{{ _(", відкриття міжнародних автобусних маршрутів і готові фірми з ліцензіями. Дистанційне оформлення") }} <a href="chip-karta-vodiya.html">{{ _("чіп-карти водія") }}</a>, <a href="kod-95.html">{{ _("кваліфікаційної картки (Код 95)") }}</a> {{ _("та") }} <a href="kod-eori.html">{{ _("коду EORI") }}</a> {{ _("для роботи з митницями ЄС. Оскарження") }} <a href="shtrafy-za-perevantazhennya.html">{{ _("штрафів Укртрансбезпеки за перевантаження") }}</a> (WIM).</p>
         </div></div>
-        <button class="more-btn" type="button" data-more-toggle aria-expanded="false"><span>Читати повністю</span> <i class="ic ic-gold ic-chevron-down"></i></button>
+        <button class="more-btn" type="button" data-more-toggle aria-expanded="false"><span>{{ _("Читати повністю") }}</span> <i class="ic ic-gold ic-chevron-down"></i></button>
       </article>
     </div>
   </div>
 </section>
 
 <!-- ============ 05 STEPS ============ -->
-<section class="h-steps" id="steps" data-screen-label="05 Етапи">
+<section class="h-steps" id="steps" data-screen-label="{{ _("05 Етапи") }}">
   <div class="h-head h-head--steps">
-    <span class="h-head__ghost" aria-hidden="true">Етапи</span>
-    <h2 class="h-head__title h-head__title--white" data-split>Як проходить робота</h2>
+    <span class="h-head__ghost" aria-hidden="true">{{ _("Етапи") }}</span>
+    <h2 class="h-head__title h-head__title--white" data-split>{{ _("Як проходить робота") }}</h2>
   </div>
   <div class="container">
     <ol class="h-steps__grid" data-steps>
@@ -120,26 +120,26 @@
           <span class="h-step__badge">{{ '%02d' % loop.index }}</span>
           <span class="h-step__tile"><span><i class="ic ic-gold {{ icon }}"></i></span></span>
         </div>
-        <p class="h-step__text">{{ text }}</p>
+        <p class="h-step__text">{{ _(text) }}</p>
       </li>
       {%- endfor %}
     </ol>
     <div class="h-steps__cta" data-reveal>
-      <a class="btn btn--gold btn--xl btn--shine" href="#contact">Отримати консультацію</a>
+      <a class="btn btn--gold btn--xl btn--shine" href="#contact">{{ _("Отримати консультацію") }}</a>
     </div>
   </div>
 </section>
 
 <!-- ============ 06 WHY ============ -->
-<section class="h-why" id="why" data-screen-label="06 Чому я">
+<section class="h-why" id="why" data-screen-label="{{ _("06 Чому я") }}">
   <div class="container h-why__in">
     <div class="h-why__photo" data-wow-reveal>
-      <div data-parallax><img src="assets/img/lawyer-office.webp" alt="Адвокат Мазур у переговорній кімнаті" width="944" height="1025" loading="lazy"></div>
+      <div data-parallax><img src="{{ page.root }}assets/img/lawyer-office.webp" alt="{{ _("Адвокат Мазур у переговорній кімнаті") }}" width="944" height="1025" loading="lazy"></div>
     </div>
     <div class="h-why__content">
-      <span class="eyebrow" data-reveal>Чому я</span>
-      <h2 class="h-why__title" data-split>Чому клієнти <span class="gold-text">обирають мене</span></h2>
-      <p class="h-why__text" data-reveal>Ви працюєте з адвокатом, а не з фірмою — без помічників, стажерів і посередників.</p>
+      <span class="eyebrow" data-reveal>{{ _("Чому я") }}</span>
+      <h2 class="h-why__title" data-split>{{ _("Чому клієнти") }} <span class="gold-text">{{ _("обирають мене") }}</span></h2>
+      <p class="h-why__text" data-reveal>{{ _("Ви працюєте з адвокатом, а не з фірмою — без помічників, стажерів і посередників.") }}</p>
       <div class="h-why__grid" data-reveal-group>
         {%- set reasons = [
           ('ic-user-focus', 'Особисто', 'Не передаю справи помічникам. Ви говорите з адвокатом, який веде ваш захист.'),
@@ -151,48 +151,48 @@
         ] %}
         {%- for icon, title, text in reasons %}
         <div class="reason">
-          <span class="reason__head"><i class="ic ic-gold {{ icon }}"></i><span>{{ title }}</span></span>
-          <p>{{ text }}</p>
+          <span class="reason__head"><i class="ic ic-gold {{ icon }}"></i><span>{{ _(title) }}</span></span>
+          <p>{{ _(text) }}</p>
         </div>
         {%- endfor %}
       </div>
       <div class="h-why__btns" data-reveal>
-        <a class="btn btn--gold btn--why btn--shine" href="#contact">Записатися на консультацію</a>
-        <button class="btn btn--ghost btn--call btn--call-sm" type="button" data-modal-open data-topic="Зворотний дзвінок"><i class="ic ic-gold ic-phone"></i>Передзвоніть мені</button>
+        <a class="btn btn--gold btn--why btn--shine" href="#contact">{{ _("Записатися на консультацію") }}</a>
+        <button class="btn btn--ghost btn--call btn--call-sm" type="button" data-modal-open data-topic="{{ _("Зворотний дзвінок") }}"><i class="ic ic-gold ic-phone"></i>{{ _("Передзвоніть мені") }}</button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ 07 CONTACT ============ -->
-<section class="h-contact" id="contact" data-screen-label="07 Заявка">
+<section class="h-contact" id="contact" data-screen-label="{{ _("07 Заявка") }}">
   <div class="container">
     <div class="h-contact__box" data-reveal>
       <div class="h-contact__media" data-wow-reveal>
-        <div data-parallax><img src="assets/img/themis.webp" alt="Адвокат Мазур" width="941" height="941" loading="lazy"></div>
+        <div data-parallax><img src="{{ page.root }}assets/img/themis.webp" alt="{{ _("Адвокат Мазур") }}" width="941" height="941" loading="lazy"></div>
       </div>
       <div class="h-contact__body" data-form-wrap>
-        <span class="eyebrow">Заявка</span>
-        <h2 class="h-contact__title" data-split>Хочете отримати консультацію та оцінку перспектив справи?</h2>
-        <p class="h-contact__text">Заповніть форму — я зв'яжуся з вами та запропоную план дій.</p>
+        <span class="eyebrow">{{ _("Заявка") }}</span>
+        <h2 class="h-contact__title" data-split>{{ _("Хочете отримати консультацію та оцінку перспектив справи?") }}</h2>
+        <p class="h-contact__text">{{ _("Заповніть форму — я зв'яжуся з вами та запропоную план дій.") }}</p>
         <form class="form h-form" data-form>
-          <label class="field field--h"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
-          <label class="field field--h"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
+          <label class="field field--h"><i class="ic ic-user"></i><input type="text" name="name" placeholder="{{ _("Ваше ім'я") }}" required></label>
+          <label class="field field--h"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="{{ _("Номер телефону") }}" required></label>
           <div class="field field--h field--select h-form__full"><i class="ic ic-briefcase"></i>
-            <select name="service" data-select aria-label="Напрям">
-              <option>Оберіть напрям</option>
+            <select name="service" data-select aria-label="{{ _("Напрям") }}">
+              <option>{{ _("Оберіть напрям") }}</option>
               {%- for s in services %}
               <option>{{ s.nav }}</option>
               {%- endfor %}
-              <option>Інше</option>
+              <option>{{ _("Інше") }}</option>
             </select>
           </div>
-          <button class="btn btn--gold btn--block h-form__full h-form__submit" type="submit">Надіслати заявку</button>
-          <p class="form__policy h-form__full">Натискаючи кнопку, ви погоджуєтеся на обробку <a href="#">персональних даних</a>.</p>
+          <button class="btn btn--gold btn--block h-form__full h-form__submit" type="submit">{{ _("Надіслати заявку") }}</button>
+          <p class="form__policy h-form__full">{{ _("Натискаючи кнопку, ви погоджуєтеся на обробку") }} <a href="#">{{ _("персональних даних") }}</a>.</p>
         </form>
         <div class="form-success">
           <i class="ic ic-gold ic-check-circle"></i>
-          <div><b>Дякую.</b> Заявку отримано. Я зв'яжуся з вами найближчим часом.</div>
+          <div><b>{{ _("Дякую.") }}</b> {{ _("Заявку отримано. Я зв'яжуся з вами найближчим часом.") }}</div>
         </div>
       </div>
     </div>
@@ -200,16 +200,16 @@
 </section>
 
 <!-- ============ 08 REVIEWS ============ -->
-<section class="reviews h-reviews" id="reviews" data-screen-label="08 Відгуки">
+<section class="reviews h-reviews" id="reviews" data-screen-label="{{ _("08 Відгуки") }}">
   <div class="container reviews__head">
     <div>
-      <span class="eyebrow" data-reveal>Відгуки Google</span>
-      <h2 class="h-head__title h-head__title--gold" data-split>Відгуки клієнтів</h2>
-      <span class="rating" data-reveal><b>5.0</b>{{ stars() }}48 відгуків у Google</span>
+      <span class="eyebrow" data-reveal>{{ _("Відгуки Google") }}</span>
+      <h2 class="h-head__title h-head__title--gold" data-split>{{ _("Відгуки клієнтів") }}</h2>
+      <span class="rating" data-reveal><b>5.0</b>{{ stars() }}{{ _("48 відгуків у Google") }}</span>
     </div>
     <div class="arrows" data-reveal>
-      <button class="arrow" type="button" aria-label="Назад" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
-      <button class="arrow arrow--gold" type="button" aria-label="Далі" data-slider-next><i class="ic ic-arrow-right"></i></button>
+      <button class="arrow" type="button" aria-label="{{ _("Назад") }}" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
+      <button class="arrow arrow--gold" type="button" aria-label="{{ _("Далі") }}" data-slider-next><i class="ic ic-arrow-right"></i></button>
     </div>
   </div>
 
@@ -220,8 +220,8 @@
   </div>
 
   <div class="container reviews__foot" data-reveal>
-    <a class="link-gold link-gold--underline" href="#">Усі відгуки в Google <i class="ic ic-gold ic-arrow-up-right"></i></a>
-    <a class="reviews__leave" href="#">Залишити відгук</a>
+    <a class="link-gold link-gold--underline" href="#">{{ _("Усі відгуки в Google") }} <i class="ic ic-gold ic-arrow-up-right"></i></a>
+    <a class="reviews__leave" href="#">{{ _("Залишити відгук") }}</a>
   </div>
 </section>
 
@@ -229,10 +229,10 @@
 <section class="h-faq" id="faq" data-screen-label="09 FAQ">
   <div class="container faq">
     <div class="faq__side">
-      <span class="eyebrow" data-reveal>Питання та відповіді</span>
-      <h2 class="h2 h-faq__title" data-split>Часті <span class="gold-text">питання</span></h2>
-      <p class="sec-head__text" data-reveal>Не знайшли відповідь? Поставте питання напряму — відповім особисто.</p>
-      <button class="btn btn--ghost btn--call btn--call-sm" type="button" data-modal-open data-topic="Інше" data-reveal><i class="ic ic-gold ic-chat"></i>Поставити питання</button>
+      <span class="eyebrow" data-reveal>{{ _("Питання та відповіді") }}</span>
+      <h2 class="h2 h-faq__title" data-split>{{ _("Часті") }} <span class="gold-text">{{ _("питання") }}</span></h2>
+      <p class="sec-head__text" data-reveal>{{ _("Не знайшли відповідь? Поставте питання напряму — відповім особисто.") }}</p>
+      <button class="btn btn--ghost btn--call btn--call-sm" type="button" data-modal-open data-topic="{{ _("Інше") }}" data-reveal><i class="ic ic-gold ic-chat"></i>{{ _("Поставити питання") }}</button>
     </div>
     <div class="faq__list" data-reveal-group>
       {%- for f in page.faq %}
@@ -243,19 +243,19 @@
 </section>
 
 <!-- ============ 10 SEO TEXT 2 ============ -->
-<section class="h-seo h-seo--last" data-screen-label="10 SEO текст 2">
+<section class="h-seo h-seo--last" data-screen-label="{{ _("10 SEO текст 2") }}">
   <div class="container">
     <div class="h-seo__in">
-      <h2 class="h-seo__title" data-reveal>Як обрати адвоката для своєї справи</h2>
+      <h2 class="h-seo__title" data-reveal>{{ _("Як обрати адвоката для своєї справи") }}</h2>
       <article class="h-seo__article" data-more>
-        <p data-reveal>Звертайте увагу на три речі: чи має адвокат практику саме у вашій категорії справ, чи веде він справу особисто і чи готовий письмово зафіксувати вартість та обсяг робіт. Індивідуальна практика дає саме це: один відповідальний адвокат, прямий зв'язок і прозорі умови.</p>
+        <p data-reveal>{{ _("Звертайте увагу на три речі: чи має адвокат практику саме у вашій категорії справ, чи веде він справу особисто і чи готовий письмово зафіксувати вартість та обсяг робіт. Індивідуальна практика дає саме це: один відповідальний адвокат, прямий зв'язок і прозорі умови.") }}</p>
         <div class="h-seo__more" data-more-body><div>
-          <h3>Що підготувати до консультації</h3>
-          <p>Документи, які у вас є, хронологію подій і перелік питань. Якщо документів немає — це не перешкода: їх можна отримати в процесі роботи.</p>
-          <h3>Консультація онлайн</h3>
-          <p>Консультація доступна в Telegram, Viber, WhatsApp або відеозв'язком. Це зручно, якщо ви в іншому місті чи за кордоном.</p>
+          <h3>{{ _("Що підготувати до консультації") }}</h3>
+          <p>{{ _("Документи, які у вас є, хронологію подій і перелік питань. Якщо документів немає — це не перешкода: їх можна отримати в процесі роботи.") }}</p>
+          <h3>{{ _("Консультація онлайн") }}</h3>
+          <p>{{ _("Консультація доступна в Telegram, Viber, WhatsApp або відеозв'язком. Це зручно, якщо ви в іншому місті чи за кордоном.") }}</p>
         </div></div>
-        <button class="more-btn" type="button" data-more-toggle aria-expanded="false"><span>Читати повністю</span> <i class="ic ic-gold ic-chevron-down"></i></button>
+        <button class="more-btn" type="button" data-more-toggle aria-expanded="false"><span>{{ _("Читати повністю") }}</span> <i class="ic ic-gold ic-chevron-down"></i></button>
       </article>
     </div>
   </div>

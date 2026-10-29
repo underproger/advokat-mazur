@@ -1,5 +1,5 @@
 {% extends "base.j2" %}
-{% from "macros.j2" import stars, review, faq_item %}
+{% from "macros.j2" import stars, review, faq_item, case_card %}
 {% block main %}
 {%- set s = page.svc %}
 
@@ -8,9 +8,9 @@
   <div class="hero__glow" aria-hidden="true"></div>
   <div class="container container--wide hero__grid">
     <div class="hero__content">
-      <nav class="crumbs" aria-label="Хлібні крихти" data-hero-in>
-        <a href="index.html">Головна</a><i class="ic ic-li-diamond ic-gold"></i>
-        <a href="index.html#services">Послуги</a><i class="ic ic-li-diamond ic-gold"></i>
+      <nav class="crumbs" aria-label="{{ _("Хлібні крихти") }}" data-hero-in>
+        <a href="index.html">{{ _("Головна") }}</a><i class="ic ic-li-diamond ic-gold"></i>
+        <a href="index.html#services">{{ _("Послуги") }}</a><i class="ic ic-li-diamond ic-gold"></i>
         <span>{{ s.nav }}</span>
       </nav>
 
@@ -25,42 +25,42 @@
       </ul>
 
       <div class="hero__btns" data-hero-in>
-        <a class="btn btn--gold btn--lg btn--shine" href="#contact">Безкоштовна консультація</a>
-        <button class="btn btn--ghost btn--lg" type="button" data-modal-open data-topic="Інше питання"><i class="ic ic-gold ic-chat"></i>Описати свою ситуацію</button>
+        <a class="btn btn--gold btn--lg btn--shine" href="#contact">{{ _("Безкоштовна консультація") }}</a>
+        <button class="btn btn--ghost btn--lg" type="button" data-modal-open data-topic="{{ _("Інше питання") }}"><i class="ic ic-gold ic-chat"></i>{{ _("Описати свою ситуацію") }}</button>
       </div>
 
       <div class="hero__trust" data-hero-in>
-        <span><i class="ic ic-gold ic-lock"></i>Конфіденційно</span>
-        <span><i class="ic ic-gold ic-globe"></i>Онлайн або в офісі</span>
-        <span><i class="ic ic-gold ic-user-focus"></i>Справу веду особисто</span>
+        <span><i class="ic ic-gold ic-lock"></i>{{ _("Конфіденційно") }}</span>
+        <span><i class="ic ic-gold ic-globe"></i>{{ _("Онлайн або в офісі") }}</span>
+        <span><i class="ic ic-gold ic-user-focus"></i>{{ _("Справу веду особисто") }}</span>
       </div>
     </div>
 
     <div class="hero__media">
       <div class="hero__photo" data-parallax>
-        <img src="assets/img/{{ s.hero_img }}.webp" alt="{{ s.hero_alt }}" width="{{ 944 if s.hero_img == 'lawyer-office' else 979 }}" height="{{ 1025 if s.hero_img == 'lawyer-office' else 1322 }}" fetchpriority="high">
+        <img src="{{ page.root }}assets/img/{{ s.hero_img }}.webp" alt="{{ s.hero_alt }}" width="{{ 944 if s.hero_img == 'lawyer-office' else 979 }}" height="{{ 1025 if s.hero_img == 'lawyer-office' else 1322 }}" fetchpriority="high">
       </div>
 
       <div class="free-seal" aria-hidden="true">
         <svg class="free-seal__ring" viewBox="0 0 200 200">
           <defs><path id="sealPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-          <text><textPath href="#sealPath">Безкоштовна консультація ◆ Безкоштовна консультація ◆ </textPath></text>
+          <text><textPath href="#sealPath">{{ _("Безкоштовна консультація ◆ Безкоштовна консультація ◆") }} </textPath></text>
         </svg>
-        <span class="free-seal__core"><b>0 ₴</b><small>перша<br>консультація</small></span>
+        <span class="free-seal__core"><b>0 ₴</b><small>{{ _("перша") }}<br>{{ _("консультація") }}</small></span>
       </div>
 
       <div class="hero__card">
-        <span class="hero__card-num"><span data-count="12">0</span><i>+</i></span>
-        <span class="hero__card-text">років практики<br>{{ s.years_text }}</span>
+        <span class="hero__card-num"><span data-count="{{ site.years }}">0</span></span>
+        <span class="hero__card-text">{{ _("років практики") }}<br>{{ s.years_text }}</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ TOC (sticky) ============ -->
-<nav class="toc" aria-label="Зміст сторінки" data-toc>
+<nav class="toc" aria-label="{{ _("Зміст сторінки") }}" data-toc>
   <div class="container toc__in">
-    <a class="btn btn--gold btn--xs toc__btn" href="#contact">Безкоштовна консультація</a>
+    <a class="btn btn--gold btn--xs toc__btn" href="#contact">{{ _("Безкоштовна консультація") }}</a>
   </div>
 </nav>
 
@@ -69,10 +69,10 @@
   <div class="container">
     <div class="sec-head sec-head--split">
       <div>
-        <span class="eyebrow" data-reveal><b>01</b>Ситуації</span>
-        <h2 class="h2" data-split>З яким питанням вам <span class="gold-text">потрібна допомога?</span></h2>
+        <span class="eyebrow" data-reveal><b>01</b>{{ _("Ситуації") }}</span>
+        <h2 class="h2" data-split>{{ _("З яким питанням вам") }} <span class="gold-text">{{ _("потрібна допомога?") }}</span></h2>
       </div>
-      <p class="sec-head__text" data-reveal>{{ s.get('situations_text') or "Не обов'язково самостійно визначати, які норми закону порушено. Оберіть ситуацію — і почнемо з її безкоштовної правової оцінки." }}</p>
+      <p class="sec-head__text" data-reveal>{{ s.get('situations_text') or _("Не обов'язково самостійно визначати, які норми закону порушено. Оберіть ситуацію — і почнемо з її безкоштовної правової оцінки.") }}</p>
     </div>
 
     <div class="sit-grid" data-reveal-group>
@@ -82,7 +82,7 @@
         <span class="tile"><i class="ic ic-gold {{ it.icon }}"></i></span>
         <h3 class="sit__title">{{ it.title }}</h3>
         <p class="sit__text">{{ it.text }}</p>
-        <button class="sit__more" type="button" data-modal-open data-topic="{{ it.topic }}">{{ 'Описати ситуацію' if last else 'Оцінити безкоштовно' }} <i class="ic ic-arrow-right"></i></button>
+        <button class="sit__more" type="button" data-modal-open data-topic="{{ it.topic }}">{{ _('Описати ситуацію') if last else _('Оцінити безкоштовно') }} <i class="ic ic-arrow-right"></i></button>
       </article>
       {%- endfor %}
     </div>
@@ -93,9 +93,9 @@
 <section class="section section--alt" id="help">
   <div class="container">
     <div class="sec-head sec-head--center">
-      <span class="ghost-word" aria-hidden="true">Допомога</span>
-      <span class="eyebrow" data-reveal><b>02</b>Чим допоможу</span>
-      <h2 class="h2" data-split>Яку допомогу надаю <span class="gold-text">{{ s.help_gold }}</span></h2>
+      <span class="ghost-word" aria-hidden="true">{{ _("Допомога") }}</span>
+      <span class="eyebrow" data-reveal><b>02</b>{{ _("Чим допоможу") }}</span>
+      <h2 class="h2" data-split>{{ _("Яку допомогу надаю") }} <span class="gold-text">{{ s.help_gold }}</span></h2>
       <p class="sec-head__text" data-reveal>{{ s.help_text }}</p>
     </div>
 
@@ -120,7 +120,7 @@
             {%- endfor %}
             <div class="tabs__cols">
               <div>
-                <span class="mini-label">У межах допомоги</span>
+                <span class="mini-label">{{ _("У межах допомоги") }}</span>
                 <ul class="check">
                   {%- for li in t.list %}
                   <li>{{ li }}</li>
@@ -145,8 +145,8 @@
 <section class="band">
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
-      {%- for _ in range(2) %}
-      <span>Безкоштовна консультація</span><i class="ic ic-li-diamond"></i><span>Конфіденційно</span><i class="ic ic-li-diamond"></i><span>Онлайн або в офісі</span><i class="ic ic-li-diamond"></i><span>Без зобов'язань</span><i class="ic ic-li-diamond"></i>
+      {%- for _rep in range(2) %}
+      <span>{{ _("Безкоштовна консультація") }}</span><i class="ic ic-li-diamond"></i><span>{{ _("Конфіденційно") }}</span><i class="ic ic-li-diamond"></i><span>{{ _("Онлайн або в офісі") }}</span><i class="ic ic-li-diamond"></i><span>{{ _("Без зобов'язань") }}</span><i class="ic ic-li-diamond"></i>
       {%- endfor %}
     </div>
   </div>
@@ -155,12 +155,12 @@
       <div class="band__text">
         <span class="band__price shimmer-dark">0 ₴</span>
         <div>
-          <h2 class="band__title">Перша консультація — безкоштовно</h2>
-          <p>Опишіть ситуацію та надішліть документи. Я оціню перспективи й скажу, які кроки варто зробити. Договір — лише якщо ви вирішите продовжити.</p>
+          <h2 class="band__title">{{ _("Перша консультація — безкоштовно") }}</h2>
+          <p>{{ _("Опишіть ситуацію та надішліть документи. Я оціню перспективи й скажу, які кроки варто зробити. Договір — лише якщо ви вирішите продовжити.") }}</p>
         </div>
       </div>
       <div class="band__actions">
-        <button class="btn btn--dark btn--lg" type="button" data-modal-open data-topic="Безкоштовна консультація">Записатися безкоштовно</button>
+        <button class="btn btn--dark btn--lg" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Записатися безкоштовно") }}</button>
         <div class="band__msg">
           <a href="{{ site.telegram }}" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-telegram"></i></a>
           <a href="{{ site.viber }}" aria-label="Viber"><i class="ic ic-viber"></i></a>
@@ -176,10 +176,10 @@
 <section class="section" id="steps">
   <div class="container">
     <div class="sec-head sec-head--center">
-      <span class="ghost-word" aria-hidden="true">Етапи</span>
-      <span class="eyebrow" data-reveal><b>03</b>Етапи</span>
-      <h2 class="h2 h2--white" data-split>Як відбувається правовий супровід</h2>
-      <p class="sec-head__text" data-reveal>Від першого звернення до реалізації погодженої стратегії захисту.</p>
+      <span class="ghost-word" aria-hidden="true">{{ _("Етапи") }}</span>
+      <span class="eyebrow" data-reveal><b>03</b>{{ _("Етапи") }}</span>
+      <h2 class="h2 h2--white" data-split>{{ _("Як відбувається правовий супровід") }}</h2>
+      <p class="sec-head__text" data-reveal>{{ _("Від першого звернення до реалізації погодженої стратегії захисту.") }}</p>
     </div>
 
     <ol class="steps" data-wow-steps>
@@ -204,59 +204,59 @@
   <div class="container">
     <div class="sec-head sec-head--split">
       <div>
-        <span class="eyebrow" data-reveal><b>04</b>Вартість</span>
-        <h2 class="h2" data-split>Скільки коштують <span class="gold-text">послуги адвоката</span></h2>
+        <span class="eyebrow" data-reveal><b>04</b>{{ _("Вартість") }}</span>
+        <h2 class="h2" data-split>{{ _("Скільки коштують") }} <span class="gold-text">{{ _("послуги адвоката") }}</span></h2>
       </div>
-      <p class="sec-head__text" data-reveal>{{ s.price.get('text') or 'Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.' }}</p>
+      <p class="sec-head__text" data-reveal>{{ s.price.get('text') or _('Вартість залежить від складності питання, обсягу документів і формату представництва. Ціна фіксується в договорі — без доплат.') }}</p>
     </div>
 
     <div class="price-grid" data-wow-fan>
       <article class="price price--free">
-        <span class="price__ribbon">Безкоштовно</span>
-        <span class="price__label">Крок 1</span>
-        <h3 class="price__title">Первинна консультація</h3>
+        <span class="price__ribbon">{{ _("Безкоштовно") }}</span>
+        <span class="price__label">{{ _("Крок 1") }}</span>
+        <h3 class="price__title">{{ _("Первинна консультація") }}</h3>
         <span class="price__value"><b>0</b> ₴</span>
         <ul class="check">
-          <li>Аналіз вашого питання</li>
-          <li>Оцінка перспектив і ризиків</li>
-          <li>Рекомендації щодо подальших дій</li>
+          <li>{{ _("Аналіз вашого питання") }}</li>
+          <li>{{ _("Оцінка перспектив і ризиків") }}</li>
+          <li>{{ _("Рекомендації щодо подальших дій") }}</li>
         </ul>
-        <button class="btn btn--gold btn--md btn--block btn--shine" type="button" data-modal-open data-topic="Безкоштовна консультація">Записатися безкоштовно</button>
+        <button class="btn btn--gold btn--md btn--block btn--shine" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Записатися безкоштовно") }}</button>
       </article>
       <article class="price">
-        <span class="price__label">Крок 2</span>
+        <span class="price__label">{{ _("Крок 2") }}</span>
         <h3 class="price__title">{{ s.price.docs_title }}</h3>
         {%- if s.price.get('docs_value') %}
         <span class="price__value">{{ s.price.docs_value|safe }}</span>
         {%- if s.price.get('docs_hint') %}<span class="price__hint">{{ s.price.docs_hint }}</span>{% endif %}
         {%- else %}
-        <span class="price__value price__value--sm">Фіксована ціна</span>
+        <span class="price__value price__value--sm">{{ _("Фіксована ціна") }}</span>
         {%- endif %}
         <ul class="check">
           {%- for li in s.price.docs %}
           <li>{{ li }}</li>
           {%- endfor %}
         </ul>
-        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Дізнатися вартість</button>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Дізнатися вартість") }}</button>
       </article>
       <article class="price">
-        <span class="price__label">Крок 3</span>
-        <h3 class="price__title">{{ s.price.get('full_title', 'Комплексний супровід') }}</h3>
+        <span class="price__label">{{ _("Крок 3") }}</span>
+        <h3 class="price__title">{{ s.price.get('full_title') or _('Комплексний супровід') }}</h3>
         {%- if s.price.get('full_value') %}
         <span class="price__value">{{ s.price.full_value|safe }}</span>
         {%- if s.price.get('full_hint') %}<span class="price__hint">{{ s.price.full_hint }}</span>{% endif %}
         {%- else %}
-        <span class="price__value price__value--sm">За договором</span>
+        <span class="price__value price__value--sm">{{ _("За договором") }}</span>
         {%- endif %}
         <ul class="check">
           {%- for li in s.price.full %}
           <li>{{ li }}</li>
           {%- endfor %}
         </ul>
-        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="Безкоштовна консультація">Обговорити справу</button>
+        <button class="btn btn--ghost btn--md btn--block" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Обговорити справу") }}</button>
       </article>
     </div>
-    <p class="price-note" data-reveal><i class="ic ic-gold ic-li-diamond"></i>Обсяг робіт і вартість погоджуються до початку надання правової допомоги.</p>
+    <p class="price-note" data-reveal><i class="ic ic-gold ic-li-diamond"></i>{{ _("Обсяг робіт і вартість погоджуються до початку надання правової допомоги.") }}</p>
   </div>
 </section>
 
@@ -265,54 +265,74 @@
   <div class="container about">
     <div class="about__media" data-reveal>
       <div class="about__photo" data-parallax data-wow-reveal>
-        <img src="assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="Адвокат Сергій Мазур" loading="lazy">
+        <img src="{{ page.root }}assets/img/{{ 'lawyer-hero' if s.hero_img == 'lawyer-office' else 'lawyer-office' }}.webp" alt="{{ _("Адвокат Сергій Мазур") }}" loading="lazy">
       </div>
       <div class="about__stats">
-        <div><b><span data-count="500">0</span>+</b><span>справ і проваджень</span></div>
-        <div><b>5.0</b><span>рейтинг у Google</span></div>
+        <div><b><span data-count="500">0</span>+</b><span>{{ _("справ і проваджень") }}</span></div>
+        <div><b>5.0</b><span>{{ _("рейтинг у Google") }}</span></div>
       </div>
     </div>
 
     <div class="about__content">
-      <span class="eyebrow" data-reveal><b>05</b>Про адвоката</span>
-      <h2 class="h2" data-split>Ваші інтереси захищає <span class="gold-text">адвокат Мазур</span></h2>
-      <p class="about__lead" data-wow-fill>Підхід до кожної справи починається з уважного вивчення обставин і документів.</p>
+      <span class="eyebrow" data-reveal><b>05</b>{{ _("Про адвоката") }}</span>
+      <h2 class="h2" data-split>{{ _("Ваші інтереси захищає") }} <span class="gold-text">{{ _("адвокат Мазур") }}</span></h2>
+      <p class="about__lead" data-wow-fill>{{ _("Підхід до кожної справи починається з уважного вивчення обставин і документів.") }}</p>
       <p class="about__text" data-reveal>{{ s.about_text }}</p>
 
       <ul class="creds" data-reveal-group>
-        <li><i class="ic ic-gold ic-id-card"></i><span>Свідоцтво № 0000<small>від 00.00.0000</small></span></li>
-        <li><i class="ic ic-gold ic-scales"></i><span>Член НААУ<small>Київ · вся Україна</small></span></li>
-        <li><i class="ic ic-gold ic-briefcase"></i><span>12+ років<small>адвокатської практики</small></span></li>
+        <li><i class="ic ic-gold ic-id-card"></i><span>{{ _("Свідоцтво №") }} {{ site.cert }}<small>{{ _("право на заняття адвокатською діяльністю") }}</small></span></li>
+        <li><i class="ic ic-gold ic-scales"></i><span>{{ _("Член НААУ") }}<small>{{ _("Київ · вся Україна") }}</small></span></li>
+        <li><i class="ic ic-gold ic-briefcase"></i><span>{{ site.years }} {{ _("років") }}<small>{{ _("практики") }}</small></span></li>
       </ul>
 
       <div class="adv" data-reveal-group>
-        <div class="adv__item"><i class="ic ic-gold ic-user-focus"></i><div><h3>Особисто</h3><p>Не передаю справи помічникам — ви говорите з адвокатом, який веде захист.</p></div></div>
-        <div class="adv__item"><i class="ic ic-gold ic-eye"></i><div><h3>Чесна оцінка</h3><p>Реальні перспективи та ризики — ще до підписання договору.</p></div></div>
-        <div class="adv__item"><i class="ic ic-gold ic-receipt"></i><div><h3>Прозора ціна</h3><p>Вартість і етапи фіксуються в договорі. Без доплат.</p></div></div>
-        <div class="adv__item"><i class="ic ic-gold ic-lock"></i><div><h3>Адвокатська таємниця</h3><p>Усе, що ви розповідаєте, захищено законом.</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-user-focus"></i><div><h3>{{ _("Особисто") }}</h3><p>{{ _("Не передаю справи помічникам — ви говорите з адвокатом, який веде захист.") }}</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-eye"></i><div><h3>{{ _("Чесна оцінка") }}</h3><p>{{ _("Реальні перспективи та ризики — ще до підписання договору.") }}</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-receipt"></i><div><h3>{{ _("Прозора ціна") }}</h3><p>{{ _("Вартість і етапи фіксуються в договорі. Без доплат.") }}</p></div></div>
+        <div class="adv__item"><i class="ic ic-gold ic-lock"></i><div><h3>{{ _("Адвокатська таємниця") }}</h3><p>{{ _("Усе, що ви розповідаєте, захищено законом.") }}</p></div></div>
       </div>
 
       <div class="about__btns" data-reveal>
-        <a class="btn btn--gold btn--md btn--shine" href="#contact">Безкоштовна консультація</a>
-        <a class="btn btn--ghost btn--md" href="index.html#about">Детальніше про адвоката <i class="ic ic-gold ic-arrow-up-right"></i></a>
+        <a class="btn btn--gold btn--md btn--shine" href="#contact">{{ _("Безкоштовна консультація") }}</a>
+        <a class="btn btn--ghost btn--md" href="index.html#about">{{ _("Детальніше про адвоката") }} <i class="ic ic-gold ic-arrow-up-right"></i></a>
       </div>
     </div>
   </div>
 </section>
 
+{%- if page.svc_cases %}
+<!-- ============ CASES ============ -->
+<section class="section section--tight" id="cases">
+  <div class="container">
+    <div class="sec-head sec-head--split">
+      <div>
+        <span class="eyebrow" data-reveal>{{ _("Кейси") }}</span>
+        <h2 class="h2" data-split>{{ _("Приклади справ") }} <span class="gold-text">{{ _("з практики") }}</span></h2>
+      </div>
+      <a class="btn btn--ghost btn--md" href="keysy.html" data-reveal>{{ _("Усі кейси") }} <i class="ic ic-gold ic-arrow-right"></i></a>
+    </div>
+    <div class="cases__list cases__list--3" data-reveal-group>
+      {%- for c in page.svc_cases %}
+      {{ case_card(c, page.svc_by_slug[c.service]) }}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{%- endif %}
+
 <!-- ============ 08 REVIEWS ============ -->
 <section class="section section--alt reviews" id="reviews">
   <div class="container reviews__head">
     <div>
-      <span class="eyebrow" data-reveal><b>06</b>{{ s.get('reviews_rating') or 'Відгуки Google' }}</span>
-      <h2 class="h2" data-split>Відгуки клієнтів <span class="gold-text">{{ s.reviews_gold }}</span></h2>
+      <span class="eyebrow" data-reveal><b>06</b>{{ s.get('reviews_rating') or _('Відгуки Google') }}</span>
+      <h2 class="h2" data-split>{{ _("Відгуки клієнтів") }} <span class="gold-text">{{ s.reviews_gold }}</span></h2>
       {%- if not s.get('reviews_rating') %}
-      <span class="rating" data-reveal><b>5.0</b>{{ stars() }}48 відгуків у Google</span>
+      <span class="rating" data-reveal><b>5.0</b>{{ stars() }}{{ _("48 відгуків у Google") }}</span>
       {%- endif %}
     </div>
     <div class="arrows" data-reveal>
-      <button class="arrow" type="button" aria-label="Назад" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
-      <button class="arrow arrow--gold" type="button" aria-label="Далі" data-slider-next><i class="ic ic-arrow-right"></i></button>
+      <button class="arrow" type="button" aria-label="{{ _("Назад") }}" data-slider-prev><i class="ic ic-gold ic-arrow-left"></i></button>
+      <button class="arrow arrow--gold" type="button" aria-label="{{ _("Далі") }}" data-slider-next><i class="ic ic-arrow-right"></i></button>
     </div>
   </div>
 
@@ -324,9 +344,9 @@
 
   <div class="container reviews__foot" data-reveal>
     {%- if not s.get('reviews_rating') %}
-    <a class="link-gold link-gold--underline" href="#">Усі відгуки в Google <i class="ic ic-gold ic-arrow-up-right"></i></a>
+    <a class="link-gold link-gold--underline" href="#">{{ _("Усі відгуки в Google") }} <i class="ic ic-gold ic-arrow-up-right"></i></a>
     {%- endif %}
-    <a class="reviews__leave" href="#">Залишити відгук</a>
+    <a class="reviews__leave" href="#">{{ _("Залишити відгук") }}</a>
   </div>
 </section>
 
@@ -334,18 +354,18 @@
 <section class="section seo" id="seo">
   <div class="container seo__grid">
     <aside class="seo__aside">
-      <span class="eyebrow" data-reveal>Корисно знати</span>
+      <span class="eyebrow" data-reveal>{{ _("Корисно знати") }}</span>
       <h2 class="h2 h2--sm" data-reveal>{{ s.seo.h2 }}</h2>
-      <nav class="seo__toc" aria-label="Зміст статті" data-reveal>
-        <a href="#seo-when">Коли потрібен адвокат</a>
+      <nav class="seo__toc" aria-label="{{ _("Зміст статті") }}" data-reveal>
+        <a href="#seo-when">{{ _("Коли потрібен адвокат") }}</a>
         {%- for sec in s.seo.sections %}
         <a href="#{{ sec.id }}">{{ sec.toc }}</a>
         {%- endfor %}
-        <a href="#seo-tips">Що варто знати</a>
+        <a href="#seo-tips">{{ _("Що варто знати") }}</a>
       </nav>
       <div class="author" data-reveal>
-        <span class="avatar avatar--lg">АМ</span>
-        <div><b>Адвокат Сергій Мазур</b><span>Автор матеріалу · оновлено жовтень 2026</span></div>
+        <span class="avatar avatar--lg">{{ _("АМ") }}</span>
+        <div><b>{{ _("Адвокат Сергій Мазур") }}</b><span>{{ _("Автор матеріалу · оновлено жовтень 2026") }}</span></div>
       </div>
     </aside>
 
@@ -382,10 +402,10 @@
 <section class="section section--alt" id="faq">
   <div class="container faq">
     <div class="faq__side">
-      <span class="eyebrow" data-reveal><b>07</b>Питання та відповіді</span>
-      <h2 class="h2" data-split>Поширені <span class="gold-text">запитання</span></h2>
-      <p class="sec-head__text" data-reveal>Не знайшли відповідь? Поставте питання напряму — відповім особисто і безкоштовно.</p>
-      <button class="btn btn--ghost btn--md" type="button" data-modal-open data-topic="Інше питання" data-reveal><i class="ic ic-gold ic-chat"></i>Поставити питання</button>
+      <span class="eyebrow" data-reveal><b>07</b>{{ _("Питання та відповіді") }}</span>
+      <h2 class="h2" data-split>{{ _("Поширені") }} <span class="gold-text">{{ _("запитання") }}</span></h2>
+      <p class="sec-head__text" data-reveal>{{ _("Не знайшли відповідь? Поставте питання напряму — відповім особисто і безкоштовно.") }}</p>
+      <button class="btn btn--ghost btn--md" type="button" data-modal-open data-topic="{{ _("Інше питання") }}" data-reveal><i class="ic ic-gold ic-chat"></i>{{ _("Поставити питання") }}</button>
     </div>
 
     <div class="faq__list" data-reveal-group>
@@ -401,22 +421,22 @@
   <div class="container">
     <div class="final">
       <div class="final__content">
-        <span class="eyebrow" data-reveal>Заявка</span>
+        <span class="eyebrow" data-reveal>{{ _("Заявка") }}</span>
         <h2 class="h2" data-split>{{ s.final_h2 }} <span class="gold-text">{{ s.final_gold }}</span></h2>
-        <p class="final__text" data-reveal>Опишіть ситуацію — я зв'яжуся з вами, проведу безкоштовну консультацію та запропоную план дій.</p>
+        <p class="final__text" data-reveal>{{ _("Опишіть ситуацію — я зв'яжуся з вами, проведу безкоштовну консультацію та запропоную план дій.") }}</p>
 
         <div class="final__docs" data-reveal>
-          <span class="mini-label">Що підготувати до консультації</span>
+          <span class="mini-label">{{ _("Що підготувати до консультації") }}</span>
           <ul class="check check--cols">
             {%- for d in s.docs %}
             <li>{{ d }}</li>
             {%- endfor %}
           </ul>
-          <p class="final__hint">Немає всіх документів? Це не перешкода для першого звернення.</p>
+          <p class="final__hint">{{ _("Немає всіх документів? Це не перешкода для першого звернення.") }}</p>
         </div>
 
         <div class="final__direct" data-reveal>
-          <span>Зручніше напряму?</span>
+          <span>{{ _("Зручніше напряму?") }}</span>
           <a class="final__phone" href="tel:{{ site.phone_href }}"><i class="ic ic-gold ic-phone"></i>{{ site.phone }}</a>
           <div class="socials">
             <a href="{{ site.telegram }}" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic-gold ic-telegram"></i></a>
@@ -430,31 +450,31 @@
         <div class="form-card" data-form-wrap>
           <div class="form-card__head">
             <span class="form-card__badge">0 ₴</span>
-            <div><b>Безкоштовна консультація</b><span>Відповім протягом робочого дня</span></div>
+            <div><b>{{ _("Безкоштовна консультація") }}</b><span>{{ _("Відповім протягом робочого дня") }}</span></div>
           </div>
           <form class="form" data-form>
             <input type="hidden" name="service" value="{{ s.nav }}">
-            <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="Ваше ім'я" required></label>
-            <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="Номер телефону" required></label>
-            <label class="field field--area"><i class="ic ic-chat"></i><textarea name="message" rows="4" placeholder="Коротко опишіть ситуацію"></textarea></label>
-            <button class="btn btn--gold btn--block btn--lg btn--shine" type="submit">Отримати безкоштовну консультацію</button>
-            <p class="form__policy">Натискаючи кнопку, ви погоджуєтеся на обробку <a href="#">персональних даних</a>. Конфіденційність гарантована адвокатською таємницею.</p>
+            <label class="field"><i class="ic ic-user"></i><input type="text" name="name" placeholder="{{ _("Ваше ім'я") }}" required></label>
+            <label class="field"><i class="ic ic-phone"></i><input type="tel" name="phone" placeholder="{{ _("Номер телефону") }}" required></label>
+            <label class="field field--area"><i class="ic ic-chat"></i><textarea name="message" rows="4" placeholder="{{ _("Коротко опишіть ситуацію") }}"></textarea></label>
+            <button class="btn btn--gold btn--block btn--lg btn--shine" type="submit">{{ _("Отримати безкоштовну консультацію") }}</button>
+            <p class="form__policy">{{ _("Натискаючи кнопку, ви погоджуєтеся на обробку") }} <a href="#">{{ _("персональних даних") }}</a>{{ _(". Конфіденційність гарантована адвокатською таємницею.") }}</p>
           </form>
           <div class="form-success">
             <i class="ic ic-gold ic-check-circle"></i>
-            <div><b>Дякую.</b> Заявку отримано. Я зв'яжуся з вами найближчим часом.</div>
+            <div><b>{{ _("Дякую.") }}</b> {{ _("Заявку отримано. Я зв'яжуся з вами найближчим часом.") }}</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="related" data-reveal>
-      <span class="related__title">Інші напрями допомоги</span>
+      <span class="related__title">{{ _("Інші напрями допомоги") }}</span>
       <div class="related__list">
         {%- for r in page.related %}
         <a href="{{ r.slug }}.html"><i class="ic ic-gold {{ r.icon }}"></i>{{ r.nav }}<i class="ic ic-arrow-up-right"></i></a>
         {%- endfor %}
-        <a href="index.html#services"><i class="ic ic-gold ic-folder"></i>Усі послуги<i class="ic ic-arrow-up-right"></i></a>
+        <a href="index.html#services"><i class="ic ic-gold ic-folder"></i>{{ _("Усі послуги") }}<i class="ic ic-arrow-up-right"></i></a>
       </div>
     </div>
   </div>

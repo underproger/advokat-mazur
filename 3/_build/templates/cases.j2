@@ -1,0 +1,51 @@
+{% extends "base.j2" %}
+{% from "macros.j2" import case_card %}
+{% block main %}
+
+<!-- ============ CASES HERO ============ -->
+<section class="cases-hero" data-hero>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="container">
+    <nav class="crumbs" aria-label="{{ _("Хлібні крихти") }}" data-hero-in>
+      <a href="index.html">{{ _("Головна") }}</a><i class="ic ic-li-diamond ic-gold"></i>
+      <span>{{ _("Кейси") }}</span>
+    </nav>
+    <div class="cases-hero__head">
+      <div>
+        <span class="eyebrow" data-hero-in>{{ _("Практика") }}</span>
+        <h1 class="cases-hero__title" data-chars>{{ _("Кейси") }} <span class="gold-text">{{ _("з практики") }}</span></h1>
+      </div>
+      <p class="cases-hero__text" data-hero-in>{{ _("У цьому розділі — приклади справ, у яких я надавав правову допомогу. Кожна справа індивідуальна, але приклади показують, як я працюю і яких результатів можна досягти.") }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASES LIST ============ -->
+<section class="section section--tight cases" data-cases>
+  <div class="container cases__grid">
+    <aside class="cases__filter" data-reveal>
+      <span class="mini-label">{{ _("Напрями") }}</span>
+      <div class="cases__chips" role="tablist">
+        <button class="chip is-active" type="button" data-filter="all">{{ _("Усі кейси") }} <b>{{ page.cases|length }}</b></button>
+        {%- for s in services %}
+        {%- set n = page.cases|selectattr('service', 'equalto', s.slug)|list|length %}
+        {%- if n %}
+        <button class="chip" type="button" data-filter="{{ s.slug }}">{{ s.nav }} <b>{{ n }}</b></button>
+        {%- endif %}
+        {%- endfor %}
+      </div>
+      <div class="cases__cta">
+        <i class="ic ic-gold ic-consult"></i>
+        <p>{{ _("Маєте схожу ситуацію? Розкажіть про неї — першу консультацію проводжу безкоштовно.") }}</p>
+        <button class="btn btn--gold btn--md btn--block" type="button" data-modal-open data-topic="{{ _("Безкоштовна консультація") }}">{{ _("Безкоштовна консультація") }}</button>
+      </div>
+    </aside>
+
+    <div class="cases__list" data-reveal-group>
+      {%- for c in page.cases %}
+      {{ case_card(c, page.svc_by_slug[c.service]) }}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
