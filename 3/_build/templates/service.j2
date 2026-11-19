@@ -38,7 +38,7 @@
 
     <div class="hero__media">
       <div class="hero__photo" data-parallax>
-        <img src="{{ page.root }}assets/img/lawyer-standing.webp" alt="{{ _("Адвокат Сергій Мазур") }}" width="959" height="1280" fetchpriority="high">
+        {% if s.hero_img == 'lawyer-office' %}<img src="{{ page.root }}assets/img/lawyer-standing.webp" alt="{{ _("Адвокат Сергій Мазур") }}" width="959" height="1280" fetchpriority="high">{% else %}<img src="{{ page.root }}assets/img/{{ s.hero_img }}.webp" alt="{{ s.hero_alt }}" width="979" height="1322" fetchpriority="high">{% endif %}
       </div>
 
       <div class="free-seal" aria-hidden="true">
