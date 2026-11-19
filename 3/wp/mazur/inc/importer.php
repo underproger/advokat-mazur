@@ -66,6 +66,9 @@ function mz_import( $opts = array() ) {
 
 	$pll   = mz_import_polylang( $log );
 	$langs = $pll ? array( 'uk', 'ru' ) : array( 'uk' );
+	if ( $pll ) {
+		mz_import_strings( $log );
+	}
 
 	$form_id = mz_import_cf7( $log );
 	if ( $form_id && ! get_field( 'mz_cf7_form', 'option' ) ) {
@@ -117,11 +120,11 @@ function mz_import( $opts = array() ) {
 				pll_set_post_language( $id, $lang );
 			}
 			update_post_meta( $id, '_wp_page_template', 'template-service.php' );
-			$was = get_post_meta( $id, 'mz_imported', true );
+			$was = mz_imported( $id );
 			update_post_meta( $id, 'mz_key', $s['key'] );
 			if ( ! $was || $opts['overwrite'] ) {
 				mz_import_service_fields( $id, $d, $log );
-				update_post_meta( $id, 'mz_imported', gmdate( 'c' ) );
+				update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 			}
 			$tr[ $lang ] = $id;
 			$log[]       = sprintf( '%s %s: %s → /%s%s/ (ID %d)', $new ? '+ створено' : '✓ оновлено', strtoupper( $lang ), $d['nav'], 'ru' === $lang ? 'ru/' : '', get_post_field( 'post_name', $id ), $id );
@@ -157,13 +160,13 @@ function mz_import( $opts = array() ) {
 		}
 		update_post_meta( $id, 'mz_key', 'home' );
 		update_post_meta( $id, '_wp_page_template', 'template-home.php' );
-		if ( ! get_post_meta( $id, 'mz_imported', true ) || $opts['overwrite'] ) {
+		if ( ! mz_imported( $id ) || $opts['overwrite'] ) {
 			$h = $data['home'][ $lang ];
 			mz_update( 'home', 'meta_title', $h['meta_title'], $id );
 			mz_update( 'home', 'meta_desc', $h['meta_desc'], $id );
 			mz_update( 'home', 'home_reviews', mz_import_reviews( $h['reviews'] ), $id );
 			mz_update( 'home', 'home_faq', $h['faq'], $id );
-			update_post_meta( $id, 'mz_imported', gmdate( 'c' ) );
+			update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 		}
 		$home_tr[ $lang ] = $id;
 		$log[]            = sprintf( '✓ Головна %s (ID %d)', strtoupper( $lang ), $id );
@@ -186,13 +189,13 @@ function mz_import( $opts = array() ) {
 		}
 		update_post_meta( $id, 'mz_key', 'thanks' );
 		update_post_meta( $id, '_wp_page_template', 'template-thanks.php' );
-		if ( ! get_post_meta( $id, 'mz_imported', true ) || $opts['overwrite'] ) {
+		if ( ! mz_imported( $id ) || $opts['overwrite'] ) {
 			mz_update( 'thx', 'meta_title', $p['meta_title'], $id );
 			mz_update( 'thx', 'h1', $p['h1'], $id );
 			mz_update( 'thx', 'h1_gold', $p['h1_gold'], $id );
 			mz_update( 'thx', 'lead', $p['lead'], $id );
 			mz_update( 'thx', 'thanks_steps', implode( "\n", $p['steps'] ), $id );
-			update_post_meta( $id, 'mz_imported', gmdate( 'c' ) );
+			update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 		}
 		$th_tr[ $lang ] = $id;
 		$log[]          = sprintf( '✓ Подяка %s → /%s%s/', strtoupper( $lang ), 'ru' === $lang ? 'ru/' : '', get_post_field( 'post_name', $id ) );
@@ -221,7 +224,7 @@ function mz_import( $opts = array() ) {
 				pll_set_post_language( $id, $lang );
 			}
 			update_post_meta( $id, 'mz_key', 'case-' . $c['key'] );
-			if ( ! get_post_meta( $id, 'mz_imported', true ) || $opts['overwrite'] ) {
+			if ( ! mz_imported( $id ) || $opts['overwrite'] ) {
 				$svc = isset( $svc_ids[ $c['service'] ][ $lang ] ) ? $svc_ids[ $c['service'] ][ $lang ] : 0;
 				mz_update( 'case', 'case_service', $svc, $id );
 				mz_update( 'case', 'case_date', $d['date'], $id );
@@ -233,7 +236,7 @@ function mz_import( $opts = array() ) {
 				mz_update( 'case', 'case_work_intro', $d['work_intro'], $id );
 				mz_update( 'case', 'case_work', implode( "\n", $d['work'] ), $id );
 				mz_update( 'case', 'case_result', implode( "\n\n", $d['result'] ), $id );
-				update_post_meta( $id, 'mz_imported', gmdate( 'c' ) );
+				update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 			}
 			$tr[ $lang ] = $id;
 		}
@@ -260,33 +263,56 @@ function mz_import( $opts = array() ) {
 	return $log;
 }
 
+/** Чи імпортувався запис раніше (службова мітка, не копіюється в переклади). */
+function mz_imported( $id ) {
+	return get_post_meta( $id, '_mz_imported', true ) || get_post_meta( $id, 'mz_imported', true );
+}
+
 /** update_field за ключем поля групи. */
 function mz_update( $group, $name, $value, $post_id ) {
 	return update_field( 'field_mz_' . $group . '_' . $name, $value, $post_id );
 }
 
-/** Знайти запис: за mz_key + мовою, інакше за слагом (UA — наявні сторінки старого сайту). */
+/**
+ * Знайти запис: за mz_key + мовою, інакше за слагом (UA — наявні сторінки старого сайту).
+ * Мову перевіряємо явно: запис без мови (старий сайт) підходить лише для UA.
+ */
 function mz_import_find( $type, $key, $lang, $slug ) {
+	$ok = function ( $id ) use ( $lang ) {
+		$l = function_exists( 'pll_get_post_language' ) ? pll_get_post_language( $id ) : '';
+		return $l ? $l === $lang : 'uk' === $lang;
+	};
 	$args = array(
 		'post_type'        => $type,
 		'post_status'      => array( 'publish', 'draft', 'private', 'pending' ),
-		'numberposts'      => 1,
+		'numberposts'      => -1,
 		'fields'           => 'ids',
 		'meta_key'         => 'mz_key',
 		'meta_value'       => $key,
 		'suppress_filters' => false,
+		'lang'             => '', // усі мови — фільтруємо самі
 	);
-	if ( function_exists( 'pll_current_language' ) ) {
-		$args['lang'] = $lang;
-	}
-	$ids = get_posts( $args );
-	if ( $ids ) {
-		return (int) $ids[0];
+	foreach ( get_posts( $args ) as $id ) {
+		if ( $ok( $id ) ) {
+			return (int) $id;
+		}
 	}
 	if ( $slug ) {
-		$p = get_page_by_path( $slug, OBJECT, $type );
-		if ( $p && ( ! function_exists( 'pll_get_post_language' ) || ! pll_get_post_language( $p->ID ) || pll_get_post_language( $p->ID ) === $lang ) ) {
-			return (int) $p->ID;
+		$found = get_posts(
+			array(
+				'post_type'        => $type,
+				'post_status'      => array( 'publish', 'draft', 'private', 'pending' ),
+				'name'             => $slug,
+				'numberposts'      => -1,
+				'fields'           => 'ids',
+				'suppress_filters' => false,
+				'lang'             => '',
+			)
+		);
+		foreach ( $found as $id ) {
+			if ( $ok( $id ) ) {
+				return (int) $id;
+			}
 		}
 	}
 	return 0;
@@ -440,7 +466,15 @@ function mz_import_polylang( &$log ) {
 		if ( $exists ) {
 			continue;
 		}
-		$r = isset( $model->languages ) && method_exists( $model->languages, 'add' ) ? $model->languages->add( $l ) : $model->add_language( $l );
+		if ( isset( $model->languages ) && method_exists( $model->languages, 'add' ) ) {
+			$r = $model->languages->add( $l ); // Polylang 3.7+
+		} else {
+			// Polylang (Pro) 3.5–3.6: add_language() є лише в PLL_Admin_Model (на екранах налаштувань Polylang)
+			if ( ! method_exists( $model, 'add_language' ) && class_exists( 'PLL_Admin_Model' ) ) {
+				$model = new PLL_Admin_Model( PLL()->options ); // налаштування — за посиланням (default_lang)
+			}
+			$r = $model->add_language( $l );
+		}
 		$log[] = is_wp_error( $r ) ? '! Polylang: ' . $r->get_error_message() : '+ Polylang: мова ' . $l['name'];
 	}
 	// UA — за замовчуванням і без /uk/ в адресах (старі URL не змінюються), RU — /ru/
@@ -451,8 +485,12 @@ function mz_import_polylang( &$log ) {
 		'rewrite'       => true,
 		'redirect_lang' => true,  // головна RU — /ru/ (а не /ru/glavnaya/)
 		'browser'       => false, // без перемикання мови за налаштуваннями браузера
-		'media_support' => false,
+		'media_support' => false, // медіа спільні для мов (фото в полях ACF однакові в UA і RU)
 	);
+	// синхронізація між перекладами: порядок сторінок (меню, футер) і шаблон сторінки
+	$cur_sync    = is_object( PLL()->options ) ? (array) PLL()->options->get( 'sync' ) : (array) ( isset( PLL()->options['sync'] ) ? PLL()->options['sync'] : array() );
+	$set['sync'] = array_values( array_unique( array_merge( $cur_sync, array( 'menu_order', '_wp_page_template' ) ) ) );
+	PLL()->model->clean_languages_cache();
 	$opt = PLL()->options;
 	if ( is_object( $opt ) && method_exists( $opt, 'set' ) ) {
 		foreach ( $set as $k => $v ) {
@@ -462,13 +500,20 @@ function mz_import_polylang( &$log ) {
 			$opt->save();
 		}
 	} else {
-		$o = get_option( 'polylang', array() );
-		update_option( 'polylang', array_merge( (array) $o, $set ) );
+		foreach ( $set as $k => $v ) {
+			PLL()->options[ $k ] = $v; // Polylang 3.5–3.6: масив налаштувань
+		}
+		update_option( 'polylang', array_merge( (array) get_option( 'polylang', array() ), $set ) );
 	}
 	if ( method_exists( $model, 'clean_languages_cache' ) ) {
 		$model->clean_languages_cache();
 	}
-	$log[] = '✓ Polylang: UA за замовчуванням (без префікса), RU — /ru/, без автоперемикання за мовою браузера.';
+	PLL()->model->clean_languages_cache();
+	if ( ! PLL()->model->get_language( 'uk' ) || ! PLL()->model->get_language( 'ru' ) ) {
+		$log[] = '! Polylang: мови не створено — перевірте «Мови» в адмінці і запустіть імпорт ще раз.';
+		return false;
+	}
+	$log[] = '✓ Polylang' . ( defined( 'POLYLANG_PRO' ) && POLYLANG_PRO ? ' Pro' : '' ) . ': UA за замовчуванням (без префікса), RU — /ru/, без автоперемикання за мовою браузера; синхронізація порядку та шаблону сторінок.';
 	return true;
 }
 
@@ -537,4 +582,38 @@ function mz_import_cf7( &$log ) {
 	update_post_meta( $id, 'mz_key', 'mz-lead' );
 	$log[] = '+ CF7: створено форму «Мазур: заявка з сайту» (ID ' . $id . '), листи → ' . $recipient;
 	return (int) $id;
+}
+
+/**
+ * Polylang «Переклади рядків»: RU-переклади рядків теми (група «Тема Мазур») зі словника теми —
+ * лише ті, що ще не перекладені (зміни в адмінці не перезаписуються).
+ * Polylang Pro: переклад слагу розділу кейсів keysy → kejsy (/ru/kejsy/).
+ */
+function mz_import_strings( &$log ) {
+	if ( ! class_exists( 'PLL_MO' ) ) {
+		return;
+	}
+	$lang = PLL()->model->get_language( 'ru' );
+	if ( ! $lang ) {
+		return;
+	}
+	$mo = new PLL_MO();
+	$mo->import_from_db( $lang );
+	$added = 0;
+	$dict  = mz_dict();
+	if ( defined( 'POLYLANG_PRO' ) && POLYLANG_PRO ) {
+		$dict['keysy'] = 'kejsy';
+	}
+	foreach ( $dict as $ua => $ru ) {
+		$cur = $mo->translate( $ua );
+		if ( '' === $cur || $cur === $ua ) {
+			$mo->add_entry( $mo->make_entry( $ua, $ru ) );
+			$added++;
+		}
+	}
+	if ( $added ) {
+		$mo->export_to_db( $lang );
+	}
+	delete_transient( 'pll_translated_slugs' );
+	$log[] = sprintf( '✓ Переклади рядків (група «Тема Мазур»): додано RU — %d', $added );
 }

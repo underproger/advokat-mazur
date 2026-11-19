@@ -3,8 +3,11 @@
  * Мови та переклад рядків шаблонів.
  *
  * Тексти сторінок (послуги, кейси, відгуки, FAQ) — окремі для кожної мови в полях ACF
- * (сторінки-переклади Polylang). Статичні рядки шаблонів пишуться українською
- * і перекладаються функцією mz_t() за словником inc/i18n-ru.php (+ доповнення нижче).
+ * (сторінки-переклади Polylang). Статичні рядки шаблонів пишуться українською і перекладаються mz_t():
+ *  1) переклад з Polylang «Мови → Переклади рядків», група «Тема Мазур» (можна правити в адмінці —
+ *     і RU, і UA-формулювання);
+ *  2) якщо там порожньо — словник теми inc/i18n-ru.php (+ доповнення нижче).
+ * Імпортер заповнює RU-переклади в Polylang зі словника, тож у таблиці рядків вони одразу видні.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -77,16 +80,46 @@ function mz_dict() {
  * Як у статичній збірці: ключ — обрізаний рядок, пробіли навколо зберігаються.
  */
 function mz_t( $text ) {
-	if ( 'ru' !== mz_lang() || '' === trim( (string) $text ) ) {
+	$key = trim( (string) $text );
+	if ( '' === $key ) {
+		return $text;
+	}
+	if ( function_exists( 'pll__' ) && did_action( 'pll_language_defined' ) ) {
+		$tr = pll__( $key );
+		if ( $tr !== $key && '' !== $tr ) {
+			return str_replace( $key, $tr, $text );
+		}
+	}
+	if ( 'ru' !== mz_lang() ) {
 		return $text;
 	}
 	$dict = mz_dict();
-	$key  = trim( $text );
 	if ( isset( $dict[ $key ] ) ) {
 		return str_replace( $key, $dict[ $key ], $text );
 	}
 	return $text;
 }
+
+/** Назва рядка в таблиці «Переклади рядків». */
+function mz_string_name( $ua ) {
+	$name = trim( preg_replace( '/\s+/u', ' ', $ua ) );
+	return mb_strlen( $name ) > 48 ? mb_substr( $name, 0, 46 ) . '…' : $name;
+}
+
+// Реєстрація рядків шаблонів у Polylang (лише в адмінці — для таблиці перекладів)
+add_action(
+	'admin_init',
+	function () {
+		if ( ! function_exists( 'pll_register_string' ) ) {
+			return;
+		}
+		foreach ( array_keys( mz_dict() ) as $ua ) {
+			if ( preg_match( '/[А-Яа-яІіЇїЄєҐґ]/u', $ua ) ) {
+				pll_register_string( mz_string_name( $ua ), $ua, 'Тема Мазур', mb_strlen( $ua ) > 90 );
+			}
+		}
+	}
+);
 
 /** echo + esc_html */
 function mz_e( $text ) {

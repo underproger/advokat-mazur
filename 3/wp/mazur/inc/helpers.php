@@ -66,9 +66,22 @@ function mz_field( $name, $post_id = null ) {
 	return get_field( 'mz_' . $name, $post_id ? $post_id : get_the_ID() );
 }
 
-/** Рядки репітера ACF (порожнє значення → []). */
-function mz_rows( $v ) {
-	return is_array( $v ) ? array_values( array_filter( $v, 'is_array' ) ) : array();
+/**
+ * Рядки репітера ACF (порожнє значення → []).
+ * $need — поле, без якого рядок не показується (напр. неперекладений рядок, доданий в іншій мові).
+ */
+function mz_rows( $v, $need = '' ) {
+	if ( ! is_array( $v ) ) {
+		return array();
+	}
+	return array_values(
+		array_filter(
+			$v,
+			function ( $r ) use ( $need ) {
+				return is_array( $r ) && ( '' === $need || ( isset( $r[ $need ] ) && '' !== trim( (string) $r[ $need ] ) ) );
+			}
+		)
+	);
 }
 
 /** Текст «по рядку на пункт» → масив. */
@@ -332,12 +345,12 @@ function mz_topics() {
 	$kind    = mz_kind();
 	if ( 'service' === $kind ) {
 		$other = mz_t( 'Інше питання' );
-		foreach ( mz_rows( mz_field( 'situations' ) ) as $it ) {
+		foreach ( mz_rows( mz_field( 'situations' ), 'title' ) as $it ) {
 			if ( ! empty( $it['topic'] ) && $it['topic'] !== $other ) {
 				$topics[] = $it['topic'];
 			}
 		}
-		foreach ( mz_rows( mz_field( 'tabs' ) ) as $it ) {
+		foreach ( mz_rows( mz_field( 'tabs' ), 'label' ) as $it ) {
 			if ( ! empty( $it['topic'] ) && $it['topic'] !== $other ) {
 				$topics[] = $it['topic'];
 			}
@@ -371,3 +384,31 @@ function mz_privacy_url() {
 	}
 	return '';
 }
+
+/**
+ * Ключ сторінки послуги (meta mz_key) — для посилань {{url:ключ}} між сторінками.
+ * Нові послуги, створені в адмінці, отримують ключ із перекладу (якщо є) або зі слагу.
+ */
+add_action(
+	'save_post_page',
+	function ( $id, $post ) {
+		if ( wp_is_post_revision( $id ) || 'template-service.php' !== get_post_meta( $id, '_wp_page_template', true ) || get_post_meta( $id, 'mz_key', true ) ) {
+			return;
+		}
+		$key = '';
+		if ( function_exists( 'pll_get_post_translations' ) ) {
+			foreach ( pll_get_post_translations( $id ) as $tid ) {
+				if ( (int) $tid !== (int) $id && get_post_meta( $tid, 'mz_key', true ) ) {
+					$key = get_post_meta( $tid, 'mz_key', true );
+					break;
+				}
+			}
+		}
+		$key = $key ? $key : $post->post_name;
+		if ( $key ) {
+			update_post_meta( $id, 'mz_key', $key );
+		}
+	},
+	20,
+	2
+);

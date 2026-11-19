@@ -7,8 +7,8 @@ get_header();
 
 $site       = mz_site();
 $services   = mz_services();
-$reviews    = mz_rows( mz_field( 'home_reviews' ) );
-$faq        = mz_rows( mz_field( 'home_faq' ) );
+$reviews    = mz_rows( mz_field( 'home_reviews' ), 'text' );
+$faq        = mz_rows( mz_field( 'home_faq' ), 'q' );
 $g_rating   = mz_opt( 'google_rating', '' );
 $g_count    = mz_opt( 'google_count', '' );
 $g_url      = mz_opt( 'google_url', '' );

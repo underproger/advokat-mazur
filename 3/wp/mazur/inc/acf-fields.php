@@ -112,6 +112,39 @@ function mz_acf_faq( $name ) {
 	);
 }
 
+/**
+ * Polylang Pro (інтеграція з ACF): поведінка кожного поля при перекладі сторінки.
+ *  - тексти верхнього рівня — translate (копіюються в новий переклад, далі перекладаються; потрапляють в експорт XLIFF);
+ *  - фото, іконки, перемикачі, зв'язки — sync (однакові в UA і RU; змінили в одній мові — оновилося в іншій;
+ *    зв'язок «Послуга» в кейсі Polylang перекладає на сторінку потрібної мови);
+ *  - підполя репітерів — copy_once: копіюються при створенні перекладу, а далі UA і RU незалежні
+ *    (інакше Polylang синхронізує кількість рядків і видалення рядка в UA зсуває рядки в RU).
+ * Без Polylang Pro налаштування просто ігнорується.
+ */
+function mz_acf_pll( $fields, $in_repeater = false ) {
+	foreach ( $fields as &$f ) {
+		if ( 'tab' === $f['type'] ) {
+			continue;
+		}
+		if ( 'repeater' === $f['type'] ) {
+			$f['sub_fields'] = mz_acf_pll( $f['sub_fields'], true );
+			continue;
+		}
+		if ( isset( $f['translations'] ) ) {
+			continue;
+		}
+		$is_text           = in_array( $f['type'], array( 'text', 'textarea', 'wysiwyg', 'url', 'email' ), true );
+		$f['translations'] = $in_repeater ? 'copy_once' : ( $is_text ? 'translate' : 'sync' );
+	}
+	return $fields;
+}
+
+/** acf_add_local_field_group + налаштування перекладу полів для Polylang Pro. */
+function mz_acf_group( $group ) {
+	$group['fields'] = mz_acf_pll( $group['fields'] );
+	acf_add_local_field_group( $group );
+}
+
 function mz_acf_meta() {
 	return array(
 		mz_acf( 'meta_title', 'SEO: title', 'text', array( 'instructions' => 'Тег &lt;title&gt;. Порожньо — назва сторінки.' ) ),
@@ -187,7 +220,7 @@ add_action(
 
 		// ------------------------------------------------------------ Сторінка послуги
 		$GLOBALS['mz_acf_g'] = 'svc';
-		acf_add_local_field_group(
+		mz_acf_group(
 			array(
 				'key'            => 'group_mz_service',
 				'title'          => 'Контент послуги',
@@ -323,7 +356,7 @@ add_action(
 							'seo_sections',
 							'Розділи статті',
 							array(
-								mz_acf_sub( 'seo_sections', 'sid', 'Якір (латиницею)', 'text', array( 'wrapper' => array( 'width' => 30 ) ) ),
+								mz_acf_sub( 'seo_sections', 'sid', 'Якір (латиницею)', 'text', array( 'wrapper' => array( 'width' => 30 ), 'translations' => 'copy_once' ) ),
 								mz_acf_sub( 'seo_sections', 'toc', 'Пункт змісту', 'text', array( 'wrapper' => array( 'width' => 70 ) ) ),
 								mz_acf_sub( 'seo_sections', 'h3', 'Заголовок' ),
 								mz_acf_paras( 'p', 'Текст', 'seo_sections' ),
@@ -355,7 +388,7 @@ add_action(
 
 		// ------------------------------------------------------------ Головна
 		$GLOBALS['mz_acf_g'] = 'home';
-		acf_add_local_field_group(
+		mz_acf_group(
 			array(
 				'key'            => 'group_mz_home',
 				'title'          => 'Головна сторінка',
@@ -378,7 +411,7 @@ add_action(
 
 		// ------------------------------------------------------------ Подяка
 		$GLOBALS['mz_acf_g'] = 'thx';
-		acf_add_local_field_group(
+		mz_acf_group(
 			array(
 				'key'            => 'group_mz_thanks',
 				'title'          => 'Сторінка подяки',
@@ -396,7 +429,7 @@ add_action(
 
 		// ------------------------------------------------------------ Кейс
 		$GLOBALS['mz_acf_g'] = 'case';
-		acf_add_local_field_group(
+		mz_acf_group(
 			array(
 				'key'      => 'group_mz_case',
 				'title'    => 'Кейс',
