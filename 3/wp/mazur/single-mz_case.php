@@ -61,14 +61,12 @@ $more = array_slice( $more, 0, 3 );
         <?php if ( mz_field( 'case_quote' ) ) : ?><blockquote class="quote" data-reveal><?php echo esc_html( mz_field( 'case_quote' ) ); ?></blockquote><?php endif; ?>
 
         <h2 class="case__h2" data-reveal><span>01</span><?php mz_e( 'У чому полягала складність ситуації?' ); ?></h2>
-        <?php foreach ( mz_paras( mz_field( 'case_problem' ) ) as $p ) : ?>
-        <p data-reveal><?php echo mz_rich( $p ); // phpcs:ignore ?></p>
-        <?php endforeach; ?>
+        <div class="case__text" data-reveal><?php echo mz_html( mz_field( 'case_problem' ) ); // phpcs:ignore ?></div>
 
         <h2 class="case__h2" data-reveal><span>02</span><?php mz_e( 'Що було зроблено' ); ?></h2>
         <p data-reveal><?php echo esc_html( mz_field( 'case_work_intro' ) ); ?></p>
         <ol class="case__steps" data-reveal-group>
-          <?php foreach ( mz_lines( mz_field( 'case_work' ) ) as $i => $w ) : ?>
+          <?php foreach ( mz_list_field( 'case_work' ) as $i => $w ) : ?>
           <li><span><?php echo esc_html( sprintf( '%02d', $i + 1 ) ); ?></span><?php echo esc_html( $w ); ?></li>
           <?php endforeach; ?>
         </ol>
@@ -77,9 +75,7 @@ $more = array_slice( $more, 0, 3 );
         <div class="case__result" data-reveal>
           <i class="ic ic-gold ic-check-circle"></i>
           <div>
-            <?php foreach ( mz_paras( mz_field( 'case_result' ) ) as $p ) : ?>
-            <p><?php echo mz_rich( $p ); // phpcs:ignore ?></p>
-            <?php endforeach; ?>
+            <?php echo mz_html( mz_field( 'case_result' ) ); // phpcs:ignore ?>
           </div>
         </div>
 

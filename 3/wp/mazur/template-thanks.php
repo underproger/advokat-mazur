@@ -6,7 +6,7 @@
 defined( 'ABSPATH' ) || exit;
 get_header();
 $site  = mz_site();
-$steps = mz_lines( mz_field( 'thanks_steps' ) );
+$steps = mz_list_field( 'thanks_steps' );
 ?>
 
 <section class="thanks" data-hero>

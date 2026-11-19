@@ -84,6 +84,65 @@ function mz_rows( $v, $need = '' ) {
 	);
 }
 
+/**
+ * Список із поля-репітера (рядки з підполем text). Підтримує і старий формат — текст «по рядку на пункт».
+ * $v — значення поля (масив рядків або рядок).
+ */
+function mz_list( $v ) {
+	if ( is_array( $v ) ) {
+		$out = array();
+		foreach ( $v as $row ) {
+			$t = is_array( $row ) ? ( isset( $row['text'] ) ? $row['text'] : '' ) : $row;
+			$t = trim( (string) $t );
+			if ( '' !== $t ) {
+				$out[] = $t;
+			}
+		}
+		return $out;
+	}
+	return mz_lines( $v );
+}
+
+/** Список з поля сторінки (з підстраховкою для значень, збережених до переходу на репітери). */
+function mz_list_field( $name, $post_id = null ) {
+	$post_id = $post_id ? $post_id : get_the_ID();
+	$list    = mz_list( mz_field( $name, $post_id ) );
+	if ( ! $list ) {
+		$raw = get_post_meta( $post_id, 'mz_' . $name, true );
+		if ( is_string( $raw ) && '' !== $raw && ! is_numeric( $raw ) ) {
+			$list = mz_lines( $raw );
+		}
+	}
+	return $list;
+}
+
+/**
+ * HTML з візуального редактора. Старий формат (абзаци через порожній рядок) теж підтримується.
+ */
+function mz_html( $v ) {
+	$v = trim( (string) $v );
+	if ( '' === $v ) {
+		return '';
+	}
+	if ( ! preg_match( '/<(p|ul|ol|h[1-6]|blockquote|div|table)[\s>]/i', $v ) ) {
+		$v = implode( "\n", array_map( function ( $p ) { return '<p>' . $p . '</p>'; }, mz_paras( $v ) ) );
+	}
+	return mz_rich( $v );
+}
+
+/** Вміст одного абзацу без обгортки <p> (для елементів, де <p> із класом уже є в розмітці). */
+function mz_inline( $v ) {
+	$h = mz_rich( trim( (string) $v ) );
+	$h = preg_replace( '#</p>\s*<p[^>]*>#i', '<br>', $h );
+	return trim( preg_replace( '#</?p[^>]*>#i', '', $h ) );
+}
+
+/** Чи показувати секцію (вкладка «Секції сторінки»). Не збережено — так. */
+function mz_show( $name, $post_id = null ) {
+	$v = mz_field( 'show_' . $name, $post_id );
+	return null === $v || '' === $v || (bool) $v;
+}
+
 /** Текст «по рядку на пункт» → масив. */
 function mz_lines( $text ) {
 	if ( is_array( $text ) ) {
@@ -184,7 +243,7 @@ function mz_services() {
 			'nav'        => mz_field( 'nav', $p->ID ) ?: get_the_title( $p ),
 			'icon'       => mz_field( 'icon', $p->ID ) ?: 'ic-scales',
 			'category'   => mz_field( 'category', $p->ID ),
-			'home_items' => mz_lines( mz_field( 'home_items', $p->ID ) ),
+			'home_items' => mz_list_field( 'home_items', $p->ID ),
 			'url'        => get_permalink( $p ),
 		);
 	}

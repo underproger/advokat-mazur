@@ -9,12 +9,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MZ_VER', '1.0.0' );
+define( 'MZ_VER', '1.2.0' );
 define( 'MZ_DIR', get_template_directory() );
 define( 'MZ_URI', get_template_directory_uri() );
 
 require MZ_DIR . '/inc/i18n.php';
 require MZ_DIR . '/inc/helpers.php';
+require MZ_DIR . '/inc/home-defaults.php';
 require MZ_DIR . '/inc/setup.php';
 require MZ_DIR . '/inc/cpt.php';
 require MZ_DIR . '/inc/acf-fields.php';

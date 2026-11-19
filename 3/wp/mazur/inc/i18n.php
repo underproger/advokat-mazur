@@ -121,6 +121,16 @@ add_action(
 	}
 );
 
+/** Переклад рядка для конкретної мови за словником теми (імпорт, значення за замовчуванням). */
+function mz_t_lang( $text, $lang ) {
+	if ( 'ru' !== $lang ) {
+		return $text;
+	}
+	$dict = mz_dict();
+	$key  = trim( (string) $text );
+	return isset( $dict[ $key ] ) ? str_replace( $key, $dict[ $key ], $text ) : $text;
+}
+
 /** echo + esc_html */
 function mz_e( $text ) {
 	echo esc_html( mz_t( $text ) );

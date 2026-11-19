@@ -75,6 +75,12 @@ function mz_import( $opts = array() ) {
 		update_field( 'field_mz_opt_cf7_form', $form_id, 'option' );
 	}
 	update_option( 'mz_cf7_form', $form_id );
+	// цифри з дизайну 3 (Налаштування сайту → Цифри і Google) — якщо ще не заповнені
+	foreach ( array( 'stat_cases' => '500+', 'google_rating' => '5.0', 'google_count' => '48' ) as $k => $v ) {
+		if ( ! get_field( 'mz_' . $k, 'option' ) ) {
+			update_field( 'field_mz_opt_' . $k, $v, 'option' );
+		}
+	}
 	if ( ! get_field( 'mz_head_code', 'option' ) ) {
 		// код зі старої теми (header.php)
 		update_field( 'field_mz_opt_head_code', '<meta name="it-rating" content="it-rat-1320b27f41502b183e5f4961dd00e5c0" />', 'option' );
@@ -165,7 +171,13 @@ function mz_import( $opts = array() ) {
 			mz_update( 'home', 'meta_title', $h['meta_title'], $id );
 			mz_update( 'home', 'meta_desc', $h['meta_desc'], $id );
 			mz_update( 'home', 'home_reviews', mz_import_reviews( $h['reviews'] ), $id );
-			mz_update( 'home', 'home_faq', $h['faq'], $id );
+			mz_update( 'home', 'home_faq', mz_import_faq( $h['faq'] ), $id );
+			// решта блоків головної — тексти дизайну 3 (inc/home-defaults.php)
+			$def                 = mz_home_defaults( $lang );
+			$def['stats'][2]['num'] = (string) count( $data['services'] );
+			foreach ( $def as $name => $value ) {
+				mz_update( 'home', $name, $value, $id );
+			}
 			update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 		}
 		$home_tr[ $lang ] = $id;
@@ -194,7 +206,7 @@ function mz_import( $opts = array() ) {
 			mz_update( 'thx', 'h1', $p['h1'], $id );
 			mz_update( 'thx', 'h1_gold', $p['h1_gold'], $id );
 			mz_update( 'thx', 'lead', $p['lead'], $id );
-			mz_update( 'thx', 'thanks_steps', implode( "\n", $p['steps'] ), $id );
+			mz_update( 'thx', 'thanks_steps', mz_import_rows( $p['steps'] ), $id );
 			update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 		}
 		$th_tr[ $lang ] = $id;
@@ -232,10 +244,10 @@ function mz_import( $opts = array() ) {
 				mz_update( 'case', 'case_result_short', $d['result_short'], $id );
 				mz_update( 'case', 'case_lead', $d['lead'], $id );
 				mz_update( 'case', 'case_quote', $d['quote'], $id );
-				mz_update( 'case', 'case_problem', implode( "\n\n", $d['problem'] ), $id );
+				mz_update( 'case', 'case_problem', mz_import_html( $d['problem'] ), $id );
 				mz_update( 'case', 'case_work_intro', $d['work_intro'], $id );
-				mz_update( 'case', 'case_work', implode( "\n", $d['work'] ), $id );
-				mz_update( 'case', 'case_result', implode( "\n\n", $d['result'] ), $id );
+				mz_update( 'case', 'case_work', mz_import_rows( $d['work'] ), $id );
+				mz_update( 'case', 'case_result', mz_import_html( $d['result'] ), $id );
 				update_post_meta( $id, '_mz_imported', gmdate( 'c' ) );
 			}
 			$tr[ $lang ] = $id;
@@ -266,6 +278,35 @@ function mz_import( $opts = array() ) {
 /** Чи імпортувався запис раніше (службова мітка, не копіюється в переклади). */
 function mz_imported( $id ) {
 	return get_post_meta( $id, '_mz_imported', true ) || get_post_meta( $id, 'mz_imported', true );
+}
+
+/** Масив рядків → рядки репітера-списку. */
+function mz_import_rows( $list ) {
+	$out = array();
+	foreach ( (array) $list as $t ) {
+		$out[] = array( 'text' => $t );
+	}
+	return $out;
+}
+
+/** Абзаци (масив або текст) → HTML для візуального редактора. */
+function mz_import_html( $paras ) {
+	if ( is_string( $paras ) ) {
+		if ( preg_match( '/<(p|ul|ol|h[1-6])[\s>]/i', $paras ) ) {
+			return $paras;
+		}
+		$paras = mz_paras( $paras );
+	}
+	return implode( "\n", array_map( function ( $p ) { return '<p>' . $p . '</p>'; }, (array) $paras ) );
+}
+
+/** FAQ: відповіді — HTML. */
+function mz_import_faq( $rows ) {
+	$out = array();
+	foreach ( (array) $rows as $r ) {
+		$out[] = array( 'q' => $r['q'], 'a' => mz_import_html( $r['a'] ) );
+	}
+	return $out;
 }
 
 /** update_field за ключем поля групи. */
@@ -347,26 +388,20 @@ function mz_import_reviews( $rows ) {
 }
 
 function mz_import_service_fields( $id, $d, &$log ) {
-	$u     = function ( $name, $value ) use ( $id ) {
+	$u = function ( $name, $value ) use ( $id ) {
 		mz_update( 'svc', $name, $value, $id );
-	};
-	$lines = function ( $a ) {
-		return implode( "\n", (array) $a );
-	};
-	$paras = function ( $a ) {
-		return implode( "\n\n", (array) $a );
 	};
 	$u( 'nav', $d['nav'] );
 	$u( 'icon', $d['icon'] );
 	$u( 'category', $d['category'] );
-	$u( 'home_items', $lines( $d['home_items'] ) );
+	$u( 'home_items', mz_import_rows( $d['home_items'] ) );
 	$u( 'meta_title', $d['title'] );
 	$u( 'meta_desc', $d['description'] );
 	$u( 'eyebrow', isset( $d['eyebrow'] ) ? $d['eyebrow'] : '' );
 	$u( 'h1', $d['h1'] );
 	$u( 'h1_gold', $d['h1_gold'] );
 	$u( 'lead', $d['lead'] );
-	$u( 'bullets', $lines( $d['bullets'] ) );
+	$u( 'bullets', mz_import_rows( $d['bullets'] ) );
 	$u( 'hero_cta', isset( $d['hero_cta'] ) ? $d['hero_cta'] : '' );
 	$u( 'hero_image', isset( $d['hero_image'] ) ? mz_import_attachment( $d['hero_image'], $log ) : '' );
 	$u( 'hero_preset', $d['hero_preset'] );
@@ -380,8 +415,8 @@ function mz_import_service_fields( $id, $d, &$log ) {
 			'image'   => mz_import_attachment( $b['image'], $log ),
 			'eyebrow' => $b['eyebrow'],
 			'title'   => $b['title'],
-			'p'       => $b['p'],
-			'list'    => $lines( $b['list'] ),
+			'p'       => mz_import_html( $b['p'] ),
+			'list'    => mz_import_rows( $b['list'] ),
 			'cta'     => $b['cta'],
 			'topic'   => $b['topic'],
 		);
@@ -401,8 +436,8 @@ function mz_import_service_fields( $id, $d, &$log ) {
 			'label'     => $t['label'],
 			'icon'      => $t['icon'],
 			'h3'        => $t['h3'],
-			'p'         => $paras( $t['p'] ),
-			'list'      => $lines( $t['list'] ),
+			'p'         => mz_import_html( $t['p'] ),
+			'list'      => mz_import_rows( $t['list'] ),
 			'note_icon' => $t['note_icon'],
 			'note'      => $t['note'],
 			'cta'       => $t['cta'],
@@ -418,7 +453,7 @@ function mz_import_service_fields( $id, $d, &$log ) {
 		$u( 'price_' . $k . '_title', isset( $p[ $k . '_title' ] ) ? $p[ $k . '_title' ] : '' );
 		$u( 'price_' . $k . '_value', isset( $p[ $k . '_value' ] ) ? $p[ $k . '_value' ] : '' );
 		$u( 'price_' . $k . '_hint', isset( $p[ $k . '_hint' ] ) ? $p[ $k . '_hint' ] : '' );
-		$u( 'price_' . $k, $lines( isset( $p[ $k ] ) ? $p[ $k ] : array() ) );
+		$u( 'price_' . $k, mz_import_rows( isset( $p[ $k ] ) ? $p[ $k ] : array() ) );
 	}
 	$u( 'about_text', $d['about_text'] );
 	$u( 'reviews_label', $d['reviews_label'] );
@@ -430,7 +465,7 @@ function mz_import_service_fields( $id, $d, &$log ) {
 	$u( 'seo_intro', $seo['intro'] );
 	$u( 'seo_p', $seo['p'] );
 	$u( 'seo_when_title', $seo['when_title'] );
-	$u( 'seo_when', $lines( $seo['when'] ) );
+	$u( 'seo_when', mz_import_rows( $seo['when'] ) );
 	$u( 'seo_quote', $seo['quote'] );
 	$rows = array();
 	foreach ( $seo['sections'] as $sec ) {
@@ -438,16 +473,16 @@ function mz_import_service_fields( $id, $d, &$log ) {
 			'sid' => $sec['id'],
 			'toc' => $sec['toc'],
 			'h3'  => $sec['h3'],
-			'p'   => $paras( $sec['p'] ),
+			'p'   => mz_import_html( $sec['p'] ),
 		);
 	}
 	$u( 'seo_sections', $rows );
 	$u( 'seo_tips_title', $seo['tips_title'] );
 	$u( 'seo_tips', $seo['tips'] );
-	$u( 'faq', $d['faq'] );
+	$u( 'faq', mz_import_faq( $d['faq'] ) );
 	$u( 'final_h2', $d['final_h2'] );
 	$u( 'final_gold', $d['final_gold'] );
-	$u( 'docs', $lines( $d['docs'] ) );
+	$u( 'docs', mz_import_rows( $d['docs'] ) );
 }
 
 /** Polylang: мови та налаштування URL. Повертає true, якщо Polylang активний. */

@@ -84,7 +84,7 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
       <p class="hero__lead" data-hero-in><?php echo esc_html( $f( 'lead' ) ); ?></p>
 
       <ul class="hero__list" data-hero-in>
-        <?php foreach ( mz_lines( $f( 'bullets' ) ) as $b ) : ?>
+        <?php foreach ( mz_list_field( 'bullets', $id ) as $b ) : ?>
         <li><i class="ic ic-li-diamond ic-gold"></i><?php echo esc_html( $b ); ?></li>
         <?php endforeach; ?>
       </ul>
@@ -142,7 +142,7 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
-<?php if ( $show ) : ?>
+<?php if ( $show && mz_show( 'showcase', $id ) ) : ?>
 <!-- ============ ФОТО-БЛОКИ (персоналізація) ============ -->
 <section class="section showcase" id="how">
   <div class="container">
@@ -165,12 +165,10 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
         <div class="showcase__body" data-reveal>
           <?php if ( ! empty( $b['eyebrow'] ) ) : ?><span class="eyebrow"><?php echo esc_html( $b['eyebrow'] ); ?></span><?php endif; ?>
           <h3 class="h3"><?php echo esc_html( $b['title'] ); ?></h3>
-          <?php foreach ( mz_paras( $b['p'] ) as $p ) : ?>
-          <p><?php echo mz_rich( $p ); // phpcs:ignore ?></p>
-          <?php endforeach; ?>
-          <?php if ( mz_lines( $b['list'] ) ) : ?>
+          <?php echo mz_html( $b['p'] ); // phpcs:ignore ?>
+          <?php if ( mz_list( $b['list'] ) ) : ?>
           <ul class="check">
-            <?php foreach ( mz_lines( $b['list'] ) as $li ) : ?>
+            <?php foreach ( mz_list( $b['list'] ) as $li ) : ?>
             <li><?php echo esc_html( $li ); ?></li>
             <?php endforeach; ?>
           </ul>
@@ -186,6 +184,7 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
 </section>
 <?php endif; ?>
 
+<?php if ( $sits && mz_show( 'situations', $id ) ) : ?>
 <!-- ============ 02 SITUATIONS ============ -->
 <section class="section<?php echo $show ? ' section--alt' : ''; ?>" id="situations">
   <div class="container">
@@ -210,6 +209,9 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( $tabs && mz_show( 'help', $id ) ) : ?>
 <!-- ============ 03 HELP (tabs) ============ -->
 <section class="section<?php echo $show ? '' : ' section--alt'; ?>" id="help">
   <div class="container">
@@ -235,14 +237,12 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
           <div class="tabs__body"><div class="tabs__inner">
             <span class="tile tile--lg"><i class="ic ic-gold <?php echo esc_attr( $t['icon'] ); ?>"></i></span>
             <h3 class="h3"><?php echo esc_html( $t['h3'] ); ?></h3>
-            <?php foreach ( mz_paras( $t['p'] ) as $p ) : ?>
-            <p><?php echo mz_rich( $p ); // phpcs:ignore ?></p>
-            <?php endforeach; ?>
+            <?php echo mz_html( $t['p'] ); // phpcs:ignore ?>
             <div class="tabs__cols">
               <div>
                 <span class="mini-label"><?php mz_e( 'У межах допомоги' ); ?></span>
                 <ul class="check">
-                  <?php foreach ( mz_lines( $t['list'] ) as $li ) : ?>
+                  <?php foreach ( mz_list( $t['list'] ) as $li ) : ?>
                   <li><?php echo esc_html( $li ); ?></li>
                   <?php endforeach; ?>
                 </ul>
@@ -261,6 +261,9 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( mz_show( 'band', $id ) ) : ?>
 <!-- ============ 04 FREE CONSULTATION BAND ============ -->
 <section class="band">
   <div class="marquee" aria-hidden="true">
@@ -290,6 +293,9 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( $steps && mz_show( 'steps', $id ) ) : ?>
 <!-- ============ 05 STEPS ============ -->
 <section class="section" id="steps">
   <div class="container">
@@ -317,6 +323,9 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( mz_show( 'price', $id ) ) : ?>
 <!-- ============ 06 PRICE ============ -->
 <section class="section section--tight" id="price">
   <div class="container">
@@ -352,7 +361,7 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
         <span class="price__value price__value--sm"><?php mz_e( 'docs' === $pk ? 'Фіксована ціна' : 'За договором' ); ?></span>
         <?php endif; ?>
         <ul class="check">
-          <?php foreach ( mz_lines( $f( 'price_' . $pk ) ) as $li ) : ?>
+          <?php foreach ( mz_list_field( 'price_' . $pk, $id ) as $li ) : ?>
           <li><?php echo esc_html( $li ); ?></li>
           <?php endforeach; ?>
         </ul>
@@ -364,6 +373,9 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( mz_show( 'about', $id ) ) : ?>
 <!-- ============ 07 ABOUT + ADVANTAGES ============ -->
 <section class="section" id="about">
   <div class="container about">
@@ -412,8 +424,10 @@ $updated = $months[ (int) get_the_modified_date( 'n', $id ) - 1 ] . ' ' . get_th
   </div>
 </section>
 
+<?php endif; ?>
+
 <?php
-$svc_cases = mz_cases( $id, 3 );
+$svc_cases = mz_show( 'cases', $id ) ? mz_cases( $id, 3 ) : array();
 if ( $svc_cases ) :
 	?>
 <!-- ============ CASES ============ -->
@@ -433,7 +447,7 @@ if ( $svc_cases ) :
 </section>
 <?php endif; ?>
 
-<?php if ( $revs ) : ?>
+<?php if ( $revs && mz_show( 'reviews', $id ) ) : ?>
 <!-- ============ 08 REVIEWS ============ -->
 <section class="section section--alt reviews" id="reviews">
   <div class="container reviews__head">
@@ -463,6 +477,7 @@ if ( $svc_cases ) :
 </section>
 <?php endif; ?>
 
+<?php if ( mz_show( 'seo', $id ) && $f( 'seo_h2' ) ) : ?>
 <!-- ============ 09 SEO TEXT (visible) ============ -->
 <section class="section seo" id="seo">
   <div class="container seo__grid">
@@ -483,12 +498,12 @@ if ( $svc_cases ) :
     </aside>
 
     <article class="seo__article">
-      <p class="seo__intro" data-wow-fill><?php echo mz_rich( $f( 'seo_intro' ) ); // phpcs:ignore ?></p>
-      <?php if ( $f( 'seo_p' ) ) : ?><p><?php echo mz_rich( $f( 'seo_p' ) ); // phpcs:ignore ?></p><?php endif; ?>
+      <p class="seo__intro" data-wow-fill><?php echo mz_inline( $f( 'seo_intro' ) ); // phpcs:ignore ?></p>
+      <?php if ( $f( 'seo_p' ) ) : ?><p><?php echo mz_inline( $f( 'seo_p' ) ); // phpcs:ignore ?></p><?php endif; ?>
 
       <h3 class="h3" id="seo-when"><?php echo esc_html( $f( 'seo_when_title' ) ); ?></h3>
       <ul class="dlist">
-        <?php foreach ( mz_lines( $f( 'seo_when' ) ) as $li ) : ?>
+        <?php foreach ( mz_list_field( 'seo_when', $id ) as $li ) : ?>
         <li><?php echo esc_html( $li ); ?></li>
         <?php endforeach; ?>
       </ul>
@@ -496,9 +511,7 @@ if ( $svc_cases ) :
       <?php foreach ( $secs as $sec ) : ?>
 
       <h3 class="h3" id="<?php echo esc_attr( $sec['sid'] ); ?>"><?php echo esc_html( $sec['h3'] ); ?></h3>
-      <?php foreach ( mz_paras( $sec['p'] ) as $p ) : ?>
-      <p><?php echo mz_rich( $p ); // phpcs:ignore ?></p>
-      <?php endforeach; ?>
+      <?php echo mz_html( $sec['p'] ); // phpcs:ignore ?>
       <?php endforeach; ?>
 
       <h3 class="h3" id="seo-tips"><?php echo esc_html( $f( 'seo_tips_title' ) ); ?></h3>
@@ -511,6 +524,9 @@ if ( $svc_cases ) :
   </div>
 </section>
 
+<?php endif; ?>
+
+<?php if ( $faq && mz_show( 'faq', $id ) ) : ?>
 <!-- ============ 10 FAQ ============ -->
 <section class="section section--alt" id="faq">
   <div class="container faq">
@@ -527,6 +543,8 @@ if ( $svc_cases ) :
   </div>
 </section>
 
+<?php endif; ?>
+
 <!-- ============ 11 FINAL FORM ============ -->
 <section class="section" id="contact">
   <div class="container">
@@ -539,7 +557,7 @@ if ( $svc_cases ) :
         <div class="final__docs" data-reveal>
           <span class="mini-label"><?php mz_e( 'Що підготувати до консультації' ); ?></span>
           <ul class="check check--cols">
-            <?php foreach ( mz_lines( $f( 'docs' ) ) as $d ) : ?>
+            <?php foreach ( mz_list_field( 'docs', $id ) as $d ) : ?>
             <li><?php echo esc_html( $d ); ?></li>
             <?php endforeach; ?>
           </ul>
@@ -575,6 +593,7 @@ if ( $svc_cases ) :
       </div>
     </div>
 
+    <?php if ( mz_show( 'related', $id ) ) : ?>
     <div class="related" data-reveal>
       <span class="related__title"><?php mz_e( 'Інші напрями допомоги' ); ?></span>
       <div class="related__list">
@@ -584,6 +603,7 @@ if ( $svc_cases ) :
         <a href="<?php echo esc_url( mz_url( 'home', '#services' ) ); ?>"><i class="ic ic-gold ic-folder"></i><?php mz_e( 'Усі послуги' ); ?><i class="ic ic-arrow-up-right"></i></a>
       </div>
     </div>
+    <?php endif; ?>
   </div>
 </section>
 
