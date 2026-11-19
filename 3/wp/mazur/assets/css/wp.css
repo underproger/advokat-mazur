@@ -1,0 +1,82 @@
+/* =========================================================
+   Адвокат Мазур — доповнення WP-версії теми (дизайн 3)
+   Нові блоки: картка адвоката на фото, фото-блоки послуги, подяка, текстова сторінка, помилки форм.
+   ========================================================= */
+
+/* ---------- WP ---------- */
+.screen-reader-text{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+body.admin-bar .hdr{top:32px}
+@media (max-width:782px){body.admin-bar .hdr{top:46px}}
+
+/* ---------- hero: тематичне фото ---------- */
+.hero--photo .hero__photo img{object-position:50% 40%}
+.hero--photo .hero__photo::after{background:linear-gradient(180deg,rgba(13,12,11,0) 45%,rgba(13,12,11,.82) 100%)}
+
+/* картка «Оформлення веде адвокат» замість «20 років практики» */
+.hero__card--lawyer{gap:14px;max-width:360px;padding:14px 20px 14px 14px}
+.hero__card-avatar{flex:none;width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:2px solid rgba(226,184,94,.6);box-shadow:0 0 0 4px rgba(226,184,94,.1)}
+.hero__card--lawyer .hero__card-text{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--muted)}
+.hero__card--lawyer .hero__card-text small{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.hero__card--lawyer .hero__card-text b{font:400 21px/1.1 var(--serif);text-transform:uppercase;color:var(--text)}
+
+/* ---------- фото-блоки послуги ---------- */
+.showcase__list{display:flex;flex-direction:column;gap:clamp(48px,6vw,96px)}
+.showcase__item{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px clamp(40px,6vw,100px);align-items:center}
+.showcase__item--rev .showcase__media{order:2}
+.showcase__media{position:relative}
+.showcase__img{position:relative;height:clamp(320px,34vw,520px);border-radius:24px;overflow:hidden;border:1px solid rgba(226,184,94,.25);box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.showcase__img img{width:100%;height:115%;object-fit:cover;object-position:50% 40%;will-change:transform}
+.showcase__img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,12,11,0) 60%,rgba(13,12,11,.55) 100%);pointer-events:none}
+.showcase__num{position:absolute;left:24px;bottom:18px;z-index:1;font:400 64px/1 var(--serif);background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;pointer-events:none}
+.showcase__item--rev .showcase__num{left:auto;right:24px}
+.showcase__body{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.showcase__body p{font-size:15.5px;line-height:1.7;color:var(--muted)}
+.showcase__body .check{margin:4px 0 6px}
+
+/* ---------- подяка / 404 ---------- */
+.thanks{position:relative;padding:clamp(40px,6vw,96px) 0 clamp(64px,8vw,120px);overflow:hidden}
+.thanks__in{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:24px;max-width:860px;text-align:center}
+.thanks__icon{display:grid;place-items:center;width:96px;height:96px;border-radius:50%;border:1px solid var(--line-gold);background:rgba(226,184,94,.06);font-size:44px}
+.thanks__title{font:400 clamp(44px,5.4vw,88px)/1 var(--serif);text-transform:uppercase;text-wrap:balance}
+.thanks__lead{max-width:640px;font-size:16.5px;line-height:1.7;color:var(--muted)}
+.thanks__steps{width:100%;max-width:640px;margin-top:8px;padding:26px 28px;border-radius:20px;border:1px solid var(--line);background:#151412;text-align:left}
+.thanks__steps ol{display:flex;flex-direction:column;gap:14px}
+.thanks__steps li{display:flex;align-items:baseline;gap:14px;font-size:15px;line-height:1.5;color:var(--text-2)}
+.thanks__steps li span{flex:none;font:400 22px/1 var(--serif);background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.thanks__direct{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 24px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+.thanks__direct .final__phone{letter-spacing:0;text-transform:none}
+.thanks__btns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:8px}
+.thanks__services{justify-content:center}
+
+/* ---------- текстова сторінка ---------- */
+.text-page{overflow:hidden}
+.text-page__in{position:relative;z-index:1;display:flex;flex-direction:column;gap:28px;max-width:900px}
+.text-page__content{display:flex;flex-direction:column;gap:16px;font-size:16px;line-height:1.75;color:var(--muted)}
+.text-page__content h2,.text-page__content h3{margin-top:16px;font:400 clamp(22px,2vw,30px)/1.2 var(--serif);text-transform:uppercase;color:var(--text)}
+.text-page__content a{color:var(--gold-l);text-decoration:underline}
+.text-page__content ul{padding-left:20px;list-style:disc}
+
+/* ---------- FAQ: списки у відповідях (контент зі старого сайту) ---------- */
+.faq__a ul,.faq__a ol{display:flex;flex-direction:column;gap:6px;margin:10px 0;padding-left:20px}
+.faq__a ul{list-style:disc}
+.faq__a ol{list-style:decimal}
+.faq__a a{color:var(--gold-l)}
+.faq__a p + p{margin-top:10px}
+
+/* ---------- форми ---------- */
+.form.is-sending{opacity:.75;pointer-events:none}
+.form__error{margin:4px 0 0;padding:12px 14px;border-radius:12px;border:1px solid rgba(235,110,90,.45);background:rgba(235,110,90,.08);font-size:13.5px;line-height:1.5;color:#f2b4a8}
+.form__error:empty{display:none}
+
+@media (max-width:1100px){
+  .showcase__item{grid-template-columns:minmax(0,1fr)}
+  .showcase__item--rev .showcase__media{order:0}
+  .showcase__img{height:clamp(260px,56vw,460px)}
+}
+@media (max-width:767px){
+  .hero__card--lawyer{max-width:none}
+  .hero__card--lawyer .hero__card-text b{font-size:18px}
+  .hero__card-avatar{width:54px;height:54px}
+  .showcase__num{font-size:48px}
+  .thanks__steps{padding:20px}
+}

@@ -1,0 +1,1 @@
+<span class="stars"><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i><i class="ic ic-gold ic-star-fill"></i></span>

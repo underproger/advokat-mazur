@@ -38,3 +38,8 @@ python3 3/_build/build.py
 - Контакти RU (ім'я, адреса, години) — `SITE_I18N` у `build.py`; підписи курсора/кнопок у JS — словники RU у `main.js` / `wow.js`.
 
 Футер: © + політика + «Створення та просування сайтів Impulse Design» (nofollow), як на чинному сайті.
+
+## WordPress
+
+`python3 3/_build/export_wp.py` → `3/wp/mazur/import/content.json` — контент UA+RU для WP-теми `3/wp/mazur`
+(імпорт: Інструменти → «Мазур: імпорт контенту»). Деталі встановлення, адреси та цілі GA4 — `3/wp/README.md`.
