@@ -387,6 +387,7 @@
       totop.classList.toggle('is-visible', window.scrollY > vh * 0.8);
       totop.style.setProperty('--p', max > 0 ? Math.min(window.scrollY / max, 1).toFixed(4) : 0);
     }
+    if (hdr) hdr.classList.toggle('is-stuck', window.scrollY > 10);
     updToc(); updSeo();
   };
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });

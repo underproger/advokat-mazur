@@ -23,7 +23,8 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var mm = gsap.matchMedia();
-  var tocH = function () { var t = $('.toc'); return t && t.offsetHeight ? t.offsetHeight : 0; };
+  // висота плаваючої шапки в компактному стані (--hdr-sh у main.css) — відступ для якорів і піну
+  var hdrH = function () { return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr-sh')) || 0; };
   var clamp = gsap.utils.clamp;
 
   // одноразова поява елементів при скролі: fromTo + clearProps, щоб нічого не «застрягало»
@@ -73,7 +74,7 @@
     if (href.charAt(0) === '#') {
       if (href.length < 2) return;
       var t = $(href);
-      if (t) { e.preventDefault(); scrollTo(t, { offset: -(tocH() + 16), duration: 1.4 }); }
+      if (t) { e.preventDefault(); scrollTo(t, { offset: -(hdrH() + 16), duration: 1.4 }); }
       return;
     }
     if (/^(tel:|mailto:|viber:|javascript:|https?:)/.test(href) || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -81,7 +82,7 @@
     var url = new URL(a.href, location.href);
     if (url.pathname === location.pathname && url.hash) {
       var t2 = $(url.hash);
-      if (t2) { e.preventDefault(); scrollTo(t2, { offset: -(tocH() + 16), duration: 1.4 }); }
+      if (t2) { e.preventDefault(); scrollTo(t2, { offset: -(hdrH() + 16), duration: 1.4 }); }
       return;
     }
     if (curtain) {
@@ -148,13 +149,12 @@
   if ($('.free-seal')) intro.fromTo('.free-seal', { scale: 0, rotation: -200 }, { scale: 1, rotation: 0, duration: 1.4, ease: 'back.out(1.5)' }, 0.9);
   if ($('.hero__card')) intro.fromTo('.hero__card', { x: -70, opacity: 0 }, { x: 0, opacity: 1, duration: 1.1 }, 1.05);
   if ($('.h-stats__box')) intro.fromTo('.h-stats__box', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, clearProps: 'transform,opacity' }, 1.0);
-  if ($('.toc')) intro.fromTo('.toc', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, clearProps: 'transform,opacity' }, 1.1);
 
   var startPage = function () {
     if (lenis) lenis.start();
     intro.play();
     ScrollTrigger.refresh();
-    if (location.hash) { var t = $(location.hash); if (t) scrollTo(t, { offset: -(tocH() + 16), immediate: true }); }
+    if (location.hash) { var t = $(location.hash); if (t) scrollTo(t, { offset: -(hdrH() + 16), immediate: true }); }
   };
 
   var quick = html.classList.contains('pl-quick');
@@ -350,7 +350,7 @@
       var tl = gsap.timeline({
         scrollTrigger: {
           trigger: '#steps', pin: true, scrub: 0.6, anticipatePin: 1,
-          start: function () { return 'top top+=' + tocH(); }, end: '+=110%',
+          start: function () { return 'top top+=' + hdrH(); }, end: '+=110%',
           onUpdate: function (self) { stepsWrap.style.setProperty('--p', self.progress.toFixed(3)); lit(self.progress); }
         }
       });

@@ -23,12 +23,13 @@
   --sans:'Mulish',system-ui,sans-serif;
   --pad:clamp(20px,4vw,72px);
   --ease:cubic-bezier(.22,.8,.24,1);
-  --toc-h:64px;
+  --hdr-h:141px;  /* висота шапки у звичайному стані — резерв місця під fixed-шапку */
+  --hdr-sh:68px;  /* висота шапки при скролі (компактна) — відступ для якорів і sticky */
 }
 
 /* ---------- base ---------- */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--toc-h) + 20px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hdr-sh) + 20px)}
 body{margin:0;background:radial-gradient(1000px 700px at 82% 0%,rgba(201,160,82,.18),rgba(0,0,0,0) 60%) no-repeat,var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body.is-locked{overflow:hidden}
 main{overflow-x:clip}
@@ -153,11 +154,18 @@ select option{background:var(--panel);color:var(--text)}
 /* =========================================================
    HEADER
    ========================================================= */
-.hdr{position:relative;z-index:40}
-.hdr__in{display:flex;align-items:center;gap:18px 28px;padding-top:30px;padding-bottom:26px}
-.logo{display:flex;flex-direction:column;gap:8px;color:var(--text)}
+/* плаваюча шапка: fixed, місце в потоці резервує padding-top у body;
+   після скролу (.is-stuck, ставить main.js) — компактна, з фоном і блюром */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:40;transition:background-color .35s,box-shadow .35s}
+body{padding-top:var(--hdr-h)}
+.hdr.is-stuck{background:rgba(13,12,11,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 14px 40px rgba(0,0,0,.35)}
+.hdr__in{display:flex;align-items:center;gap:18px 28px;padding-top:30px;padding-bottom:26px;transition:padding .35s var(--ease)}
+.hdr.is-stuck .hdr__in{padding-top:12px;padding-bottom:12px}
+.logo{display:flex;flex-direction:column;gap:8px;color:var(--text);transition:gap .35s var(--ease)}
+.hdr.is-stuck .logo{gap:0}
 .logo__name{font:400 32px/1 var(--serif);letter-spacing:.04em}
-.logo__sub{align-self:flex-start;max-width:250px;padding-bottom:10px;border-bottom:1px solid rgba(226,184,94,.5);font-size:12px;line-height:1.4;color:#a9a39a}
+.logo__sub{align-self:flex-start;max-width:250px;max-height:60px;overflow:hidden;padding-bottom:10px;border-bottom:1px solid rgba(226,184,94,.5);font-size:12px;line-height:1.4;color:#a9a39a;transition:max-height .35s var(--ease),padding .35s var(--ease),opacity .25s,border-color .25s}
+.hdr.is-stuck .logo__sub{max-height:0;padding-bottom:0;opacity:0;border-bottom-color:transparent}
 .hdr__nav{margin-left:auto;display:flex;align-items:center;flex-wrap:wrap;gap:14px 0;font-size:14px;letter-spacing:.03em}
 .hdr__menu,.hdr__actions{display:flex;align-items:center;white-space:nowrap}
 .hdr__link{padding:4px 16px;border-left:1px solid rgba(255,255,255,.2)}
@@ -189,7 +197,8 @@ select option{background:var(--panel);color:var(--text)}
 .mega__item .ic{font-size:24px}
 .mega__item:hover,.mega__item.is-active{background:rgba(226,184,94,.08);color:var(--gold-l)}
 
-.burger{display:none;margin-left:auto;width:52px;height:52px;border-radius:14px;border:1px solid var(--line-gold);background:transparent;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.burger{display:none;margin-left:auto;width:52px;height:52px;border-radius:14px;border:1px solid var(--line-gold);background:transparent;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:width .35s var(--ease),height .35s var(--ease)}
+.hdr.is-stuck .burger{width:44px;height:44px}
 .burger span{display:block;width:20px;height:1.5px;background:var(--gold)}
 
 /* =========================================================
@@ -234,9 +243,6 @@ select option{background:var(--panel);color:var(--text)}
 /* =========================================================
    TOC
    ========================================================= */
-.toc{position:sticky;top:0;z-index:30;background:rgba(13,12,11,.88);backdrop-filter:blur(14px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.toc__in{display:flex;align-items:center;justify-content:flex-end;gap:24px;min-height:var(--toc-h)}
-.toc__btn{flex:none}
 
 /* =========================================================
    SECTIONS
@@ -393,7 +399,7 @@ select option{background:var(--panel);color:var(--text)}
 
 /* ---------- seo ---------- */
 .seo__grid{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:48px clamp(40px,5vw,96px);align-items:start}
-.seo__aside{position:sticky;top:calc(var(--toc-h) + 32px);display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+.seo__aside{position:sticky;top:calc(var(--hdr-sh) + 32px);display:flex;flex-direction:column;align-items:flex-start;gap:22px}
 .seo__toc{display:flex;flex-direction:column;width:100%;border-left:1px solid var(--line)}
 .seo__toc a{position:relative;padding:9px 0 9px 18px;font-size:14px;color:var(--muted-2);transition:color .2s}
 .seo__toc a::before{content:"";position:absolute;left:-1px;top:8px;bottom:8px;width:1px;background:var(--gold);transform:scaleY(0);transition:transform .3s var(--ease)}
@@ -886,7 +892,7 @@ select option{background:var(--panel);color:var(--text)}
   .tabs__inner > .tile{display:none}
 }
 @media (max-width:767px){
-  :root{--toc-h:56px}
+  :root{--hdr-h:90px}
   .hdr__in{padding-top:20px;padding-bottom:18px}
   .logo__name{font-size:26px}
   .logo__sub{display:none}
@@ -902,7 +908,6 @@ select option{background:var(--panel);color:var(--text)}
   .free-seal__ring text{font-size:16px}
   .hero__card{left:12px;right:12px;bottom:12px;max-width:none;padding:14px 18px}
   .hero__card-num{font-size:38px}
-  .toc{display:none}
   .sec-head--split{flex-direction:column;align-items:flex-start}
   .sec-head--split > div,.sec-head--split > .sec-head__text{flex:none}
   .sit-grid,.price-grid,.steps,.adv,.creds,.tips,.dlist,.check--cols{grid-template-columns:minmax(0,1fr)}
